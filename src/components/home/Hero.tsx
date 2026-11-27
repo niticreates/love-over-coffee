@@ -35,12 +35,12 @@ export function Hero({ headline, subhead, image, orderingEnabled }: { headline: 
           <motion.p className="eyebrow flex items-center gap-3 text-turquoise-deep" {...fade(0.05)}>
             <span className="h-px w-8 bg-turquoise-deep/60" /> Vijay Nagar · Indore
           </motion.p>
-          <h1 className="mt-6 text-[clamp(2.9rem,1.1rem+5.4vw,6.4rem)] text-ink lg:text-[clamp(3.4rem,0.6rem+5vw,6.6rem)]">
+          <h1 className="mt-6 text-[clamp(2.9rem,1.1rem+5.4vw,6.4rem)] text-ink lg:text-[clamp(3.2rem,0.4rem+4.3vw,5.9rem)]">
             {ls.map((l, i) => {
               const last = i === ls.length - 1;
               const words = l.replace(/\.$/, "").split(" ");
               return (
-                <span key={l} className="block overflow-hidden pb-[.08em] -mb-[.08em] lg:whitespace-nowrap">
+                <span key={l} className="block overflow-hidden pb-[.22em] -mb-[.18em] lg:whitespace-nowrap">
                   <motion.span className="block" {...line(i)}>
                     {last ? (
                       <>

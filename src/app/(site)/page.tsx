@@ -57,15 +57,27 @@ export default async function Home() {
             <span className="text-pink">.</span>
           </p>
         </Reveal>
-        <div className="mt-16 grid items-end gap-10 md:grid-cols-12">
+        <div className="mt-16 grid items-center gap-12 md:grid-cols-12 md:gap-10">
           <ImageReveal className="md:col-span-5">
             <div className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[24px]">
               <Image src={MEDIA.storefront.src} alt={MEDIA.storefront.alt} fill sizes="(min-width:768px) 40vw, 90vw" className="object-cover" style={{ objectPosition: MEDIA.storefront.position }} />
             </div>
           </ImageReveal>
-          <Reveal className="md:col-span-6 md:col-start-7 md:pb-10" delay={0.1}>
-            <p className="text-lg leading-relaxed text-muted md:text-xl">{c.intro_body}</p>
-            <Link href="/story" className="btn btn-dark mt-10">Discover our story</Link>
+          <Reveal className="md:col-span-6 md:col-start-7" delay={0.1}>
+            <p className="eyebrow flex items-center gap-3 text-pink"><span className="h-px w-8 bg-pink/60" />Find us on Scheme 113</p>
+            <p className="mt-6 font-display text-[clamp(1.9rem,1.2rem+2vw,3.1rem)] leading-[1.12] tracking-[-.02em] text-ink text-balance">
+              Some cafés you visit. <em className="text-turquoise-deep">This one you come back to.</em>
+            </p>
+            <p className="mt-6 max-w-xl text-xl leading-relaxed text-muted md:text-[1.35rem]">{c.intro_body}</p>
+            <ul className="mt-9 grid max-w-xl grid-cols-3 gap-4 border-y border-ink/10 py-6">
+              {[["Coffee", "made with care"], ["Comfort food", "made to share"], ["A room", "made to stay"]].map(([a, b]) => (
+                <li key={a}>
+                  <p className="font-display text-xl text-ink md:text-2xl">{a}</p>
+                  <p className="mt-1 text-sm text-muted">{b}</p>
+                </li>
+              ))}
+            </ul>
+            <Link href="/story" className="btn btn-dark mt-9">Discover our story</Link>
           </Reveal>
         </div>
       </section>

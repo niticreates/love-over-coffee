@@ -217,7 +217,7 @@ export const defaultSettings: WebsiteSettings = {
       "Your favourite corner for coffee, conversations, comfort food and unforgettable little moments.",
     intro_headline: "More Than Just Coffee.",
     intro_body:
-      "Love Over Coffee is where the day slows down. Come for a carefully made cup, stay for comforting plates, a board game, and the kind of conversation that runs longer than planned.",
+      "Love Over Coffee is a neighbourhood café in Vijay Nagar for carefully made coffee, comfort food worth sharing, and the kind of conversation that outlasts the first cup.",
     reservation_headline: "Your Table Is Waiting.",
     reservation_body:
       "Planning a coffee date, catching up with friends, or simply taking a break? Reserve your favourite spot.",

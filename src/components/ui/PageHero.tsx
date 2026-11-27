@@ -51,9 +51,9 @@ export function PageHero({
           <motion.p className="eyebrow flex items-center gap-3 text-turquoise-deep" {...fade(0.05)}>
             <span className="h-px w-8 bg-turquoise-deep/60" /> {eyebrow}
           </motion.p>
-          <span className="mt-6 block overflow-hidden pb-[.1em]">
+          <span className="mt-6 -mb-[.2em] block overflow-hidden pb-[.24em] pt-[.04em]">
             <motion.h1
-              className={clsx("text-ink text-balance", full ? "text-[clamp(2.8rem,1.2rem+5vw,6rem)]" : "text-[clamp(2.6rem,1.4rem+4vw,5rem)]")}
+              className={clsx("text-ink text-balance leading-[1.04]", full ? "text-[clamp(2.8rem,1.2rem+5vw,6rem)]" : "text-[clamp(2.6rem,1.4rem+4vw,5rem)]")}
               {...(reduce ? {} : { initial: { y: "60%", opacity: 0 }, animate: { y: "0%", opacity: 1 }, transition: { duration: 1, delay: 0.12, ease: EASE } })}
             >
               {title}

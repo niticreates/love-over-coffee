@@ -41,15 +41,15 @@ export default async function StoryPage() {
         return (
           <section key={s.id} className={`py-section ${GROUNDS[i % GROUNDS.length]}`}>
             <div className="container-site grid items-center gap-12 md:grid-cols-12">
-              <ImageReveal className={flip ? "md:order-2 md:col-span-5 md:col-start-8" : "md:col-span-6"}>
-                <div className={`relative overflow-hidden ${flip ? "aspect-square rounded-full" : i === 0 ? "aspect-[4/5] rounded-t-[999px] rounded-b-[24px]" : "aspect-[4/5] rounded-[24px]"}`}>
+              <ImageReveal className={flip ? "md:order-2 md:col-span-5 md:col-start-8" : "md:col-span-5"}>
+                <div className={`relative overflow-hidden ${flip ? "aspect-square rounded-full" : i === 0 ? "aspect-[4/5] max-h-[640px] rounded-t-[999px] rounded-b-[24px]" : "aspect-[4/5] max-h-[640px] rounded-[24px]"}`}>
                   <Image src={media.src} alt={media.alt} fill sizes="(min-width:768px) 45vw, 90vw" className="object-cover" style={{ objectPosition: media.position }} />
                 </div>
               </ImageReveal>
-              <Reveal className={flip ? "md:col-span-6" : "md:col-span-5 md:col-start-8"}>
-                <p className="font-display text-lg italic text-pink">{String(i + 1).padStart(2, "0")}</p>
-                <h2 className="mt-3 text-display-md text-balance">{s.title}</h2>
-                <p className={`mt-6 max-w-prose text-lg leading-relaxed ${GROUNDS[i % GROUNDS.length].includes("navy") ? "text-ivory/75" : "text-muted"}`}>{s.body}</p>
+              <Reveal className={flip ? "md:col-span-6" : "md:col-span-6 md:col-start-7"}>
+                <p className="flex items-center gap-3 font-display text-xl italic text-pink">{String(i + 1).padStart(2, "0")}<span className="h-px w-10 bg-pink/50" /></p>
+                <h2 className="mt-4 text-[clamp(2.4rem,1.2rem+3.6vw,4.8rem)] leading-[1.02] text-balance">{s.title}</h2>
+                <p className={`mt-8 max-w-xl text-xl leading-relaxed md:text-[1.4rem] ${GROUNDS[i % GROUNDS.length].includes("navy") ? "text-ivory/75" : "text-muted"}`}>{s.body}</p>
               </Reveal>
             </div>
           </section>

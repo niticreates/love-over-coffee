@@ -60,8 +60,8 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
           </div>
         </div>
       </div>
-      <div aria-hidden className="container-site select-none overflow-hidden">
-        <p className="font-brand -mb-[.18em] whitespace-nowrap text-[clamp(3rem,12.4vw,11.5rem)] font-bold leading-none tracking-[-.04em] text-ivory/[.07]">
+      <div aria-hidden className="container-site select-none overflow-hidden pb-6 pt-4 md:pb-10">
+        <p className="font-brand whitespace-nowrap text-[clamp(2.6rem,11.6vw,10.5rem)] font-bold leading-[1.15] tracking-[-.04em] text-ivory/[.07]">
           loveOverCoffee.
         </p>
       </div>
