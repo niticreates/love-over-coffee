@@ -1,8 +1,8 @@
 // In-memory preview store. Used when Supabase isn't configured (local dev, CI, design previews).
 // Data resets on server restart. All mutations are synchronous inside a single JS turn,
 // which gives the same atomicity the SQL functions provide in Supabase mode.
-import { categories, defaultSettings, demoCustomizations, demoSamplePrices, galleryImages, products } from "@/data/seed";
-import type { Category, ContactMessage, Coupon, GalleryImage, NotificationLog, Order, Product, Reservation, WebsiteSettings } from "../types";
+import { categories, defaultSettings, demoCustomizations, demoSamplePrices, externalPlatforms, galleryImages, products } from "@/data/seed";
+import type { Category, ContactMessage, Coupon, ExternalPlatform, GalleryImage, NotificationLog, Order, Product, Reservation, WebsiteSettings } from "../types";
 import { uuid } from "../ids";
 import { StoreError, type Store } from "./types";
 
@@ -16,6 +16,7 @@ interface DB {
   webhookEvents: Set<string>;
   reservations: Reservation[];
   gallery: GalleryImage[];
+  platforms: ExternalPlatform[];
   notifications: NotificationLog[];
   contacts: ContactMessage[];
 }
@@ -48,6 +49,7 @@ function freshDB(sample: boolean): DB {
     webhookEvents: new Set(),
     reservations: [],
     gallery: clone(galleryImages),
+    platforms: clone(externalPlatforms),
     notifications: [],
     contacts: [],
   };
@@ -213,6 +215,32 @@ export const memoryStore: Store = {
     if (!r) throw new StoreError("not_found", "Reservation not found");
     Object.assign(r, patch, { updated_at: now() });
     return clone(r);
+  },
+
+  async listPlatforms(opts) {
+    return clone(
+      db().platforms
+        .filter((p) => !opts?.publicOnly || (p.is_active && p.is_verified && p.platform_url))
+        .sort((a, b) => a.display_order - b.display_order),
+    );
+  },
+  async upsertPlatform(p) {
+    const d = db();
+    const i = d.platforms.findIndex((x) => x.id === p.id);
+    const row: ExternalPlatform = { ...clone(p), created_at: i >= 0 ? d.platforms[i].created_at : now(), updated_at: now() };
+    if (i >= 0) d.platforms[i] = row;
+    else d.platforms.push(row);
+    return clone(row);
+  },
+  async deletePlatform(id) {
+    db().platforms = db().platforms.filter((p) => p.id !== id);
+  },
+  async reorderPlatforms(ids) {
+    const d = db();
+    ids.forEach((id, i) => {
+      const p = d.platforms.find((x) => x.id === id);
+      if (p) p.display_order = i;
+    });
   },
 
   async listGallery() {

@@ -8,6 +8,8 @@ import { ProductCard } from "@/components/menu/ProductCard";
 import { Photo } from "@/components/ui/Photo";
 import { ImageReveal, Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { WhatsAppIcon } from "@/components/ui/icons";
+import { whatsappLink } from "@/lib/whatsapp";
 import { toPublic } from "@/lib/public";
 import { getSiteData } from "@/lib/site";
 
@@ -117,7 +119,15 @@ export default async function Home() {
             <p className="eyebrow text-sage">Reservations</p>
             <h2 className="mx-auto mt-6 max-w-3xl text-display-md">{c.reservation_headline}</h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ivory/75">{c.reservation_body}</p>
-            <Link href="/reserve" className="btn btn-primary mt-10">Book Your Table</Link>
+            <div className="mt-10 flex flex-wrap justify-center gap-3">
+              <Link href="/reserve" className="btn btn-primary">Book Your Table</Link>
+              {whatsappLink(settings.business, "reservation") && (
+                <a href={whatsappLink(settings.business, "reservation")!} target="_blank" rel="noopener noreferrer" className="btn btn-outline border-ivory/40 text-ivory hover:bg-ivory hover:text-espresso">
+                  <WhatsAppIcon className="h-4 w-4" /> Enquire on WhatsApp
+                </a>
+              )}
+            </div>
+            <p className="mt-5 text-xs text-ivory/55">WhatsApp enquiries are confirmed by our team.</p>
           </Reveal>
         </div>
       </section>

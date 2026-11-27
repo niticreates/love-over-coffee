@@ -5,7 +5,7 @@ import "server-only";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { defaultSettings } from "@/data/seed";
 import { env } from "../config";
-import type { Category, ContactMessage, Coupon, NotificationLog, GalleryImage, Order, OrderItem, Product, Reservation, WebsiteSettings } from "../types";
+import type { Category, ContactMessage, Coupon, ExternalPlatform, NotificationLog, GalleryImage, Order, OrderItem, Product, Reservation, WebsiteSettings } from "../types";
 import { StoreError, type Store } from "./types";
 
 let client: SupabaseClient | null = null;
@@ -233,6 +233,21 @@ export const supabaseStore: Store = {
     const res = await sb().from("reservations").update(patch).eq("id", id).select("*").single();
     if (res.error?.code === "23P01") throw new StoreError("conflict", "That table is already booked for an overlapping time.");
     return toReservation(must(res));
+  },
+
+  async listPlatforms(opts) {
+    let q = sb().from("external_platforms").select("*").order("display_order");
+    if (opts?.publicOnly) q = q.eq("is_active", true).eq("is_verified", true).not("platform_url", "is", null);
+    return (must(await q) ?? []) as ExternalPlatform[];
+  },
+  async upsertPlatform(p) {
+    return must(await sb().from("external_platforms").upsert(p).select("*").single()) as ExternalPlatform;
+  },
+  async deletePlatform(id) {
+    must(await sb().from("external_platforms").delete().eq("id", id));
+  },
+  async reorderPlatforms(ids) {
+    await Promise.all(ids.map((id, i) => sb().from("external_platforms").update({ display_order: i }).eq("id", id)));
   },
 
   async listGallery() {

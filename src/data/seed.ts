@@ -12,6 +12,7 @@
  */
 import type {
   Category,
+  ExternalPlatform,
   Coupon,
   GalleryImage,
   Product,
@@ -152,7 +153,13 @@ export const defaultSettings: WebsiteSettings = {
     country: "IN",
     phone_display: "+91 93296 97769",
     phone_e164: "+919329697769",
-    whatsapp_e164: null, // owner to confirm the number is on WhatsApp
+    whatsapp_e164: "+919329697769", // supplied by the client for WhatsApp (27 Nov 2026)
+    whatsapp_messages: {
+      general: "Hello Love Over Coffee! I'd like to know more about your menu and services.",
+      reservation: "Hello Love Over Coffee! I'd like to enquire about reserving a table.",
+      ordering: "Hello Love Over Coffee! I'd like to enquire about placing an order.",
+      group: "Hello Love Over Coffee! I'd like to enquire about visiting with a group.",
+    },
     email: null,
     instagram_url: null, // no verified official handle found
     maps_query: "Love Over Coffee, Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010",
@@ -207,3 +214,44 @@ export const defaultSettings: WebsiteSettings = {
   },
   notifications: { admin_emails: [], admin_whatsapp: [], email_enabled: false, whatsapp_enabled: false },
 };
+
+/**
+ * Third-party listings for THIS outlet (Plot 11, Sector/Scheme 113, Vijay Nagar).
+ * Each was opened on 27 Nov 2026 and matched on address and/or phone (+91 93296 97769).
+ * Love Over Coffee has other outlets (Jaipur, Gurugram, Bikaner…) — never link those.
+ */
+const verifiedAt = "2026-11-27T00:00:00.000Z";
+export const externalPlatforms: ExternalPlatform[] = [
+  {
+    id: "plt_district", platform_name: "District by Zomato", platform_type: "reservation", brand: "district",
+    platform_url: "https://www.district.in/dining/indore/love-over-coffee-vijay-nagar", platform_logo: null,
+    description: "Pick a date and party size and book instantly — with dining offers when available.",
+    is_active: true, is_verified: true, display_order: 0,
+    verification_note: "Page shows Plot 11, Sector 113, Vijay Nagar and phone +919329697769.",
+    created_at: verifiedAt, updated_at: verifiedAt,
+  },
+  {
+    id: "plt_zomato", platform_name: "Zomato", platform_type: "ordering", brand: "zomato",
+    platform_url: "https://www.zomato.com/indore/love-over-coffee-vijay-nagar/order", platform_logo: null,
+    description: "Order for delivery or browse the full menu, photos and reviews.",
+    is_active: true, is_verified: true, display_order: 1,
+    verification_note: "Listing shows Plot 11, Sector 113, Vijay Nagar and phone +919329697769.",
+    created_at: verifiedAt, updated_at: verifiedAt,
+  },
+  {
+    id: "plt_swiggy", platform_name: "Swiggy", platform_type: "ordering", brand: "swiggy",
+    platform_url: "https://www.swiggy.com/city/indore/love-over-coffee-vijay-nagar-scheme-113-rest764666", platform_logo: null,
+    description: "Get your favourites delivered across Indore.",
+    is_active: true, is_verified: true, display_order: 2,
+    verification_note: "Listing 'Scheme 113' shows Plot No 11, Sector 113, Vijay Nagar, 452010.",
+    created_at: verifiedAt, updated_at: verifiedAt,
+  },
+  {
+    id: "plt_google_maps", platform_name: "Google Maps", platform_type: "location", brand: "google_maps",
+    platform_url: "https://www.google.com/maps/search/?api=1&query=Love+Over+Coffee+Scheme+113+Vijay+Nagar+Indore", platform_logo: null,
+    description: "Directions, opening hours and reviews.",
+    is_active: true, is_verified: true, display_order: 3,
+    verification_note: "Search link. Replace with the Business Profile share link (maps.app.goo.gl/…) to pin this exact outlet.",
+    created_at: verifiedAt, updated_at: verifiedAt,
+  },
+];

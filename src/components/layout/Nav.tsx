@@ -12,6 +12,7 @@ export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/story", label: "Our Story" },
   { href: "/menu", label: "Menu" },
+  { href: "/book-order", label: "Book & Order" },
   { href: "/gallery", label: "Gallery" },
   { href: "/contact", label: "Contact" },
 ];
@@ -51,7 +52,7 @@ export function Nav({ phone, announcement }: { phone: string; announcement?: str
           <Link href="/" className="text-[13px] sm:text-sm" aria-label="Love Over Coffee — home">
             <Wordmark />
           </Link>
-          <ul className="hidden items-center gap-8 lg:flex">
+          <ul className="hidden items-center gap-6 xl:gap-8 lg:flex">
             {NAV_LINKS.map((l) => {
               const active = l.href === "/" ? path === "/" : path.startsWith(l.href);
               return (

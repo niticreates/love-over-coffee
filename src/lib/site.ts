@@ -7,11 +7,12 @@ import { getStore } from "./store";
 /** Per-request cached read of everything public pages need. */
 export const getSiteData = cache(async () => {
   const store = getStore();
-  const [settings, categories, products, gallery] = await Promise.all([
+  const [settings, categories, products, gallery, platforms] = await Promise.all([
     store.getSettings(),
     store.listCategories(),
     store.listProducts({ includeUnavailable: true }),
     store.listGallery(),
+    store.listPlatforms({ publicOnly: true }),
   ]);
   const featured = products
     .filter((p) => p.is_featured)
@@ -25,6 +26,7 @@ export const getSiteData = cache(async () => {
     products,
     featured,
     gallery,
+    platforms,
     flags: {
       preview: dataMode() === "memory",
       samplePrices: dataMode() === "memory" && env.demoSampleData,

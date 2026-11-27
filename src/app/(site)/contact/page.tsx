@@ -4,15 +4,18 @@ import { Hours } from "@/components/layout/Hours";
 import { MapEmbed } from "@/components/layout/MapEmbed";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { JsonLd, pageMeta } from "@/lib/seo";
+import { whatsappLink } from "@/lib/whatsapp";
 import { getSiteData } from "@/lib/site";
 
 export const revalidate = 300;
 export const metadata = pageMeta("Contact & Location", "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Call +91 93296 97769, get directions, or send us a message.", "/contact");
 
 export default async function ContactPage() {
-  const { settings } = await getSiteData();
+  const { settings, platforms } = await getSiteData();
   const b = settings.business;
   const c = settings.commerce;
+  const mapsLink = platforms.find((p) => p.platform_type === "location")?.platform_url ?? b.maps_place_url;
+  const waGroup = whatsappLink(b, "group");
   const faqs = [
     { q: "Can I reserve a table?", a: "Yes. Send a request on our reservations page with your date, time and number of guests. Your booking is confirmed once the café approves it — you'll get a confirmation from us." },
     { q: "Do you take online orders?", a: c.ordering_enabled ? `Yes — order on this website and pay securely online${c.delivery_enabled ? " for pickup or delivery" : " for pickup at the café"}.` : "Online ordering is opening soon. Until then, please call the café to place an order." },
@@ -34,8 +37,8 @@ export default async function ContactPage() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href={`tel:${b.phone_e164}`} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</a>
-            {b.whatsapp_e164 && <a href={`https://wa.me/${b.whatsapp_e164.replace("+", "")}`} target="_blank" rel="noopener noreferrer" className="btn btn-outline"><WhatsAppIcon className="h-4 w-4" /> WhatsApp</a>}
-            <a href={b.maps_place_url} target="_blank" rel="noopener noreferrer" className="btn btn-outline">Get directions <ArrowUpRight size={14} /></a>
+            {whatsappLink(b, "general") && <a href={whatsappLink(b, "general")!} target="_blank" rel="noopener noreferrer" className="btn btn-outline"><WhatsAppIcon className="h-4 w-4" /> WhatsApp</a>}
+            <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="btn btn-outline">Get directions <ArrowUpRight size={14} /></a>
           </div>
           <div className="border-t border-oat pt-8">
             <p className="eyebrow text-walnut">Opening hours</p>
@@ -48,6 +51,7 @@ export default async function ContactPage() {
         <section className="lg:col-span-5" aria-labelledby="msg">
           <h2 id="msg" className="text-display-sm">Send a message</h2>
           <p className="mt-4 text-muted">For events, large groups or anything else.</p>
+          {waGroup && <p className="mt-3 text-sm text-muted">Coming with a group? <a href={waGroup} target="_blank" rel="noopener noreferrer" className="link-underline text-espresso">Message us on WhatsApp</a> and our team will confirm what we can arrange.</p>}
           <div className="mt-8"><ContactForm /></div>
         </section>
         <section className="lg:col-span-6 lg:col-start-7" aria-labelledby="faq">

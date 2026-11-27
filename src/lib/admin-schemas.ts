@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ORDER_STATUSES, RESERVATION_STATUSES } from "./types";
+import { ORDER_STATUSES, PLATFORM_BRANDS, PLATFORM_TYPES, RESERVATION_STATUSES } from "./types";
 
 const slug = z.string().regex(/^[a-z0-9-]{1,80}$/, "Use lowercase letters, numbers and hyphens");
 const rupeesToPaise = z.number().min(0).max(100000).transform((r) => Math.round(r * 100));
@@ -61,6 +61,7 @@ export const settingsSchema = z.object({
       name: z.string().min(1).max(120), short_name: z.string().min(1).max(60), address_lines: z.array(z.string().max(160)).max(4),
       locality: z.string().max(80), city: z.string().max(80), region: z.string().max(80), postal_code: z.string().max(12), country: z.string().length(2),
       phone_display: z.string().max(30), phone_e164: z.string().regex(/^\+\d{8,15}$/), whatsapp_e164: z.string().regex(/^\+\d{8,15}$/).nullable(),
+      whatsapp_messages: z.object({ general: z.string().trim().min(1).max(300), reservation: z.string().trim().min(1).max(300), ordering: z.string().trim().min(1).max(300), group: z.string().trim().min(1).max(300) }),
       email: z.string().email().nullable(), instagram_url: z.string().url().regex(/^https:\/\/(www\.)?instagram\.com\//).nullable(),
       maps_query: z.string().max(300), maps_place_url: z.string().url(), geo: z.object({ lat: z.number().min(-90).max(90), lng: z.number().min(-180).max(180) }).nullable(),
       price_range: z.string().max(60), hours: z.array(z.object({ day: z.number().int().min(0).max(6), open: hhmm.nullable(), close: hhmm.nullable() })).length(7).nullable(),
@@ -99,4 +100,32 @@ export const couponSchema = z.object({
   code: z.string().regex(/^[A-Z0-9_-]{3,24}$/), kind: z.enum(["percent", "flat"]), value: z.number().int().min(1),
   min_subtotal: z.number().int().min(0), max_discount: z.number().int().min(0).nullable(), is_active: z.boolean(),
   starts_at: z.string().datetime().nullable(), ends_at: z.string().datetime().nullable(),
+});
+
+/** https only; no credentials in URL; no javascript:/data: schemes. */
+export const safeExternalUrl = z
+  .string()
+  .trim()
+  .max(500)
+  .refine((v) => {
+    try {
+      const u = new URL(v);
+      return u.protocol === "https:" && !u.username && !u.password && u.hostname.includes(".");
+    } catch {
+      return false;
+    }
+  }, "Enter a full https:// link");
+
+export const platformSchema = z.object({
+  id: z.string().max(80).optional(),
+  platform_name: z.string().trim().min(1).max(60),
+  platform_type: z.enum(PLATFORM_TYPES),
+  platform_url: safeExternalUrl.nullable(),
+  platform_logo: z.string().max(3_000_000).refine((v) => /^(https:\/\/|\/|data:image\/(png|jpeg|webp|avif);base64,)/.test(v), "Logo must be an uploaded image").nullable(),
+  brand: z.enum(PLATFORM_BRANDS),
+  description: z.string().trim().max(200).nullable(),
+  is_active: z.boolean(),
+  is_verified: z.boolean(),
+  verification_note: z.string().trim().max(300).nullable(),
+  display_order: z.number().int().min(0).max(1000),
 });

@@ -154,6 +154,8 @@ export interface BusinessSettings {
   phone_display: string;
   phone_e164: string;
   whatsapp_e164: string | null;
+  /** Prefilled WhatsApp messages by context. Staff must still confirm anything requested over WhatsApp. */
+  whatsapp_messages: WhatsAppMessages;
   email: string | null;
   instagram_url: string | null;
   maps_query: string;
@@ -242,4 +244,32 @@ export interface ContactMessage {
   email: string | null;
   message: string;
   created_at: string;
+}
+
+export type WhatsAppContext = "general" | "reservation" | "ordering" | "group";
+export type WhatsAppMessages = Record<WhatsAppContext, string>;
+
+export const PLATFORM_TYPES = ["reservation", "ordering", "location"] as const;
+export type PlatformType = (typeof PLATFORM_TYPES)[number];
+
+/** Built-in tile styles for well-known platforms (used when no logo file is uploaded). */
+export const PLATFORM_BRANDS = ["district", "zomato", "swiggy", "google_maps", "other"] as const;
+export type PlatformBrand = (typeof PLATFORM_BRANDS)[number];
+
+export interface ExternalPlatform {
+  id: string;
+  platform_name: string;
+  platform_type: PlatformType;
+  platform_url: string | null;
+  /** Uploaded logo URL; null → built-in tile for `brand`. */
+  platform_logo: string | null;
+  brand: PlatformBrand;
+  description: string | null;
+  is_active: boolean;
+  /** Set only when someone has confirmed the link points to THIS outlet. Unverified links never render publicly. */
+  is_verified: boolean;
+  verification_note: string | null;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
 }

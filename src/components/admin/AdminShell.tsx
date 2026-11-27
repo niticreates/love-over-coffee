@@ -1,6 +1,6 @@
 "use client";
 import clsx from "clsx";
-import { CalendarDays, Image as ImageIcon, LayoutDashboard, LogOut, Menu as MenuIcon, Receipt, Settings, Type, UtensilsCrossed, X } from "lucide-react";
+import { CalendarDays, Link2, Image as ImageIcon, LayoutDashboard, LogOut, Menu as MenuIcon, Receipt, Settings, Type, UtensilsCrossed, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
@@ -13,6 +13,7 @@ const NAV = [
   { href: "/admin/menu", label: "Menu", icon: UtensilsCrossed, role: "staff" },
   { href: "/admin/gallery", label: "Gallery", icon: ImageIcon, role: "manager" },
   { href: "/admin/content", label: "Website content", icon: Type, role: "manager" },
+  { href: "/admin/integrations", label: "Booking links", icon: Link2, role: "manager" },
   { href: "/admin/settings", label: "Settings", icon: Settings, role: "manager" },
 ] as const;
 const RANK = { staff: 1, manager: 2, owner: 3 };

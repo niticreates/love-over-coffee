@@ -2,6 +2,7 @@ import type {
   Category,
   ContactMessage,
   Coupon,
+  ExternalPlatform,
   GalleryImage,
   NotificationLog,
   Order,
@@ -90,6 +91,12 @@ export interface Store {
   getReservationByToken(token: string): Promise<Reservation | null>;
   getReservation(id: string): Promise<Reservation | null>;
   updateReservation(id: string, patch: Partial<Pick<Reservation, "status" | "date" | "time" | "guests" | "staff_note" | "table_id">>): Promise<Reservation>;
+
+  /** publicOnly → active, verified, with a URL; sorted by display_order. */
+  listPlatforms(opts?: { publicOnly?: boolean }): Promise<ExternalPlatform[]>;
+  upsertPlatform(p: Omit<ExternalPlatform, "created_at" | "updated_at">): Promise<ExternalPlatform>;
+  deletePlatform(id: string): Promise<void>;
+  reorderPlatforms(ids: string[]): Promise<void>;
 
   listGallery(): Promise<GalleryImage[]>;
   upsertGalleryImage(g: GalleryImage): Promise<GalleryImage>;

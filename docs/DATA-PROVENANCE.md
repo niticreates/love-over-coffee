@@ -23,3 +23,16 @@ Rule: nothing customer-facing is invented. Unknown values are `null`, hidden, or
 | Board games, books, laptop-friendly | ✅ | Brief + Free Press Journal (Feb 2026) |
 
 The dashboard's **“Before going live”** checklist tracks these.
+
+## External booking & ordering links (checked 27 Nov 2026)
+
+Each link was opened and matched to this outlet by address (Plot 11, Scheme/Sector 113, Vijay Nagar, 452010) and/or phone (+91 93296 97769) before being marked **verified**. Unverified, disabled or URL-less platforms never render publicly (enforced in the app and by Supabase RLS).
+
+| Platform | Use | URL | Evidence |
+|---|---|---|---|
+| District | Reservations | https://www.district.in/dining/indore/love-over-coffee-vijay-nagar | Listing address + phone match |
+| Zomato | Ordering | https://www.zomato.com/indore/love-over-coffee-vijay-nagar/order | Address + phone match; listing says "Vegetarian only" (owner to confirm before showing veg marks on our menu) |
+| Swiggy | Ordering | https://www.swiggy.com/city/indore/love-over-coffee-vijay-nagar-scheme-113-rest764666 | Address match (Plot No 11, Sector 113) |
+| Google Maps | Directions | Search link for "Love Over Coffee Scheme 113 Vijay Nagar Indore" | **Owner to replace** with the Google Business Profile share link to pin the exact listing |
+
+Manage them in Admin → Booking links (`/admin/integrations`). Changing a URL there clears its verified flag until someone re-checks it.

@@ -30,3 +30,7 @@ Import the repo, set all env vars (Production + Preview), set `NEXT_PUBLIC_SITE_
 - [ ] Razorpay test payment + webhook verified, then live keys
 - [ ] Staff accounts created with correct roles
 - [ ] Google Search Console + Business Profile website link
+
+## WhatsApp click-to-chat (no API key needed)
+
+Public WhatsApp buttons are plain `https://wa.me/<number>?text=<encoded message>` links built by `src/lib/whatsapp.ts` from Admin → Booking links. Four prefilled messages exist (general/floating button, reservation, ordering, group). The site always labels WhatsApp as an *enquiry* that staff confirm. This is separate from the WhatsApp Cloud API used for staff notifications.

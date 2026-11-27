@@ -18,7 +18,7 @@ test.describe("public site", () => {
   for (const width of [360, 390, 430, 768, 1024, 1440, 1920]) {
     test(`no horizontal overflow at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
-      for (const path of ["/", "/menu", "/story", "/gallery", "/contact", "/reserve", "/checkout"]) {
+      for (const path of ["/", "/menu", "/story", "/gallery", "/contact", "/reserve", "/book-order", "/checkout"]) {
         await page.goto(path);
         await noOverflow(page);
       }
@@ -227,5 +227,64 @@ test.describe("security", () => {
     const r = await request.get("/");
     expect(r.headers()["content-security-policy"]).toContain("frame-ancestors 'none'");
     expect(r.headers()["x-content-type-options"]).toBe("nosniff");
+  });
+});
+
+test.describe("book & order + whatsapp", () => {
+  const ORIGIN = { origin: "http://localhost:3000" };
+
+  test("book & order lists only verified outlet links, opening safely", async ({ page }) => {
+    await page.goto("/book-order");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Your Coffee Experience");
+    const district = page.getByRole("link", { name: /Book a Table on District/ });
+    await expect(district).toHaveAttribute("href", "https://www.district.in/dining/indore/love-over-coffee-vijay-nagar");
+    await expect(district).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(district).toHaveAttribute("target", "_blank");
+    await expect(page.getByRole("link", { name: /Order Now on Zomato/ })).toHaveAttribute("href", /zomato\.com\/indore\/love-over-coffee-vijay-nagar/);
+    await expect(page.getByRole("link", { name: /Order Now on Swiggy/ })).toHaveAttribute("href", /swiggy\.com\/city\/indore\/love-over-coffee-vijay-nagar/);
+    await expect(page.getByRole("link", { name: "Get Directions" })).toHaveAttribute("href", /google\.com\/maps/);
+    await expect(page.getByText(/isn.t a confirmed booking until our staff reply/)).toBeVisible();
+  });
+
+  test("floating WhatsApp button: encoded message, hidden on checkout", async ({ page }) => {
+    await page.goto("/");
+    const fab = page.getByRole("link", { name: "Chat with us on WhatsApp (opens WhatsApp)" });
+    await expect(fab).toBeVisible();
+    const href = await fab.getAttribute("href");
+    expect(href).toBe(`https://wa.me/919329697769?text=${encodeURIComponent("Hello Love Over Coffee! I'd like to know more about your menu and services.")}`);
+    await expect(fab).toHaveAttribute("rel", "noopener noreferrer");
+    await page.goto("/reserve");
+    await expect(page.getByRole("link", { name: /Message us on WhatsApp/ })).toHaveAttribute("href", /text=.*reserving%20a%20table/);
+    await page.goto("/checkout");
+    await expect(page.getByRole("link", { name: "Chat with us on WhatsApp (opens WhatsApp)" })).toHaveCount(0);
+  });
+
+  test("mobile: floating button sits above the action bar", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    const fab = page.getByRole("link", { name: "Chat with us on WhatsApp (opens WhatsApp)" });
+    await expect(fab).toBeVisible();
+    const box = (await fab.boundingBox())!;
+    expect(box.y + box.height).toBeLessThanOrEqual(844 - 68);
+  });
+
+  test("admin: disabling or un-verifying a platform hides it; unsafe URLs rejected", async ({ page }) => {
+    const login = await page.request.post("/api/admin/login", { data: { email: "owner@example.com", password: "preview-admin" }, headers: ORIGIN });
+    expect(login.ok()).toBeTruthy();
+    const list = await (await page.request.get("/api/admin/platforms")).json();
+    const swiggy = list.find((p: { brand: string }) => p.brand === "swiggy");
+    const bad = await page.request.post("/api/admin/platforms", { data: { ...swiggy, platform_url: "javascript:alert(1)" }, headers: ORIGIN });
+    expect(bad.status()).toBe(422);
+    const http = await page.request.post("/api/admin/platforms", { data: { ...swiggy, platform_url: "http://swiggy.com" }, headers: ORIGIN });
+    expect(http.status()).toBe(422);
+    const off = await page.request.post("/api/admin/platforms", { data: { ...swiggy, is_active: false }, headers: ORIGIN });
+    expect(off.ok()).toBeTruthy();
+    await page.goto("/book-order");
+    await expect(page.getByRole("link", { name: /Order Now on Swiggy/ })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /Order Now on Zomato/ })).toBeVisible();
+    // restore
+    await page.request.post("/api/admin/platforms", { data: swiggy, headers: ORIGIN });
+    await page.goto("/admin/integrations");
+    await expect(page.getByRole("heading", { name: "External Integrations & Booking Links" })).toBeVisible();
   });
 });

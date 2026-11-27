@@ -24,7 +24,7 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
           <div>
             <p className="eyebrow text-sage">Explore</p>
             <ul className="mt-5 space-y-2.5 text-sm text-ivory/80">
-              {[["/", "Home"], ["/story", "Our Story"], ["/menu", "Menu"], ["/gallery", "Gallery"], ["/reserve", "Reservations"], ["/contact", "Contact"]].map(([h, l]) => (
+              {[["/", "Home"], ["/story", "Our Story"], ["/menu", "Menu"], ["/book-order", "Book & Order"], ["/gallery", "Gallery"], ["/reserve", "Reservations"], ["/contact", "Contact"]].map(([h, l]) => (
                 <li key={h}><Link className="link-underline" href={h}>{l}</Link></li>
               ))}
             </ul>
