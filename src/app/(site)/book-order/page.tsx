@@ -90,15 +90,15 @@ export default async function BookOrderPage() {
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {direct && (
               <Reveal>
-                <Link href="/menu" className="flex h-full flex-col rounded-[22px] bg-turquoise p-6 text-ink md:p-7">
+                <Link href="/menu" className="group flex h-full flex-col rounded-[22px] bg-turquoise p-6 text-ink transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgb(0_0_0/.6)] md:p-7">
                   <span className="grid h-12 w-12 place-items-center rounded-[12px] bg-ivory" aria-hidden><Mascot className="h-auto w-[55%]" title={null} animated={false} /></span>
                   <h3 className="mt-6 text-3xl">Order from us</h3>
                   <p className="mt-2 text-sm leading-relaxed text-ink/80">Order and pay on our website for pickup — straight to our kitchen.</p>
-                  <span className="mt-auto pt-6"><span className="btn btn-dark min-h-[42px] w-full">Order Now</span></span>
+                  <span className="mt-auto pt-6"><span className="btn btn-card min-h-[42px] w-full">Order Now</span></span>
                 </Link>
               </Reveal>
             )}
-            {order.map((p, i) => <div key={p.id} data-aos="flip-up" data-aos-delay={String((i + 1) * 110)}><PlatformCard p={p} cta="Order Now" /></div>)}
+            {order.map((p, i) => <div key={p.id} data-aos="flip-up" data-aos-delay={String((i + 1) * 110)}><PlatformCard p={p} cta="Order Now" tone="turquoise" /></div>)}
           </div>
           {waOrder && (
             <p className="mt-8 text-sm text-ivory/70">

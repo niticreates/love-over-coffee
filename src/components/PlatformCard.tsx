@@ -25,22 +25,23 @@ export function PlatformLogo({ p, className }: { p: Pick<ExternalPlatform, "plat
   );
 }
 
-export function PlatformCard({ p, cta }: { p: ExternalPlatform; cta: string }) {
+export function PlatformCard({ p, cta, tone = "paper" }: { p: ExternalPlatform; cta: string; tone?: "paper" | "turquoise" }) {
+  const blue = tone === "turquoise";
   return (
     <a
       href={p.platform_url!}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex h-full flex-col rounded-[22px] border border-oat bg-paper p-6 transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-walnut/50 hover:shadow-soft md:p-7"
+      className={clsx("group flex h-full flex-col rounded-[22px] p-6 transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1 md:p-7", blue ? "bg-turquoise text-ink hover:shadow-[0_24px_50px_-24px_rgb(0_0_0/.6)]" : "border border-oat bg-paper hover:border-walnut/50 hover:shadow-soft")}
     >
       <div className="flex items-start justify-between gap-4">
         <PlatformLogo p={p} />
-        <ArrowUpRight size={18} className="text-muted transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-espresso" aria-hidden />
+        <ArrowUpRight size={18} className={clsx("transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-espresso", blue ? "text-ink/70" : "text-muted")} aria-hidden />
       </div>
       <h3 className="mt-6 text-3xl text-ink">{p.platform_name}</h3>
-      {p.description && <p className="mt-2 text-sm leading-relaxed text-muted">{p.description}</p>}
+      {p.description && <p className={clsx("mt-2 text-sm leading-relaxed", blue ? "text-ink/80" : "text-muted")}>{p.description}</p>}
       <span className="mt-auto pt-6">
-        <span className="btn btn-outline min-h-[42px] w-full text-ink group-hover:bg-ink group-hover:text-ivory">
+        <span className={clsx("btn min-h-[42px] w-full", blue ? "btn-card" : "btn-outline text-ink group-hover:bg-ink group-hover:text-ivory")}>
           {cta} <span className="sr-only">on {p.platform_name} (opens in a new tab)</span>
         </span>
       </span>

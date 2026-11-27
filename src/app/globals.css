@@ -144,6 +144,10 @@
   .btn-pink { background: var(--color-pink); color: #fff; --btn-sweep: var(--color-ink); }
   .btn-outline { border: 1.5px solid currentColor; --btn-sweep: var(--color-ink); }
   .btn-outline:hover:not(:disabled) { color: var(--color-ivory); border-color: var(--color-ink); }
+  /* White button on a turquoise card; fills dark navy when the card or the button is hovered */
+  .btn-card { background: var(--color-paper); color: var(--color-ink); --btn-sweep: var(--color-ink); box-shadow: 0 8px 20px -12px rgb(14 31 61 / .45); }
+  .btn-card:hover:not(:disabled), .group:hover .btn-card, .group:focus-visible .btn-card { color: var(--color-ivory); }
+  .group:hover .btn-card::before, .group:focus-visible .btn-card::before { transform: translateY(0); }
   .btn-ghost-light { border: 1.5px solid rgb(251 247 239 / .55); color: var(--color-ivory); --btn-sweep: var(--color-ivory); }
   .btn-ghost-light:hover { color: var(--color-ink); border-color: var(--color-ivory); }
 
