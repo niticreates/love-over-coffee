@@ -172,7 +172,7 @@ test.describe("reservations", () => {
     expect(past.status()).toBe(409);
 
     await page.getByRole("link", { name: "View your booking" }).click();
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Awaiting confirmation");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/^Awaiting confirmation/);
     const guestUrl = page.url();
 
     const admin = await context.newPage();
@@ -186,7 +186,7 @@ test.describe("reservations", () => {
     await expect(admin.getByText("Rohan: confirmed")).toBeVisible();
 
     await page.goto(guestUrl);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Confirmed");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/^Confirmed/);
   });
 
   test("overbooking is blocked when capacity is reached", async ({ request }) => {

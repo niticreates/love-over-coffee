@@ -168,7 +168,7 @@ export function Checkout({ deliveryEnabled, taxNote, phone }: { deliveryEnabled:
     else setFormError(r.error.message);
   }
 
-  if (!hydrated) return <div className="h-96 animate-pulse bg-paper" />;
+  if (!hydrated) return <div className="h-96 animate-pulse rounded-[24px] bg-paper" />;
   if (!lines.length)
     return (
       <div className="py-20 text-center">
@@ -189,7 +189,7 @@ export function Checkout({ deliveryEnabled, taxNote, phone }: { deliveryEnabled:
                 return (
                   <button
                     key={m} type="button" role="radio" aria-checked={fulfilment === m} disabled={disabled} onClick={() => setFulfilment(m)}
-                    className={clsx("border p-5 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50", fulfilment === m ? "border-espresso bg-paper" : "border-oat")}
+                    className={clsx("rounded-[18px] border p-5 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50", fulfilment === m ? "border-espresso bg-paper" : "border-oat")}
                   >
                     <span className="font-display text-2xl">{m === "pickup" ? "Pickup" : "Delivery"}</span>
                     <span className="mt-1 block text-xs text-muted">{m === "pickup" ? "Collect from the café" : disabled ? "Not available online yet" : "To your address"}</span>
@@ -221,7 +221,7 @@ export function Checkout({ deliveryEnabled, taxNote, phone }: { deliveryEnabled:
         </div>
 
         <aside className="lg:col-span-5">
-          <div className="border border-oat bg-paper p-6 md:p-8 lg:sticky lg:top-28">
+          <div className="rounded-[24px] border border-oat bg-paper p-6 md:p-8 lg:sticky lg:top-28">
             <h2 className="text-3xl">Summary</h2>
             <ul className="mt-6 divide-y divide-oat">
               {lines.map((l) => (

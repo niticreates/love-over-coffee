@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OrderStatus } from "@/components/checkout/OrderStatus";
+import { PageHero } from "@/components/ui/PageHero";
 import { formatINR } from "@/lib/money";
 import { getStore } from "@/lib/store";
 
@@ -15,12 +16,16 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   if (!o) notFound();
   const paid = o.payment_status === "paid";
   return (
-    <div className="container-site max-w-3xl pt-32 pb-section md:pt-44">
-      <p className="eyebrow text-terracotta-ink">Order {o.reference}</p>
-      <h1 className="mt-5 text-display-md">{paid ? (isNew ? "Thank you — payment received." : "Your order") : "Payment not completed"}</h1>
-      {paid && o.status === "pending" && <p className="mt-4 max-w-prose text-muted">Your order has been sent to the café. You&apos;ll see it change to “Accepted” once the café confirms it{o.customer_email ? ", and we'll email you" : ""}.</p>}
+    <>
+    <PageHero
+      size="compact"
+      eyebrow={`Order ${o.reference}`}
+      title={paid ? (isNew ? <>Thank you — <em className="text-turquoise-deep">payment received</em><span className="text-pink">.</span></> : <>Your <em className="text-turquoise-deep">order</em><span className="text-pink">.</span></>) : <>Payment <em className="text-turquoise-deep">not completed</em><span className="text-pink">.</span></>}
+      intro={paid && o.status === "pending" ? <p>Your order has been sent to the café. You&apos;ll see it change to “Accepted” once the café confirms it{o.customer_email ? ", and we'll email you" : ""}.</p> : undefined}
+    />
+    <div className="container-site max-w-3xl pb-section">
       <OrderStatus token={token} initial={{ status: o.status, payment_status: o.payment_status, fulfilment: o.fulfilment }} />
-      <div className="mt-12 border border-oat bg-paper p-6 md:p-8">
+      <div className="mt-12 rounded-[24px] border border-oat bg-paper p-6 md:p-8">
         <ul className="divide-y divide-oat">
           {o.items.map((i, k) => (
             <li key={k} className="flex justify-between gap-4 py-3 text-sm">
@@ -43,5 +48,6 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
         <Link href="/menu" className="btn btn-outline">Back to menu</Link>
       </div>
     </div>
+    </>
   );
 }

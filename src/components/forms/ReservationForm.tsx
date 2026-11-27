@@ -67,7 +67,7 @@ export function ReservationForm({ maxGuests, maxDays, enabled, phone }: { maxGue
 
   if (done)
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="border border-oat bg-paper p-8 md:p-12" role="status">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-[24px] border border-oat bg-paper p-8 md:p-12" role="status">
         <p className="eyebrow text-terracotta-ink">Request received</p>
         <h2 className="mt-4 text-display-sm">Thank you — we&apos;ve got your request.</h2>
         <p className="mt-4 max-w-prose text-muted">Your table is <strong>not yet confirmed</strong>. The café will review it and confirm shortly. Keep your reference handy:</p>
@@ -110,7 +110,7 @@ export function ReservationForm({ maxGuests, maxDays, enabled, phone }: { maxGue
             {slots.map((s) => (
               <button
                 key={s.time} type="button" role="radio" aria-checked={time === s.time} disabled={!s.available} onClick={() => setTime(s.time)}
-                className={clsx("h-11 border text-sm tabular-nums transition-colors disabled:cursor-not-allowed disabled:text-muted/50 disabled:line-through", time === s.time ? "border-espresso bg-espresso text-ivory" : "border-oat bg-paper hover:border-walnut")}
+                className={clsx("h-11 rounded-full border text-sm tabular-nums transition-colors disabled:cursor-not-allowed disabled:text-muted/50 disabled:line-through", time === s.time ? "border-espresso bg-espresso text-ivory" : "border-oat bg-paper hover:border-walnut")}
               >
                 {fmt12(s.time)}
               </button>

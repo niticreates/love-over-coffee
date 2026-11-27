@@ -23,7 +23,7 @@ export function ContactForm() {
 
   if (state === "sent")
     return (
-      <div className="border border-oat bg-paper p-8">
+      <div className="rounded-[24px] border border-oat bg-paper p-8">
         <p className="font-display text-3xl">Thank you.</p>
         <p className="mt-3 text-muted">Your message has reached the café. We&apos;ll get back to you soon.</p>
       </div>

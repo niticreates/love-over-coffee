@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Mascot } from "@/components/ui/Mascot";
+import { ClosingCTA } from "@/components/ui/ClosingCTA";
+import { PageHero } from "@/components/ui/PageHero";
+import { Ticker } from "@/components/ui/Ticker";
 import { ImageReveal, Reveal } from "@/components/ui/Reveal";
 import { MEDIA, type Media } from "@/lib/media";
 import { pageMeta } from "@/lib/seo";
@@ -25,22 +27,14 @@ export default async function StoryPage() {
   const sections = settings.content.story_sections;
   return (
     <>
-      <header className="container-site grid gap-12 pt-36 pb-20 md:pt-44 lg:grid-cols-12 lg:items-end">
-        <div className="lg:col-span-7">
-          <p className="eyebrow text-turquoise-deep">Our story</p>
-          <h1 className="mt-6 text-display-lg text-balance">A place where every cup creates a moment <em className="text-turquoise-deep">worth remembering</em><span className="text-pink">.</span></h1>
-        </div>
-        <div className="relative lg:col-span-5">
-          <ImageReveal>
-            <div className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[24px]">
-              <Image src={MEDIA.storefrontCup.src} alt={MEDIA.storefrontCup.alt} fill priority sizes="(min-width:1024px) 38vw, 90vw" className="object-cover" style={{ objectPosition: MEDIA.storefrontCup.position }} />
-            </div>
-          </ImageReveal>
-          <div className="absolute -bottom-6 -left-4 grid h-28 w-28 place-items-center rounded-full bg-turquoise shadow-[var(--shadow-soft)] md:h-36 md:w-36">
-            <Mascot className="h-auto w-[45%]" />
-          </div>
-        </div>
-      </header>
+      <PageHero
+        eyebrow="Our story"
+        title={<>A place where every cup creates a moment <em className="text-turquoise-deep">worth remembering</em><span className="text-pink">.</span></>}
+        media={MEDIA.storefrontCup}
+        accent={MEDIA.latteArt}
+        intro={<p>Coffee, comfort food and a room worth staying in — on Scheme 113 in Vijay Nagar, Indore.</p>}
+      />
+      <Ticker words={["Coffee", "Conversations", "Comfort food", "Books on the wall", "Good company"]} />
       {sections.map((s, i) => {
         const media = SECTION_MEDIA[s.id] ?? FALLBACK[i % FALLBACK.length];
         const flip = i % 2 === 1;
@@ -61,15 +55,10 @@ export default async function StoryPage() {
           </section>
         );
       })}
-      <section className="bg-turquoise py-section text-ink">
-        <div className="container-site flex flex-col items-start justify-between gap-10 md:flex-row md:items-end">
-          <h2 className="max-w-3xl text-display-lg">Come and write the <em>next chapter</em> with us<span className="text-pink">.</span></h2>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/menu" className="btn btn-dark">See the menu</Link>
-            <Link href="/reserve" className="btn btn-outline">Reserve a table</Link>
-          </div>
-        </div>
-      </section>
+      <ClosingCTA eyebrow="The next chapter" title={<>Come and write it <em>with us</em><span className="text-pink">.</span></>}>
+        <Link href="/menu" className="btn btn-dark">See the menu</Link>
+        <Link href="/reserve" className="btn btn-outline">Reserve a table</Link>
+      </ClosingCTA>
     </>
   );
 }

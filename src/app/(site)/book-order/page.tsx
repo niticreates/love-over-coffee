@@ -4,7 +4,11 @@ import { Hours } from "@/components/layout/Hours";
 import { MapEmbed } from "@/components/layout/MapEmbed";
 import { PlatformCard } from "@/components/PlatformCard";
 import { WhatsAppIcon } from "@/components/ui/icons";
+import { Mascot } from "@/components/ui/Mascot";
+import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
+import { Ticker } from "@/components/ui/Ticker";
+import { MEDIA } from "@/lib/media";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
@@ -29,38 +33,38 @@ export default async function BookOrderPage() {
   const direct = settings.commerce.ordering_enabled;
 
   return (
-    <div className="pt-32 md:pt-44">
-      <header className="container-site grid gap-8 md:grid-cols-12 md:items-end">
-        <div className="md:col-span-8">
-          <p className="eyebrow text-terracotta-ink">Book &amp; Order</p>
-          <h1 className="mt-5 text-display-lg">Your Coffee Experience, <em className="text-turquoise-deep">Your Way</em><span className="text-pink">.</span></h1>
-        </div>
-        <p className="text-lg leading-relaxed text-muted md:col-span-4">Reserve your table or order your favourites through your preferred platform.</p>
-      </header>
+    <div>
+      <PageHero
+        eyebrow="Book & Order"
+        title={<>Your Coffee Experience, <em className="text-turquoise-deep">Your Way</em><span className="text-pink">.</span></>}
+        media={MEDIA.storefront}
+        accent={MEDIA.latteArt}
+        intro={<p>Reserve your table or order your favourites through your preferred platform.</p>}
+      />
 
       {/* Three ways in */}
-      <div className="container-site mt-14"><nav aria-label="Ways to visit" className="grid gap-px overflow-hidden rounded-[24px] border border-oat bg-oat sm:grid-cols-3">
+      <div className="container-site"><nav aria-label="Ways to visit" className="grid gap-px overflow-hidden rounded-[28px] bg-navy/60 sm:grid-cols-3">
         {[
           { n: "01", t: "Book a table", d: reserve.length ? "Instantly on a booking platform, or request one from us." : "Request one directly from the café.", href: "#reserve" },
           { n: "02", t: "Order", d: direct ? "Pickup from our own website, or delivery via partners." : "Delivery and takeaway via our partners.", href: "#order" },
           { n: "03", t: "Talk to us", d: "WhatsApp or call the café — staff reply and confirm.", href: "#visit" },
         ].map((x) => (
-          <a key={x.n} href={x.href} className="group bg-ivory p-6 transition-colors hover:bg-paper">
-            <span className="font-display text-sm italic text-terracotta-ink">{x.n}</span>
-            <span className="mt-2 block font-display text-2xl group-hover:italic">{x.t}</span>
-            <span className="mt-1 block text-sm text-muted">{x.d}</span>
+          <a key={x.n} href={x.href} className="group bg-navy p-6 text-ivory transition-colors hover:bg-ink md:p-8">
+            <span className="font-display text-sm italic text-turquoise">{x.n}</span>
+            <span className="mt-2 block font-display text-3xl transition-transform duration-500 group-hover:translate-x-1 group-hover:italic">{x.t} <span className="text-turquoise">→</span></span>
+            <span className="mt-2 block text-sm text-ivory/70">{x.d}</span>
           </a>
         ))}
       </nav></div>
 
       {/* A. Reserve */}
       <section id="reserve" className="container-site scroll-mt-28 py-section">
-        <Reveal><SectionHeading index="A" eyebrow="Reserve your table" title={<>A table, <em>held for you.</em></>} /></Reveal>
+        <Reveal><SectionHeading index="A" eyebrow="Reserve your table" title={<>A table, <em className="text-turquoise-deep">held for you.</em></>} /></Reveal>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {reserve.map((p) => <Reveal key={p.id}><PlatformCard p={p} cta="Book a Table" /></Reveal>)}
           <Reveal>
             <Link href="/reserve" className="group flex h-full flex-col rounded-[22px] border border-oat bg-paper p-6 transition-[border-color,box-shadow] duration-300 hover:border-walnut/50 hover:shadow-soft md:p-7">
-              <span className="font-display grid h-12 w-12 place-items-center rounded-[12px] bg-turquoise text-lg italic text-ink" aria-hidden>L</span>
+              <span className="grid h-12 w-12 place-items-center rounded-[12px] bg-turquoise" aria-hidden><Mascot className="h-auto w-[55%]" title={null} animated={false} /></span>
               <h3 className="mt-6 text-3xl">Request with the café</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">Send a request on our website. Our team confirms it with you.</p>
               <span className="mt-auto pt-6"><span className="btn btn-primary min-h-[42px] w-full">Request a Table</span></span>
@@ -80,16 +84,16 @@ export default async function BookOrderPage() {
       </section>
 
       {/* B. Order */}
-      <section id="order" className="scroll-mt-28 border-t border-oat bg-paper py-section">
+      <section id="order" className="scroll-mt-28 bg-navy py-section text-ivory">
         <div className="container-site">
-          <Reveal><SectionHeading index="B" eyebrow="Order your favourites" title={<>Delivered, <em>or ready to collect.</em></>} /></Reveal>
+          <Reveal><SectionHeading tone="light" index="B" eyebrow="Order your favourites" title={<>Delivered, <em className="text-turquoise">or ready to collect.</em></>} /></Reveal>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {direct && (
               <Reveal>
-                <Link href="/menu" className="flex h-full flex-col rounded-[22px] border border-ink bg-ivory p-6 md:p-7">
-                  <span className="font-display grid h-12 w-12 place-items-center rounded-[12px] bg-ink text-lg italic text-ivory" aria-hidden>L</span>
+                <Link href="/menu" className="flex h-full flex-col rounded-[22px] bg-turquoise p-6 text-ink md:p-7">
+                  <span className="grid h-12 w-12 place-items-center rounded-[12px] bg-ivory" aria-hidden><Mascot className="h-auto w-[55%]" title={null} animated={false} /></span>
                   <h3 className="mt-6 text-3xl">Order from us</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">Order and pay on our website for pickup — straight to our kitchen.</p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink/80">Order and pay on our website for pickup — straight to our kitchen.</p>
                   <span className="mt-auto pt-6"><span className="btn btn-dark min-h-[42px] w-full">Order Now</span></span>
                 </Link>
               </Reveal>
@@ -97,17 +101,19 @@ export default async function BookOrderPage() {
             {order.map((p) => <Reveal key={p.id}><PlatformCard p={p} cta="Order Now" /></Reveal>)}
           </div>
           {waOrder && (
-            <p className="mt-8 text-sm text-muted">
-              Questions about an order or a large order? <a href={waOrder} target="_blank" rel="noopener noreferrer" className="link-underline text-espresso">Ask us on WhatsApp</a>.
+            <p className="mt-8 text-sm text-ivory/70">
+              Questions about an order or a large order? <a href={waOrder} target="_blank" rel="noopener noreferrer" className="link-underline text-ivory">Ask us on WhatsApp</a>.
               {" "}Orders placed with Zomato or Swiggy are handled by those platforms.
             </p>
           )}
         </div>
       </section>
 
+      <Ticker words={["Book a table", "Order online", "Zomato", "Swiggy", "District", "WhatsApp us"]} />
+
       {/* C. Location */}
-      <section id="visit" className="container-site scroll-mt-28 py-section">
-        <div className="grid gap-12 lg:grid-cols-12">
+      <section id="visit" className="scroll-mt-28 bg-cream py-section">
+        <div className="container-site grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Reveal>
               <SectionHeading index="C" eyebrow="Discover our location" title="Find your way to us." />

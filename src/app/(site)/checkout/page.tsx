@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Checkout } from "@/components/checkout/Checkout";
+import { PageHero } from "@/components/ui/PageHero";
 import { getSiteData } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
@@ -11,10 +12,11 @@ export default async function CheckoutPage() {
   const c = settings.commerce;
   const taxNote = c.tax_bps == null ? "Taxes" : `GST ${(c.tax_bps / 100).toFixed(c.tax_bps % 100 ? 1 : 0)}%${c.tax_inclusive ? " (included)" : ""}`;
   return (
-    <div className="container-site pt-28 pb-section md:pt-36">
-      <p className="eyebrow text-terracotta-ink">Checkout</p>
-      <h1 className="mt-4 text-display-md">Almost there.</h1>
-      <div className="mt-12">
+    <>
+    <PageHero size="compact" eyebrow="Checkout" title={<>Almost <em className="text-turquoise-deep">there</em><span className="text-pink">.</span></>} intro={<p>Pickup from the café on Scheme 113. Nothing is charged until you confirm payment.</p>} />
+    <div className="bg-cream py-14 md:py-20">
+    <div className="container-site pb-section">
+      <div>
         {c.ordering_enabled ? (
           <Checkout deliveryEnabled={c.delivery_enabled} taxNote={taxNote} phone={settings.business.phone_display} />
         ) : (
@@ -25,5 +27,7 @@ export default async function CheckoutPage() {
         )}
       </div>
     </div>
+    </div>
+    </>
   );
 }
