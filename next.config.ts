@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: supabaseHost ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }] : [],
   },
+  async redirects() {
+    return [{ source: "/story", destination: "/our-story", permanent: true }];
+  },
   async headers() {
     return [
       {

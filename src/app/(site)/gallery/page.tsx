@@ -3,17 +3,18 @@ import { ClosingCTA } from "@/components/ui/ClosingCTA";
 import { PageHero } from "@/components/ui/PageHero";
 import { Ticker } from "@/components/ui/Ticker";
 import { MEDIA } from "@/lib/media";
-import { pageMeta } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 
 export const revalidate = 300;
-export const metadata = pageMeta("Gallery", "Inside Love Over Coffee, Vijay Nagar: interiors, coffee, food, desserts and good times.", "/gallery");
+export const metadata = pageMeta("Gallery", "Photos of Love Over Coffee in Vijay Nagar, Indore: the navy-and-blush dining room, the coffee counter, latte art, cold coffees, nachos, pizza and garlic bread.", "/gallery");
 
 export default async function GalleryPage() {
   const { gallery, settings } = await getSiteData();
   const hasPhotos = gallery.some((g) => g.url);
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd([["Gallery", "/gallery"]])} />
       <PageHero
         eyebrow="Gallery"
         title={<>Moments, <em className="text-turquoise-deep">poured</em><span className="text-pink">.</span></>}

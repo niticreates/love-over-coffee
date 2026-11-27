@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces, Quicksand } from "next/font/google";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { ToastProvider } from "@/components/ui/Toast";
-import { JsonLd, localBusinessJsonLd, SITE_URL } from "@/lib/seo";
+import { JsonLd, localBusinessJsonLd, OG_IMAGE, SITE_URL, websiteJsonLd } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 import "./globals.css";
 
@@ -13,14 +13,16 @@ const brand = Quicksand({ subsets: ["latin"], weight: ["700"], variable: "--font
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "Love Over Coffee — Café in Vijay Nagar, Indore", template: "%s · Love Over Coffee, Vijay Nagar" },
-  description: "Coffee, frappes, comfort food and board games at Love Over Coffee, Scheme 113, Vijay Nagar, Indore. Order online for pickup or reserve a table.",
+  description: "Love Over Coffee is a café in Scheme 113, Vijay Nagar, Indore for coffee, frappes, comfort food and board games. Order online for pickup or reserve a table.",
+  keywords: ["café in Vijay Nagar", "cafe in Indore", "coffee shop Vijay Nagar Indore", "Love Over Coffee", "cafe near Scheme 113", "frappe Indore", "board game cafe Indore"],
+  category: "Café",
   applicationName: "Love Over Coffee",
   formatDetection: { telephone: true },
   openGraph: {
     siteName: "Love Over Coffee — Vijay Nagar",
     locale: "en_IN",
     type: "website",
-    images: [{ url: "/images/exterior/storefront-signage.webp", width: 765, height: 1020, alt: "The Love Over Coffee storefront in Vijay Nagar, Indore" }],
+    images: [OG_IMAGE],
   },
   twitter: { card: "summary_large_image" },
 };
@@ -28,14 +30,15 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#FBF7EF", width: "device-width", initialScale: 1 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { settings } = await getSiteData();
+  const { settings, platforms } = await getSiteData();
   return (
     <html lang="en-IN" className={`${display.variable} ${sans.variable} ${brand.variable}`}>
       <body>
         <ToastProvider>
           <CartProvider>{children}</CartProvider>
         </ToastProvider>
-        <JsonLd data={localBusinessJsonLd(settings)} />
+        <JsonLd data={localBusinessJsonLd(settings, platforms)} />
+        <JsonLd data={websiteJsonLd()} />
       </body>
     </html>
   );

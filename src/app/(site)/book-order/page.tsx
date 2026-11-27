@@ -10,7 +10,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Ticker } from "@/components/ui/Ticker";
 import { MEDIA } from "@/lib/media";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { pageMeta } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
 
@@ -31,9 +31,22 @@ export default async function BookOrderPage() {
   const waOrder = whatsappLink(b, "ordering");
   const waGroup = whatsappLink(b, "group");
   const direct = settings.commerce.ordering_enabled;
+  const names = (list: typeof platforms) => list.map((p) => p.platform_name).join(" or ");
+  const address = `${b.address_lines.join(", ")}, ${b.city} ${b.postal_code}`;
+  const faqs = [
+    {
+      q: "How do I reserve a table at Love Over Coffee, Vijay Nagar?",
+      a: `${reserve.length ? `Book on ${names(reserve)}, ` : ""}send a request through the Reserve a Table page on this website${waReserve ? ", or message the café on WhatsApp" : ""}. A request is confirmed once café staff confirm it.`,
+    },
+    ...(waReserve ? [{ q: "Is a WhatsApp message a confirmed booking?", a: "No. A WhatsApp message is an enquiry. Your table or order is confirmed only when café staff reply to confirm it." }] : []),
+    ...(direct ? [{ q: "Can I order online for pickup?", a: "Yes. Add items from the menu on this website, pay at checkout and collect your order from the café." }] : []),
+    ...(order.length ? [{ q: "Does Love Over Coffee deliver?", a: `Delivery is available through ${names(order)}. Orders placed there are handled by those platforms.` }] : []),
+    { q: "Where is Love Over Coffee in Indore?", a: `At ${address}, in Vijay Nagar. Call ${b.phone_display} for directions.` },
+  ];
 
   return (
     <div>
+      <JsonLd data={breadcrumbJsonLd([["Book & Order", "/book-order"]])} />
       <PageHero
         eyebrow="Book & Order"
         title={<>Your Coffee Experience, <em className="text-turquoise-deep">Your Way</em><span className="text-pink">.</span></>}
@@ -131,6 +144,23 @@ export default async function BookOrderPage() {
           </div>
           <Reveal className="lg:col-span-7"><div className="h-full overflow-hidden rounded-[24px] border border-oat"><MapEmbed query={b.maps_query} className="aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[460px]" /></div></Reveal>
         </div>
+      </section>
+
+      {/* D. Questions people ask — visible answers, mirrored in FAQPage structured data */}
+      <section id="faq" className="container-site scroll-mt-28 py-section">
+        <Reveal><SectionHeading index="D" eyebrow="Good to know" title={<>Booking &amp; ordering, <em className="text-turquoise-deep">answered.</em></>} /></Reveal>
+        <div className="mt-10 max-w-4xl divide-y divide-oat border-y border-oat">
+          {faqs.map((f, i) => (
+            <details key={f.q} data-aos="fade-up" data-aos-delay={String(i * 70)} className="group py-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-2xl text-ink">
+                {f.q}
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-turquoise text-ink transition-transform duration-300 group-open:rotate-45" aria-hidden>+</span>
+              </summary>
+              <p className="mt-3 max-w-prose leading-relaxed text-muted">{f.a}</p>
+            </details>
+          ))}
+        </div>
+        <JsonLd data={{ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) }} />
       </section>
     </div>
   );

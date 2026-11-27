@@ -10,12 +10,12 @@ import { whatsappLink } from "@/lib/whatsapp";
 import { getSiteData } from "@/lib/site";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const { settings, categories } = await getSiteData();
+  const { settings, categories, products } = await getSiteData();
   return (
     <>
       <Nav phone={settings.business.phone_e164} announcement={settings.content.announcement} />
       <main id="main">{children}</main>
-      <Footer settings={settings} categories={categories} />
+      <Footer settings={settings} categories={categories.filter((c) => products.some((p) => p.category_id === c.id && p.is_available))} />
       <MobileActionBar phone={settings.business.phone_e164} />
       <WhatsAppFab href={whatsappLink(settings.business, "general")} />
       <CartDrawer orderingEnabled={settings.commerce.ordering_enabled} />

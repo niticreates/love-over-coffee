@@ -18,7 +18,7 @@ test.describe("public site", () => {
   for (const width of [360, 390, 430, 768, 1024, 1440, 1920]) {
     test(`no horizontal overflow at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
-      for (const path of ["/", "/menu", "/story", "/gallery", "/contact", "/reserve", "/book-order", "/checkout"]) {
+      for (const path of ["/", "/menu", "/our-story", "/gallery", "/contact", "/reserve", "/book-order", "/checkout"]) {
         await page.goto(path);
         await noOverflow(page);
       }
@@ -34,7 +34,7 @@ test.describe("public site", () => {
       await expect(page.locator("#mobile-menu")).toBeVisible({ timeout: 1000 });
     }).toPass({ timeout: 15000 });
     await page.locator("#mobile-menu").getByRole("link", { name: "Our Story" }).click();
-    await expect(page).toHaveURL(/\/story$/);
+    await expect(page).toHaveURL(/\/our-story$/);
     const bar = page.getByRole("navigation", { name: "Quick actions" });
     await expect(bar.getByRole("link", { name: "Call" })).toHaveAttribute("href", "tel:+919329697769");
   });
@@ -148,12 +148,14 @@ test.describe("ordering", () => {
 
 test.describe("reservations", () => {
   test("request → duplicate guard → admin approves → guest sees confirmed", async ({ page, context }) => {
-    await page.goto("/reserve");
+    test.setTimeout(60_000); // spans guest + admin pages; first-compile in dev mode can exceed 30s
+    await page.goto("/reserve", { waitUntil: "networkidle" }); // let the form hydrate before typing
     const tomorrow = await page.evaluate(() => {
       const d = new Date(Date.now() + 330 * 60_000 + 86_400_000);
       return d.toISOString().slice(0, 10);
     });
     await page.getByLabel("Date").fill(tomorrow);
+    await expect(page.getByLabel("Date")).toHaveValue(tomorrow);
     await page.getByLabel("Guests").selectOption("4");
     await page.getByRole("radio", { name: "7:00 pm" }).click();
     await page.getByLabel("Name").fill("Rohan");

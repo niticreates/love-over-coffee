@@ -10,7 +10,7 @@ import { Wordmark } from "@/components/ui/Wordmark";
 
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/story", label: "Our Story" },
+  { href: "/our-story", label: "Our Story" },
   { href: "/menu", label: "Menu" },
   { href: "/book-order", label: "Book & Order" },
   { href: "/gallery", label: "Gallery" },

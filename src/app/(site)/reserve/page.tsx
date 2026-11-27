@@ -6,7 +6,7 @@ import { WhatsAppIcon } from "@/components/ui/icons";
 import { PageHero } from "@/components/ui/PageHero";
 import { Ticker } from "@/components/ui/Ticker";
 import { MEDIA } from "@/lib/media";
-import { pageMeta } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
 
@@ -22,6 +22,7 @@ export default async function ReservePage() {
   const lastSpace = title.lastIndexOf(" ");
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd([["Reserve a Table", "/reserve"]])} />
       <PageHero
         eyebrow="Reservations"
         title={<>{title.slice(0, lastSpace)} <em className="text-turquoise-deep">{title.slice(lastSpace + 1)}</em><span className="text-pink">.</span></>}

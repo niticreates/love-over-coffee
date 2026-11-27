@@ -5,11 +5,11 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Ticker } from "@/components/ui/Ticker";
 import { ImageReveal, Reveal } from "@/components/ui/Reveal";
 import { MEDIA, type Media } from "@/lib/media";
-import { pageMeta } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 
 export const revalidate = 300;
-export const metadata = pageMeta("Our Story", "The Love Over Coffee experience in Vijay Nagar, Indore: coffee, comforting food, a navy-and-blush dining room and a wall of books.", "/story");
+export const metadata = pageMeta("Our Story", "The Love Over Coffee experience in Vijay Nagar, Indore: coffee, comforting food, a navy-and-blush dining room and a wall of books.", "/our-story");
 
 /** Photograph for each story section id; unknown ids fall back by position. */
 const SECTION_MEDIA: Record<string, Media> = {
@@ -27,6 +27,7 @@ export default async function StoryPage() {
   const sections = settings.content.story_sections;
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd([["Our Story", "/our-story"]])} />
       <PageHero
         eyebrow="Our story"
         title={<>A place where every cup creates a moment <em className="text-turquoise-deep">worth remembering</em><span className="text-pink">.</span></>}

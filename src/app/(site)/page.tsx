@@ -16,6 +16,9 @@ import { MEDIA, type Media } from "@/lib/media";
 import { toPublic } from "@/lib/public";
 import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export const revalidate = 60;
 
@@ -77,7 +80,7 @@ export default async function Home() {
                 </li>
               ))}
             </ul>
-            <Link href="/story" className="btn btn-dark mt-9">Discover our story</Link>
+            <Link href="/our-story" className="btn btn-dark mt-9">Discover our story</Link>
           </Reveal>
         </div>
       </section>

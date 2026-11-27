@@ -5,7 +5,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Ticker } from "@/components/ui/Ticker";
 import { MEDIA } from "@/lib/media";
 import { toPublic } from "@/lib/public";
-import { pageMeta } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMeta, SITE_URL } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 
 export const revalidate = 60;
@@ -18,6 +18,31 @@ export default async function MenuPage() {
   const withItems = categories.filter((cat) => products.some((p) => p.category_id === cat.id));
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd([["Menu", "/menu"]])} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Menu",
+          "@id": `${SITE_URL}/menu#menu`,
+          name: "Love Over Coffee menu — Vijay Nagar, Indore",
+          url: `${SITE_URL}/menu`,
+          inLanguage: "en-IN",
+          hasMenuSection: withItems.map((cat) => ({
+            "@type": "MenuSection",
+            name: cat.name,
+            hasMenuItem: products
+              .filter((p) => p.category_id === cat.id)
+              .map((p) => ({
+                "@type": "MenuItem",
+                name: p.name,
+                url: `${SITE_URL}/menu/${p.slug}`,
+                ...(p.description ? { description: p.description } : {}),
+                // Prices only once the café has confirmed them — never sample prices.
+                ...(p.price != null && !flags.samplePrices ? { offers: { "@type": "Offer", price: (p.price / 100).toFixed(2), priceCurrency: "INR" } } : {}),
+              })),
+          })),
+        }}
+      />
       <PageHero
         eyebrow="The menu"
         title={<>Coffee, comfort <em className="text-turquoise-deep">&amp; everything after</em><span className="text-pink">.</span></>}

@@ -10,7 +10,7 @@ import { Photo } from "@/components/ui/Photo";
 import { ImageReveal, Reveal } from "@/components/ui/Reveal";
 import { Ticker } from "@/components/ui/Ticker";
 import { VegMark } from "@/components/ui/VegMark";
-import { JsonLd, pageMeta, SITE_URL } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMeta, SITE_URL } from "@/lib/seo";
 import { toPublic } from "@/lib/public";
 import { getSiteData } from "@/lib/site";
 import { toneForCategory } from "@/lib/tones";
@@ -75,6 +75,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </section>
       )}
       <JsonLd data={ld} />
+      <JsonLd data={breadcrumbJsonLd([["Menu", "/menu"], ...(cat ? [[cat.name, `/menu#${cat.slug}`] as [string, string]] : []), [p.name, `/menu/${p.slug}`]])} />
     </div>
     <ClosingCTA eyebrow="While you're here" title={<>Make it a <em>table for two</em><span className="text-pink">.</span></>} />
     </>

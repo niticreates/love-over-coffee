@@ -7,7 +7,7 @@ import { ClosingCTA } from "@/components/ui/ClosingCTA";
 import { PageHero } from "@/components/ui/PageHero";
 import { Ticker } from "@/components/ui/Ticker";
 import { MEDIA } from "@/lib/media";
-import { JsonLd, pageMeta } from "@/lib/seo";
+import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { whatsappLink } from "@/lib/whatsapp";
 import { getSiteData } from "@/lib/site";
 
@@ -29,6 +29,7 @@ export default async function ContactPage() {
   ];
   return (
     <div>
+      <JsonLd data={breadcrumbJsonLd([["Contact", "/contact"]])} />
       <PageHero
         eyebrow="Contact"
         title={<>Come say <em className="text-turquoise-deep">hello</em><span className="text-pink">.</span></>}
