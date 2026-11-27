@@ -1,12 +1,18 @@
 import clsx from "clsx";
+import { Mascot } from "./Mascot";
 
-/** Typographic wordmark. Replace with the café's official logo file once supplied (public/brand/logo.svg). */
-export function Wordmark({ className, stacked }: { className?: string; stacked?: boolean }) {
+/**
+ * Wordmark set to echo the storefront lettering — rounded lowercase with the turquoise
+ * "l", "O" and "C" — beside the cup mascot. Replace with the official logo file when supplied.
+ */
+export function Wordmark({ className, mascot = true, tone = "dark" }: { className?: string; mascot?: boolean; stacked?: boolean; tone?: "dark" | "light" }) {
+  const accent = tone === "dark" ? "text-turquoise-deep" : "text-turquoise";
   return (
-    <span className={clsx("font-display inline-flex items-baseline gap-[.35em] leading-none whitespace-nowrap", stacked && "flex-col items-start gap-0", className)}>
-      <span className="tracking-[.28em] text-[1em] font-semibold">LOVE</span>
-      <span className="italic text-[1.05em] font-normal tracking-normal">over</span>
-      <span className="tracking-[.28em] text-[1em] font-semibold">COFFEE</span>
+    <span className={clsx("font-brand inline-flex items-center gap-[.45em] leading-none whitespace-nowrap tracking-[-.01em]", className)}>
+      {mascot && <Mascot className="h-[1.9em] w-auto shrink-0" title={null} />}
+      <span className="text-[1.35em] font-bold">
+        <span className={accent}>l</span>ove<span className={accent}>O</span>ver<span className={accent}>C</span>offee<span className="text-pink">.</span>
+      </span>
     </span>
   );
 }

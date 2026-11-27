@@ -1,6 +1,9 @@
 "use client";
 import clsx from "clsx";
 import { Search, X } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import Image from "next/image";
+import { CATEGORY_MEDIA } from "@/lib/media";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { Category } from "@/lib/types";
 import { ProductRow } from "./ProductRow";
@@ -15,6 +18,7 @@ export function MenuBrowser({ categories, products, orderingEnabled, sample }: {
   const q = useDeferredValue(query);
   const anyVegKnown = products.some((p) => p.is_veg != null);
   const barRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     const hash = decodeURIComponent(location.hash.slice(1));
@@ -36,15 +40,15 @@ export function MenuBrowser({ categories, products, orderingEnabled, sample }: {
 
   return (
     <div>
-      <div ref={barRef} className="sticky top-[60px] z-30 -mx-[var(--spacing-gutter)] border-b border-oat bg-ivory/95 px-[var(--spacing-gutter)] py-4 backdrop-blur-md">
+      <div ref={barRef} className="sticky top-[68px] z-30 -mx-[var(--spacing-gutter)] border-b border-oat bg-ivory/95 px-[var(--spacing-gutter)] py-4 backdrop-blur-md">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
           <label className="relative block lg:w-80">
             <span className="sr-only">Search the menu</span>
             <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
-            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search coffee, pasta, frappe…" className="input pl-11 pr-10" />
+            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search coffee, pasta, frappe…" className="input rounded-full pl-11 pr-10" />
             {query && <button onClick={() => setQuery("")} className="absolute right-2 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center" aria-label="Clear search"><X size={14} /></button>}
           </label>
-          <div className="-mx-[var(--spacing-gutter)] flex gap-2 overflow-x-auto px-[var(--spacing-gutter)] lg:mx-0 lg:flex-1 lg:px-0" role="toolbar" aria-label="Filter by category">
+          <div className="isolate -mx-[var(--spacing-gutter)] flex gap-2 overflow-x-auto px-[var(--spacing-gutter)] lg:mx-0 lg:flex-1 lg:px-0" role="toolbar" aria-label="Filter by category">
             {[{ id: "all", name: "All", slug: "" }, ...categories.filter((c) => counts[c.id])].map((c) => (
               <button
                 key={c.id}
@@ -53,9 +57,10 @@ export function MenuBrowser({ categories, products, orderingEnabled, sample }: {
                   setActive(c.id);
                   history.replaceState(null, "", c.slug ? `#${c.slug}` : location.pathname);
                 }}
-                className={clsx("shrink-0 whitespace-nowrap border px-4 py-2 text-[13px] transition-colors", active === c.id ? "border-espresso bg-espresso text-ivory" : "border-oat hover:border-walnut")}
+                className={clsx("relative shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-[13px] font-medium transition-colors", active === c.id ? "border-ink text-ivory" : "border-oat hover:border-ink")}
               >
-                {c.name}
+                {active === c.id && <motion.span layoutId="menu-chip" className="absolute inset-0 -z-10 rounded-full bg-ink" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
+                <span className="relative">{c.name}</span>
               </button>
             ))}
           </div>
@@ -74,17 +79,35 @@ export function MenuBrowser({ categories, products, orderingEnabled, sample }: {
           <button className="btn btn-outline mt-6" onClick={() => { setQuery(""); setActive("all"); setVegOnly(false); }}>Clear filters</button>
         </div>
       ) : (
-        groups.map(({ c, items }) => (
-          <section key={c.id} id={c.slug} className="scroll-mt-40 py-14 first:pt-10" aria-labelledby={`h-${c.slug}`}>
-            <div className="mb-8 flex items-baseline justify-between gap-6 border-b border-espresso/80 pb-4">
-              <h2 id={`h-${c.slug}`} className="text-4xl md:text-5xl">{c.name}</h2>
-              <span className="eyebrow text-muted">{items.length} {items.length === 1 ? "item" : "items"}</span>
-            </div>
-            <ul className="grid gap-x-12 gap-y-2 md:grid-cols-2">
-              {items.map((p) => <ProductRow key={p.id} product={p} orderingEnabled={orderingEnabled} sample={sample} />)}
-            </ul>
-          </section>
-        ))
+        <AnimatePresence mode="popLayout" initial={false}>
+          {groups.map(({ c, items }, gi) => {
+            const media = CATEGORY_MEDIA[c.id];
+            return (
+              <motion.section
+                key={c.id} id={c.slug} layout={!reduce} className="scroll-mt-40 border-b border-oat py-14 first:pt-10 last:border-0" aria-labelledby={`h-${c.slug}`}
+                initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
+                  <div className="lg:col-span-4">
+                    <div className="lg:sticky lg:top-48">
+                      <p className="font-display text-sm italic text-pink">{String(gi + 1).padStart(2, "0")}</p>
+                      <h2 id={`h-${c.slug}`} className="mt-1 text-[clamp(2.4rem,1.6rem+2.6vw,3.6rem)]">{c.name}</h2>
+                      <p className="eyebrow mt-3 text-muted">{items.length} {items.length === 1 ? "item" : "items"}</p>
+                      {media && (
+                        <div className="relative mt-6 hidden aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[22px] lg:block">
+                          <Image src={media.src} alt={media.alt} fill sizes="30vw" className="object-cover" style={{ objectPosition: media.position }} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <ul className="grid gap-x-10 sm:grid-cols-2 lg:col-span-8">
+                    {items.map((p) => <ProductRow key={p.id} product={p} orderingEnabled={orderingEnabled} sample={sample} />)}
+                  </ul>
+                </div>
+              </motion.section>
+            );
+          })}
+        </AnimatePresence>
       )}
     </div>
   );

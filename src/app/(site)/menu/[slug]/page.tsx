@@ -41,7 +41,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <span aria-current="page" className="text-espresso">{p.name}</span>
       </nav>
       <div className="mt-10 grid gap-12 md:grid-cols-12">
-        <Photo src={p.image_url} alt={p.image_alt ?? p.name} label={p.name} tone={toneForCategory(p.category_id)} priority className="aspect-[4/5] md:col-span-6" sizes="(min-width:768px) 50vw, 100vw" />
+        <Photo src={p.image_url} alt={p.image_alt ?? p.name} label={p.name} tone={toneForCategory(p.category_id)} priority shape="arch" className="aspect-[4/5] md:col-span-6" sizes="(min-width:768px) 50vw, 100vw" />
         <div className="md:col-span-5 md:col-start-8 md:self-center">
           <p className="eyebrow text-terracotta-ink">{cat?.name}</p>
           <h1 className="mt-4 flex items-center gap-3 text-display-md">{p.name} <VegMark veg={p.is_veg} /></h1>

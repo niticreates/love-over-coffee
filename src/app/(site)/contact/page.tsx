@@ -27,7 +27,7 @@ export default async function ContactPage() {
     <div className="pt-32 md:pt-44">
       <div className="container-site">
         <p className="eyebrow text-terracotta-ink">Contact</p>
-        <h1 className="mt-5 text-display-lg">Come say <em>hello.</em></h1>
+        <h1 className="mt-5 text-display-lg">Come say <em className="text-turquoise-deep">hello</em><span className="text-pink">.</span></h1>
       </div>
       <div className="container-site mt-16 grid gap-14 lg:grid-cols-12">
         <div className="space-y-10 lg:col-span-5">
@@ -45,7 +45,7 @@ export default async function ContactPage() {
             <Hours business={b} className="mt-4 max-w-sm text-muted" />
           </div>
         </div>
-        <MapEmbed query={b.maps_query} className="aspect-[4/3] lg:col-span-7" />
+        <div className="overflow-hidden rounded-[24px] border border-oat lg:col-span-7"><MapEmbed query={b.maps_query} className="aspect-[4/3] h-full" /></div>
       </div>
       <div className="container-site grid gap-14 py-section lg:grid-cols-12">
         <section className="lg:col-span-5" aria-labelledby="msg">

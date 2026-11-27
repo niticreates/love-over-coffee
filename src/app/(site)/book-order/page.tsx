@@ -33,13 +33,13 @@ export default async function BookOrderPage() {
       <header className="container-site grid gap-8 md:grid-cols-12 md:items-end">
         <div className="md:col-span-8">
           <p className="eyebrow text-terracotta-ink">Book &amp; Order</p>
-          <h1 className="mt-5 text-display-lg">Your Coffee Experience, <em>Your Way.</em></h1>
+          <h1 className="mt-5 text-display-lg">Your Coffee Experience, <em className="text-turquoise-deep">Your Way</em><span className="text-pink">.</span></h1>
         </div>
         <p className="text-lg leading-relaxed text-muted md:col-span-4">Reserve your table or order your favourites through your preferred platform.</p>
       </header>
 
       {/* Three ways in */}
-      <div className="container-site mt-14"><nav aria-label="Ways to visit" className="grid gap-px overflow-hidden border border-oat bg-oat sm:grid-cols-3">
+      <div className="container-site mt-14"><nav aria-label="Ways to visit" className="grid gap-px overflow-hidden rounded-[24px] border border-oat bg-oat sm:grid-cols-3">
         {[
           { n: "01", t: "Book a table", d: reserve.length ? "Instantly on a booking platform, or request one from us." : "Request one directly from the café.", href: "#reserve" },
           { n: "02", t: "Order", d: direct ? "Pickup from our own website, or delivery via partners." : "Delivery and takeaway via our partners.", href: "#order" },
@@ -59,8 +59,8 @@ export default async function BookOrderPage() {
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {reserve.map((p) => <Reveal key={p.id}><PlatformCard p={p} cta="Book a Table" /></Reveal>)}
           <Reveal>
-            <Link href="/reserve" className="group flex h-full flex-col border border-oat bg-paper p-6 transition-[border-color,box-shadow] duration-300 hover:border-walnut/50 hover:shadow-soft md:p-7">
-              <span className="font-display grid h-12 w-12 place-items-center rounded-[10px] bg-terracotta text-lg italic text-white" aria-hidden>L</span>
+            <Link href="/reserve" className="group flex h-full flex-col rounded-[22px] border border-oat bg-paper p-6 transition-[border-color,box-shadow] duration-300 hover:border-walnut/50 hover:shadow-soft md:p-7">
+              <span className="font-display grid h-12 w-12 place-items-center rounded-[12px] bg-turquoise text-lg italic text-ink" aria-hidden>L</span>
               <h3 className="mt-6 text-3xl">Request with the café</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">Send a request on our website. Our team confirms it with you.</p>
               <span className="mt-auto pt-6"><span className="btn btn-primary min-h-[42px] w-full">Request a Table</span></span>
@@ -68,8 +68,8 @@ export default async function BookOrderPage() {
           </Reveal>
           {waReserve && (
             <Reveal>
-              <a href={waReserve} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col border border-oat bg-paper p-6 transition-[border-color,box-shadow] duration-300 hover:border-walnut/50 hover:shadow-soft md:p-7">
-                <span className="grid h-12 w-12 place-items-center rounded-[10px] bg-[#25D366] text-white" aria-hidden><WhatsAppIcon className="h-6 w-6" /></span>
+              <a href={waReserve} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-[22px] border border-oat bg-paper p-6 transition-[border-color,box-shadow] duration-300 hover:border-walnut/50 hover:shadow-soft md:p-7">
+                <span className="grid h-12 w-12 place-items-center rounded-[12px] bg-[#25D366] text-white" aria-hidden><WhatsAppIcon className="h-6 w-6" /></span>
                 <h3 className="mt-6 text-3xl">Enquire on WhatsApp</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">Message us your date, time and party size. A WhatsApp message isn&apos;t a confirmed booking until our staff reply to confirm.</p>
                 <span className="mt-auto pt-6"><span className="btn btn-outline min-h-[42px] w-full group-hover:bg-espresso group-hover:text-ivory">Message us <span className="sr-only">(opens WhatsApp)</span></span></span>
@@ -86,8 +86,8 @@ export default async function BookOrderPage() {
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {direct && (
               <Reveal>
-                <Link href="/menu" className="flex h-full flex-col border border-espresso bg-ivory p-6 md:p-7">
-                  <span className="font-display grid h-12 w-12 place-items-center rounded-[10px] bg-espresso text-lg italic text-ivory" aria-hidden>L</span>
+                <Link href="/menu" className="flex h-full flex-col rounded-[22px] border border-ink bg-ivory p-6 md:p-7">
+                  <span className="font-display grid h-12 w-12 place-items-center rounded-[12px] bg-ink text-lg italic text-ivory" aria-hidden>L</span>
                   <h3 className="mt-6 text-3xl">Order from us</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">Order and pay on our website for pickup — straight to our kitchen.</p>
                   <span className="mt-auto pt-6"><span className="btn btn-dark min-h-[42px] w-full">Order Now</span></span>
@@ -123,7 +123,7 @@ export default async function BookOrderPage() {
               </div>
             </Reveal>
           </div>
-          <Reveal className="lg:col-span-7"><MapEmbed query={b.maps_query} className="aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[460px]" /></Reveal>
+          <Reveal className="lg:col-span-7"><div className="h-full overflow-hidden rounded-[24px] border border-oat"><MapEmbed query={b.maps_query} className="aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[460px]" /></div></Reveal>
         </div>
       </section>
     </div>

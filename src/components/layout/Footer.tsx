@@ -8,10 +8,10 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
   const b = settings.business;
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-charcoal text-ivory">
+    <footer className="relative overflow-hidden bg-ink text-ivory">
       <div className="container-site grid gap-14 py-20 md:grid-cols-12">
         <div className="md:col-span-4">
-          <Wordmark className="text-base" />
+          <Wordmark className="text-lg" tone="light" />
           <p className="mt-6 max-w-xs text-sm leading-relaxed text-ivory/70">
             Coffee, comfort food and unhurried conversations in Vijay Nagar, Indore.
           </p>
@@ -22,7 +22,7 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
         </div>
         <div className="grid grid-cols-2 gap-10 md:col-span-4">
           <div>
-            <p className="eyebrow text-sage">Explore</p>
+            <p className="eyebrow text-turquoise">Explore</p>
             <ul className="mt-5 space-y-2.5 text-sm text-ivory/80">
               {[["/", "Home"], ["/story", "Our Story"], ["/menu", "Menu"], ["/book-order", "Book & Order"], ["/gallery", "Gallery"], ["/reserve", "Reservations"], ["/contact", "Contact"]].map(([h, l]) => (
                 <li key={h}><Link className="link-underline" href={h}>{l}</Link></li>
@@ -30,7 +30,7 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
             </ul>
           </div>
           <div>
-            <p className="eyebrow text-sage">Menu</p>
+            <p className="eyebrow text-turquoise">Menu</p>
             <ul className="mt-5 space-y-2.5 text-sm text-ivory/80">
               {categories.slice(0, 7).map((c) => (
                 <li key={c.id}><Link className="link-underline" href={`/menu#${c.slug}`}>{c.name}</Link></li>
@@ -40,7 +40,7 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
         </div>
         <div className="space-y-8 text-sm text-ivory/80 md:col-span-4">
           <div>
-            <p className="eyebrow text-sage">Visit</p>
+            <p className="eyebrow text-turquoise">Visit</p>
             <address className="mt-5 not-italic leading-relaxed">
               {b.address_lines.map((l) => <span key={l} className="block">{l}</span>)}
               {b.city}, {b.region} {b.postal_code}
@@ -48,17 +48,22 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
             <a href={b.maps_place_url} target="_blank" rel="noopener noreferrer" className="link-underline mt-3 inline-block text-ivory">Google Maps ↗</a>
           </div>
           <div>
-            <p className="eyebrow text-sage">Contact</p>
+            <p className="eyebrow text-turquoise">Contact</p>
             <a href={`tel:${b.phone_e164}`} className="link-underline mt-5 inline-block text-ivory">{b.phone_display}</a>
             {b.instagram_url && (
               <a href={b.instagram_url} target="_blank" rel="noopener noreferrer" className="mt-3 flex items-center gap-2 text-ivory"><InstagramIcon className="h-4 w-4" /> Instagram</a>
             )}
           </div>
           <div>
-            <p className="eyebrow text-sage">Hours</p>
+            <p className="eyebrow text-turquoise">Hours</p>
             <Hours business={b} className="mt-5 max-w-xs" />
           </div>
         </div>
+      </div>
+      <div aria-hidden className="container-site select-none overflow-hidden">
+        <p className="font-brand -mb-[.18em] whitespace-nowrap text-[clamp(3rem,12.4vw,11.5rem)] font-bold leading-none tracking-[-.04em] text-ivory/[.07]">
+          loveOverCoffee.
+        </p>
       </div>
       <div className="border-t border-ivory/10">
         <div className="container-site flex flex-col gap-2 py-6 text-xs text-ivory/50 sm:flex-row sm:justify-between">

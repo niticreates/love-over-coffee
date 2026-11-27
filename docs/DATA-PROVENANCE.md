@@ -36,3 +36,26 @@ Each link was opened and matched to this outlet by address (Plot 11, Scheme/Sect
 | Google Maps | Directions | Search link for "Love Over Coffee Scheme 113 Vijay Nagar Indore" | **Owner to replace** with the Google Business Profile share link to pin the exact listing |
 
 Manage them in Admin → Booking links (`/admin/integrations`). Changing a URL there clears its verified flag until someone re-checks it.
+
+## Photographs (supplied by the client, 27 Nov 2026)
+
+Fifteen photographs were uploaded by the client and are stored in `public/images/`. They are used across the site and in the gallery seed. Google search pages that were also uploaded were **not** used as an image source.
+
+**Dish matches made by appearance (owner to confirm):**
+- Cappuccino: the latte-art cup.
+- Cold Coffee: the two cold coffees.
+- Tex-Mex Nachos: the nachos platter.
+- Masala Pull-A-Part Garlic Bread: the pull-apart bread.
+
+All other dishes have no photo and are shown typographically. Menu category headers use a photo of that kind of food, not a specific dish.
+
+**Facts read from the photos and now used in the copy:**
+- A party hall (signage visible).
+- A wall of books by the counter.
+- Outdoor white wicker seating.
+- A navy ceiling, blush velvet chairs and green sofas.
+
+**Owner to supply:**
+- Official logo and mascot vector files.
+- Higher-resolution hero images.
+- Any video.

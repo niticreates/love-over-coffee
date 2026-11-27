@@ -25,7 +25,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 6 }}
               transition={{ duration: 0.25 }}
-              className={`pointer-events-auto max-w-sm rounded-[2px] px-5 py-3 text-sm shadow-soft ${t.tone === "error" ? "bg-danger text-white" : "bg-espresso text-ivory"}`}
+              className={`pointer-events-auto max-w-sm rounded-full px-5 py-3 text-sm shadow-soft ${t.tone === "error" ? "bg-danger text-white" : "bg-espresso text-ivory"}`}
             >
               {t.message}
             </motion.div>

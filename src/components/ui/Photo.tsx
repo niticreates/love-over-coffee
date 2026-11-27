@@ -1,18 +1,20 @@
 import Image from "next/image";
 import clsx from "clsx";
+import { Mascot } from "./Mascot";
 
+/** Placeholder palettes drawn from the café interior. */
 const TONES = {
-  interiors: "bg-[#c9cdb8] text-[#3f4a37]",
-  beverages: "bg-[#b89a80] text-[#3b2a1f]",
-  food: "bg-[#c98f72] text-[#4a2617]",
-  desserts: "bg-[#e3d3bd] text-[#5d4a36]",
-  experiences: "bg-[#56636a] text-[#eae3d3]",
+  interiors: "bg-navy text-ivory",
+  beverages: "bg-turquoise-soft text-ink",
+  food: "bg-blush text-berry",
+  desserts: "bg-cream text-berry",
+  experiences: "bg-leaf text-ivory",
 } as const;
 export type Tone = keyof typeof TONES;
 
 /**
- * Renders a real photograph when one exists; otherwise an art-directed, clearly labelled
- * placeholder. We never substitute stock imagery for the café's own food or interiors.
+ * Renders the café's own photograph when one exists. Otherwise an art-directed, clearly
+ * labelled typographic tile — never a stock photo standing in for the café's food or rooms.
  */
 export function Photo({
   src,
@@ -24,6 +26,7 @@ export function Photo({
   priority,
   shape = "rect",
   style,
+  position,
 }: {
   src?: string | null;
   alt: string;
@@ -32,30 +35,23 @@ export function Photo({
   className?: string;
   sizes?: string;
   priority?: boolean;
-  shape?: "rect" | "arch";
+  shape?: "rect" | "arch" | "round";
   style?: React.CSSProperties;
+  position?: string;
 }) {
-  const radius = shape === "arch" ? "rounded-t-[999px] rounded-b-[4px]" : "rounded-[2px]";
+  const radius = shape === "arch" ? "rounded-t-[999px] rounded-b-[20px]" : shape === "round" ? "rounded-full" : "rounded-[20px]";
   if (src) {
     return (
       <div style={style} className={clsx("relative overflow-hidden bg-oat", radius, className)}>
-        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" unoptimized={src.startsWith("data:")} />
+        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" style={position ? { objectPosition: position } : undefined} unoptimized={src.startsWith("data:")} />
       </div>
     );
   }
   return (
-    <div style={style} role="img" aria-label={`${alt} — photograph coming soon`} className={clsx("grain relative isolate overflow-hidden", radius, TONES[tone], className)}>
-      <svg aria-hidden className="absolute inset-0 h-full w-full opacity-[.22]" preserveAspectRatio="none" viewBox="0 0 100 100">
-        <defs>
-          <radialGradient id="g" cx="30%" cy="25%" r="80%">
-            <stop offset="0" stopColor="#fff" stopOpacity=".9" />
-            <stop offset="1" stopColor="#000" stopOpacity=".5" />
-          </radialGradient>
-        </defs>
-        <rect width="100" height="100" fill="url(#g)" />
-      </svg>
-      <span className="absolute right-3 top-3 whitespace-nowrap text-[9px] font-semibold tracking-[.2em] uppercase opacity-55 sm:right-4 sm:top-4">Photo to come</span>
-      {label?.trim() && <span className="eyebrow absolute inset-x-0 bottom-0 p-4 opacity-80 sm:p-5">{label}</span>}
+    <div style={style} role="img" aria-label={`${alt} — photograph coming soon`} className={clsx("relative isolate flex flex-col justify-between overflow-hidden p-4 sm:p-5", radius, TONES[tone], className)}>
+      <Mascot className="absolute -bottom-[8%] -right-[6%] -z-10 h-[62%] w-auto opacity-[.13] grayscale" title={null} animated={false} />
+      <span className="self-end whitespace-nowrap text-[9px] font-bold tracking-[.2em] uppercase opacity-60">Photo to come</span>
+      {label?.trim() && <span className="font-display text-[clamp(1.25rem,1rem+1.2vw,2rem)] italic leading-[1.05] text-balance">{label}</span>}
     </div>
   );
 }

@@ -25,7 +25,7 @@ export function WhatsAppFab({ href }: { href: string | null }) {
       <WhatsAppIcon className="h-7 w-7" strokeWidth={1.7} />
       <span
         role="tooltip"
-        className="pointer-events-none absolute right-[calc(100%+12px)] top-1/2 hidden -translate-y-1/2 translate-x-1 whitespace-nowrap rounded-[2px] bg-espresso px-3 py-2 text-xs text-ivory opacity-0 shadow-soft transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100 md:block"
+        className="pointer-events-none absolute right-[calc(100%+12px)] top-1/2 hidden -translate-y-1/2 translate-x-1 whitespace-nowrap rounded-full bg-ink px-3 py-2 text-xs text-ivory opacity-0 shadow-soft transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100 md:block"
       >
         Chat with us on WhatsApp
       </span>

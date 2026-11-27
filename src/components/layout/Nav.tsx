@@ -43,21 +43,22 @@ export function Nav({ phone, announcement }: { phone: string; announcement?: str
       <header
         className={clsx(
           "fixed inset-x-0 top-0 z-50 transition-[background-color,color,box-shadow,padding] duration-500",
-          transparent ? "bg-transparent pb-5 text-ivory" : "bg-ivory/95 pb-3 text-espresso shadow-[0_1px_0_rgb(41_39_32/.08)] backdrop-blur-md",
+          transparent ? "bg-transparent pb-5 text-ink" : "bg-ivory/90 pb-3 text-ink shadow-[0_1px_0_rgb(14_31_61/.08)] backdrop-blur-md",
         )}
       >
-        {announcement && <div className="bg-espresso px-4 py-1.5 text-center text-[11px] tracking-wide text-ivory">{announcement}</div>}
+        {announcement && <div className="bg-ink px-4 py-1.5 text-center text-[11px] tracking-wide text-ivory">{announcement}</div>}
         <div className={transparent ? "pt-5" : "pt-3"}>
         <nav className="container-site flex items-center justify-between gap-6" aria-label="Main">
-          <Link href="/" className="text-[13px] sm:text-sm" aria-label="Love Over Coffee — home">
+          <Link href="/" className="text-[13px] sm:text-[15px]" aria-label="Love Over Coffee — home">
             <Wordmark />
           </Link>
-          <ul className="hidden items-center gap-6 xl:gap-8 lg:flex">
+          <ul className="relative z-0 hidden items-center gap-0.5 lg:flex xl:gap-1">
             {NAV_LINKS.map((l) => {
               const active = l.href === "/" ? path === "/" : path.startsWith(l.href);
               return (
                 <li key={l.href}>
-                  <Link href={l.href} aria-current={active ? "page" : undefined} className={clsx("link-underline py-1 text-[13px] tracking-[.08em]", active && "bg-[length:100%_1px]")}>
+                  <Link href={l.href} aria-current={active ? "page" : undefined} className={clsx("relative rounded-full px-2.5 py-2 text-[14px] xl:px-3.5 font-medium transition-colors hover:text-turquoise-deep")}>
+                    {active && <motion.span layoutId="nav-pill" className="absolute inset-0 -z-10 rounded-full bg-turquoise/25" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
                     {l.label}
                   </Link>
                 </li>
@@ -65,11 +66,11 @@ export function Nav({ phone, announcement }: { phone: string; announcement?: str
             })}
           </ul>
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link href="/menu" className={clsx("btn hidden min-h-[42px] px-4 md:inline-flex", transparent ? "btn-ghost-light" : "btn-outline")}>Order Online</Link>
+            <Link href="/menu" className="btn btn-outline hidden min-h-[42px] px-4 xl:inline-flex">Order Online</Link>
             <Link href="/reserve" className="btn btn-primary hidden min-h-[42px] px-4 md:inline-flex">Reserve a Table</Link>
             <button onClick={() => setOpen(true)} className="relative grid h-11 w-11 place-items-center" aria-label={`Open cart, ${count} item${count === 1 ? "" : "s"}`}>
               <ShoppingBag size={20} strokeWidth={1.6} />
-              {count > 0 && <span className="absolute right-1 top-1 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-terracotta px-1 text-[10px] font-bold text-white">{count}</span>}
+              {count > 0 && <span className="absolute right-1 top-1 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-pink px-1 text-[10px] font-bold text-white">{count}</span>}
             </button>
             <button onClick={() => setMenuOpen((v) => !v)} className="grid h-11 w-11 place-items-center lg:hidden" aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={menuOpen ? "Close menu" : "Open menu"}>
               {menuOpen ? <X size={22} strokeWidth={1.6} /> : <Menu size={22} strokeWidth={1.6} />}
@@ -91,7 +92,7 @@ export function Nav({ phone, announcement }: { phone: string; announcement?: str
             <ul className="flex flex-col gap-1">
               {NAV_LINKS.map((l, i) => (
                 <motion.li key={l.href} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i + 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-                  <Link href={l.href} className="font-display block py-2 text-5xl">{l.label}</Link>
+                  <Link href={l.href} aria-current={(l.href === "/" ? path === "/" : path.startsWith(l.href)) ? "page" : undefined} className="font-display flex items-baseline gap-3 py-1.5 text-[clamp(2.5rem,11vw,3.5rem)] aria-[current=page]:italic aria-[current=page]:text-turquoise-deep"><span className="font-sans text-xs text-muted">{String(i + 1).padStart(2, "0")}</span>{l.label}</Link>
                 </motion.li>
               ))}
             </ul>

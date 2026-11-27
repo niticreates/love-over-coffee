@@ -288,3 +288,19 @@ test.describe("book & order + whatsapp", () => {
     await expect(page.getByRole("heading", { name: "External Integrations & Booking Links" })).toBeVisible();
   });
 });
+
+test.describe("brand redesign", () => {
+  test("home uses the café's own photos and the gallery lightbox works by keyboard", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("img", { name: /storefront in Vijay Nagar/ }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: "Love Over Coffee — home" })).toBeVisible();
+    await page.goto("/gallery");
+    await page.getByRole("button", { name: /^Open photo:/ }).first().click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press("ArrowRight");
+    await expect(dialog).toContainText("2 /");
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+  });
+});

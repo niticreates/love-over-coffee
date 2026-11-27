@@ -4,12 +4,14 @@ import type { WebsiteSettings } from "./types";
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+export const OG_IMAGE = { url: "/images/exterior/storefront-signage.webp", width: 765, height: 1020, alt: "The Love Over Coffee storefront in Vijay Nagar, Indore" };
+
 export function pageMeta(title: string, description: string, path: string): Metadata {
   return {
     title,
     description,
     alternates: { canonical: path },
-    openGraph: { title, description, url: path, siteName: "Love Over Coffee — Vijay Nagar", locale: "en_IN", type: "website" },
+    openGraph: { title, description, url: path, siteName: "Love Over Coffee — Vijay Nagar", locale: "en_IN", type: "website", images: [OG_IMAGE] },
     twitter: { card: "summary_large_image", title, description },
   };
 }

@@ -19,6 +19,7 @@ import type {
   ProductCustomization,
   WebsiteSettings,
 } from "@/lib/types";
+import { MEDIA } from "../lib/media.ts";
 
 export const categories: Category[] = [
   ["coffee", "Coffee"],
@@ -39,9 +40,9 @@ export const categories: Category[] = [
 type SeedRow = [slug: string, name: string, category: string, description: string, featured?: boolean, note?: string];
 
 const rows: SeedRow[] = [
-  ["lotus-biscoff-coffee", "Lotus Biscoff Coffee", "coffee", "Coffee with the caramelised warmth of Lotus Biscoff.", false, "Named as a must-try by Free Press Journal (Feb 2026)."],
-  ["biscoff-cappuccino", "Biscoff Cappuccino", "coffee", "A cappuccino finished with Biscoff — creamy, spiced, comforting.", true, "Owner to confirm whether this is the same item as Lotus Biscoff Coffee."],
-  ["cappuccino", "Cappuccino", "coffee", "Espresso with steamed milk and a soft layer of foam.", false],
+  ["lotus-biscoff-coffee", "Lotus Biscoff Coffee", "coffee", "Coffee with the caramelised warmth of Lotus Biscoff.", true, "Named as a must-try by Free Press Journal (Feb 2026)."],
+  ["biscoff-cappuccino", "Biscoff Cappuccino", "coffee", "A cappuccino finished with Biscoff — creamy, spiced, comforting.", false, "Owner to confirm whether this is the same item as Lotus Biscoff Coffee."],
+  ["cappuccino", "Cappuccino", "coffee", "Espresso with steamed milk and a soft layer of foam.", true],
   ["cold-coffee", "Cold Coffee", "cold-coffee", "Chilled, creamy and made for long afternoons.", false],
   ["cafe-frappe", "Cafe Frappe", "frappes-shakes", "Blended iced coffee, smooth and frothy.", true],
   ["dark-chocolate-frappe", "Dark Chocolate Frappe", "frappes-shakes", "Iced coffee blended with deep dark chocolate.", true],
@@ -63,6 +64,17 @@ const rows: SeedRow[] = [
   ["tiramisu", "Tiramisu", "desserts", "Coffee-soaked layers and mascarpone cream.", false],
 ];
 
+/**
+ * The café's own photographs matched to a dish by appearance (Nov 2026 upload).
+ * Owner to confirm each match; anything unmatched shows its category photo or a placeholder.
+ */
+const PRODUCT_PHOTOS: Record<string, { src: string; alt: string }> = {
+  cappuccino: { src: MEDIA.latteArt.src, alt: MEDIA.latteArt.alt },
+  "cold-coffee": { src: MEDIA.coldCoffees.src, alt: MEDIA.coldCoffees.alt },
+  "tex-mex-nachos": { src: MEDIA.nachos.src, alt: MEDIA.nachos.alt },
+  "masala-pull-apart-garlic-bread": { src: MEDIA.pullApart.src, alt: MEDIA.pullApart.alt },
+};
+
 export const products: Product[] = rows.map(([slug, name, cat, description, featured, note], i) => ({
   id: `prd_${slug}`,
   slug,
@@ -73,8 +85,8 @@ export const products: Product[] = rows.map(([slug, name, cat, description, feat
   is_veg: null,
   is_available: true,
   is_featured: Boolean(featured),
-  image_url: null,
-  image_alt: null,
+  image_url: PRODUCT_PHOTOS[slug]?.src ?? null,
+  image_alt: PRODUCT_PHOTOS[slug]?.alt ?? null,
   sort_order: i,
   customizations: [],
   verification: "owner_to_confirm",
@@ -83,8 +95,9 @@ export const products: Product[] = rows.map(([slug, name, cat, description, feat
 
 /** Display order for the homepage "Signature favourites", per the brief. */
 export const featuredOrder = [
-  "biscoff-cappuccino",
+  "cappuccino",
   "cafe-frappe",
+  "lotus-biscoff-coffee",
   "dark-chocolate-frappe",
   "tex-mex-nachos",
   "potato-cheese-shots",
@@ -119,26 +132,31 @@ export const coupons: Coupon[] = [];
 
 export const galleryImages: GalleryImage[] = (
   [
-    ["interiors", "Café interior — seating", 4, 5],
-    ["beverages", "Signature coffee", 4, 5],
-    ["food", "Food from the kitchen", 5, 4],
-    ["interiors", "Window corner", 3, 4],
-    ["desserts", "Dessert", 1, 1],
-    ["experiences", "Board games with friends", 5, 4],
-    ["beverages", "Frappe", 3, 4],
-    ["food", "Pasta", 4, 5],
-    ["experiences", "Conversations over coffee", 4, 3],
-    ["desserts", "Sundae", 4, 5],
+    ["interiors", MEDIA.diningRoom, "The dining room under the navy ceiling"],
+    ["beverages", MEDIA.latteArt, "Latte art, served in blue"],
+    ["food", MEDIA.nachos, "Loaded nachos"],
+    ["interiors", MEDIA.counterBooks, "The counter and the book wall"],
+    ["experiences", MEDIA.storefrontCup, "A cup to go, outside the café"],
+    ["food", MEDIA.garlicBread, "Garlic bread and a grilled sandwich"],
+    ["beverages", MEDIA.coldCoffees, "Cold coffees"],
+    ["experiences", MEDIA.storefront, "The storefront, dressed in balloons"],
+    ["food", MEDIA.pullApart, "Pull-apart bread among the plants"],
+    ["beverages", MEDIA.layered, "A layered iced coffee"],
+    ["experiences", MEDIA.spread, "A table for sharing, outdoors"],
+    ["food", MEDIA.pizza, "Vegetable pizza"],
+    ["interiors", MEDIA.counterParty, "Steps up to the party hall"],
+    ["food", MEDIA.wrap, "A wrap with dips"],
+    ["experiences", MEDIA.shakesFries, "Shakes, coffee and fries"],
   ] as const
-).map(([category, alt, w, h], i) => ({
+).map(([category, media, caption], i) => ({
   id: `gal_${i + 1}`,
   category,
-  url: null,
-  alt,
-  caption: null,
+  url: media.src,
+  alt: media.alt,
+  caption,
   sort_order: i,
-  width: w * 300,
-  height: h * 300,
+  width: media.width,
+  height: media.height,
 }));
 
 export const defaultSettings: WebsiteSettings = {
@@ -193,10 +211,10 @@ export const defaultSettings: WebsiteSettings = {
     last_booking_before_close_minutes: 60,
   },
   content: {
-    hero_headline: "Good Coffee. Beautiful Moments.",
+    hero_headline: "Good Coffee. Great Company. A Little More Love.",
     hero_image_url: null,
     hero_subhead:
-      "Your favourite corner in Vijay Nagar for exceptional coffee, comforting food, and moments worth slowing down for.",
+      "Your favourite corner for coffee, conversations, comfort food and unforgettable little moments.",
     intro_headline: "More Than Just Coffee.",
     intro_body:
       "Love Over Coffee is where the day slows down. Come for a carefully made cup, stay for comforting plates, a board game, and the kind of conversation that runs longer than planned.",
@@ -208,7 +226,7 @@ export const defaultSettings: WebsiteSettings = {
       { id: "experience", title: "The Love Over Coffee experience", body: "A warm room, an easy pace, and a cup that is worth sitting with. We built this corner of Vijay Nagar for the moments in between — the catch-ups, the first dates, the long afternoons with a laptop.", needs_owner_review: true },
       { id: "coffee", title: "Our approach to coffee", body: "From the everyday cappuccino to the indulgent Biscoff and dark-chocolate frappes, the menu is built around coffee that rewards slowing down.", needs_owner_review: true },
       { id: "food", title: "Food and flavours", body: "Comfort food with Italian and Mexican accents — loaded nachos, pull-apart garlic bread, penne in rich sauces, and desserts made for sharing.", needs_owner_review: true },
-      { id: "ambience", title: "Our ambience", body: "Soft light, warm wood, sage and terracotta tones. A space designed to feel like a favourite room rather than a waiting room.", needs_owner_review: true },
+      { id: "ambience", title: "Our ambience", body: "A deep navy ceiling, blush velvet chairs, green sofas and a wall of books. A space designed to feel like a favourite room rather than a waiting room.", needs_owner_review: true },
       { id: "conversations", title: "A place for conversations", body: "Board games on the shelf, books within reach, and tables made for lingering. Bring your people.", needs_owner_review: true },
     ],
   },

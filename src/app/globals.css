@@ -1,39 +1,62 @@
 @import "tailwindcss";
 
 /*
- * Love Over Coffee — design tokens.
- * Single source of truth for colour, type, spacing, radii, shadows, motion.
- * The palette is the brief's preliminary estimate from interior photos; it has
- * NOT yet been verified against licensed photography (see docs/BRAND.md).
- * Contrast ratios noted are against --color-ivory (#F2EBDD).
+ * Love Over Coffee — design tokens (brand-led, Nov 2026).
+ * Colours were sampled from the café's own photographs: the turquoise of the
+ * storefront letters and cup mascot, the navy ceiling, blush velvet chairs,
+ * burgundy feature wall, green sofas, the yellow alcove and natural wood.
+ * They are close estimates, not official brand codes — see docs/BRAND.md.
+ * Contrast ratios are against --color-ivory (#FBF7EF) unless noted.
+ *
+ * Legacy token names (espresso, terracotta, sage…) are kept as aliases so the
+ * admin and form components re-theme without churn; new work uses the brand names.
  */
 @theme {
-  /* Core palette */
-  --color-ivory: #f2ebdd;        /* background */
-  --color-paper: #f8f4ec;        /* raised surfaces */
-  --color-oat: #e7dccb;          /* hairlines, quiet fills */
-  --color-sage: #a9b99a;         /* secondary — ornament & fills only (not text on ivory) */
-  --color-sage-deep: #6f7f62;    /* sage for text/icons on light: 4.0:1 large text only */
-  --color-terracotta: #a65f40;   /* accent fill; white text on it = 4.85:1 */
-  --color-terracotta-ink: #8f4f33; /* accent as text on ivory = 5.31:1 */
-  --color-walnut: #79543d;       /* secondary text/ui = 5.62:1 */
-  --color-charcoal: #29343a;     /* dark sections; ivory on it = 10.75:1 */
-  --color-espresso: #292720;     /* primary text = 12.6:1 */
-  --color-muted: #6b6457;        /* body-secondary = 4.94:1 */
+  /* Brand palette */
+  --color-turquoise: #22b8de;      /* signature — storefront "O"/"C" + mascot. Fill only; ink text on it = 7.0:1 */
+  --color-turquoise-deep: #0a6f8c; /* turquoise as text/links on ivory = 5.36:1 */
+  --color-turquoise-soft: #d3eff7; /* tints */
+  --color-navy: #0b2a57;           /* ceiling navy — dark sections; ivory on it = 13.3:1, turquoise on it = 6.0:1 */
+  --color-ink: #0e1f3d;            /* primary text = 15.3:1 */
+  --color-pink: #d6336c;           /* expressive accent (mascot tongue, neon); white on it = 4.6:1 */
+  --color-blush: #f6cdd6;          /* velvet-chair blush — fills; ink on it = 11.4:1 */
+  --color-berry: #8a2445;          /* burgundy feature wall = 8.1:1 */
+  --color-leaf: #3c6a32;           /* sofa / plant green = 6.0:1 */
+  --color-sun: #f2c14e;            /* yellow alcove — tiny highlights only */
+  --color-wood: #7a5536;           /* warm wood = 6.2:1 */
+
+  /* Surfaces */
+  --color-ivory: #fbf7ef;          /* page background */
+  --color-paper: #ffffff;          /* raised surfaces */
+  --color-cream: #f3ecdf;          /* alternate section */
+  --color-oat: #e6dfd2;            /* hairlines, quiet fills */
+  --color-muted: #566074;          /* secondary text = 5.9:1 */
+
+  /* Legacy aliases → brand */
+  --color-espresso: var(--color-ink);
+  --color-charcoal: var(--color-navy);
+  --color-terracotta: var(--color-turquoise);
+  --color-terracotta-ink: var(--color-turquoise-deep);
+  --color-walnut: var(--color-wood);
+  --color-sage: var(--color-blush);
+  --color-sage-deep: var(--color-leaf);
+
   --color-veg: #2f7d32;
   --color-nonveg: #a3361f;
-  --color-success: #3f6b3a;
-  --color-danger: #a3361f;
+  --color-success: #2f6b3a;
+  --color-danger: #b3261e;
 
   /* Typography */
-  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
-  --font-sans: var(--font-manrope), "Manrope", system-ui, sans-serif;
+  --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --font-sans: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  --font-brand: var(--font-quicksand), "Quicksand", var(--font-sans); /* wordmark only — echoes the rounded signage letters */
 
   --text-eyebrow: 0.6875rem;   /* 11px tracked caps */
   --text-eyebrow--letter-spacing: 0.22em;
-  --text-display-sm: clamp(2rem, 1.5rem + 2vw, 2.75rem);
-  --text-display-md: clamp(2.5rem, 1.6rem + 3.6vw, 4.25rem);
-  --text-display-lg: clamp(3rem, 1.4rem + 6.4vw, 7rem);
+  --text-display-sm: clamp(1.9rem, 1.4rem + 2vw, 2.6rem);
+  --text-display-md: clamp(2.4rem, 1.5rem + 3.6vw, 4.25rem);
+  --text-display-lg: clamp(2.9rem, 1.3rem + 6.4vw, 7rem);
+  --text-display-xl: clamp(3.3rem, 1rem + 9vw, 10rem);
 
   /* Spacing rhythm for sections */
   --spacing-section: clamp(5rem, 3.5rem + 6vw, 10rem);
@@ -44,16 +67,19 @@
   --container-site: 88rem;
 
   /* Radii — restrained */
-  --radius-xs: 2px;
-  --radius-sm: 4px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-lg: 28px;
   --radius-arch: 999px 999px 4px 4px;
 
   /* Shadows — soft, warm */
-  --shadow-soft: 0 1px 2px rgb(41 39 32 / 0.06), 0 8px 24px -12px rgb(41 39 32 / 0.18);
-  --shadow-drawer: -24px 0 60px -20px rgb(41 39 32 / 0.35);
+  --shadow-soft: 0 1px 2px rgb(14 31 61 / 0.06), 0 10px 28px -14px rgb(14 31 61 / 0.22);
+  --shadow-lift: 0 30px 60px -30px rgb(14 31 61 / 0.45);
+  --shadow-drawer: -24px 0 60px -20px rgb(14 31 61 / 0.35);
 
   /* Motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
   --duration-fast: 160ms;
   --duration-base: 320ms;
   --duration-slow: 700ms;
@@ -75,12 +101,14 @@
   }
   h1, h2, h3, .font-display {
     font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    line-height: 1.02;
+    font-weight: 420;
+    font-variation-settings: "SOFT" 60, "WONK" 0, "opsz" 96;
+    letter-spacing: -0.025em;
+    line-height: 0.98;
   }
-  ::selection { background: var(--color-sage); color: var(--color-espresso); }
-  :focus-visible { outline: 2px solid var(--color-terracotta); outline-offset: 3px; }
+  h1 em, h2 em, h3 em, .font-display em { font-style: italic; font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 96; }
+  ::selection { background: var(--color-turquoise); color: var(--color-ink); }
+  :focus-visible { outline: 2px solid var(--color-turquoise-deep); outline-offset: 3px; border-radius: 2px; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -93,39 +121,64 @@
   .hairline { height: 1px; background: color-mix(in oklab, var(--color-espresso) 14%, transparent); }
 
   .btn {
+    position: relative; isolation: isolate; overflow: hidden;
     display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
-    min-height: 48px; padding: 0 1.5rem; border-radius: var(--radius-xs);
-    font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
-    transition: background-color var(--duration-fast) var(--ease-out-soft), color var(--duration-fast), border-color var(--duration-fast), transform var(--duration-fast);
+    min-height: 50px; padding: 0 1.6rem; border-radius: 999px;
+    font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700;
+    transition: background-color var(--duration-base) var(--ease-out-soft), color var(--duration-base) var(--ease-out-soft), border-color var(--duration-base), transform var(--duration-fast), box-shadow var(--duration-base);
     white-space: nowrap;
   }
+  /* Fill sweeps up from the bottom on hover */
+  .btn::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+    background: var(--btn-sweep, transparent); transform: translateY(101%);
+    transition: transform var(--duration-base) var(--ease-out-soft);
+  }
+  .btn:hover:not(:disabled)::before { transform: translateY(0); }
   .btn:active { transform: translateY(1px); }
   .btn:disabled { opacity: .45; cursor: not-allowed; }
-  .btn-primary { background: var(--color-terracotta); color: #fff; }
-  .btn-primary:hover:not(:disabled) { background: var(--color-terracotta-ink); }
-  .btn-dark { background: var(--color-espresso); color: var(--color-ivory); }
-  .btn-dark:hover:not(:disabled) { background: var(--color-charcoal); }
-  .btn-outline { border: 1px solid currentColor; }
-  .btn-outline:hover:not(:disabled) { background: var(--color-espresso); color: var(--color-ivory); border-color: var(--color-espresso); }
-  .btn-ghost-light { border: 1px solid rgb(242 235 221 / .6); color: var(--color-ivory); }
-  .btn-ghost-light:hover { background: var(--color-ivory); color: var(--color-espresso); }
+  .btn-primary { background: var(--color-turquoise); color: var(--color-ink); --btn-sweep: var(--color-ink); }
+  .btn-primary:hover:not(:disabled) { color: var(--color-ivory); }
+  .btn-dark { background: var(--color-ink); color: var(--color-ivory); --btn-sweep: var(--color-turquoise); }
+  .btn-dark:hover:not(:disabled) { color: var(--color-ink); }
+  .btn-pink { background: var(--color-pink); color: #fff; --btn-sweep: var(--color-ink); }
+  .btn-outline { border: 1.5px solid currentColor; --btn-sweep: var(--color-ink); }
+  .btn-outline:hover:not(:disabled) { color: var(--color-ivory); border-color: var(--color-ink); }
+  .btn-ghost-light { border: 1.5px solid rgb(251 247 239 / .55); color: var(--color-ivory); --btn-sweep: var(--color-ivory); }
+  .btn-ghost-light:hover { color: var(--color-ink); border-color: var(--color-ivory); }
 
   .link-underline { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size var(--duration-base) var(--ease-out-soft); }
   .link-underline:hover { background-size: 100% 1px; }
 
   .field { display: grid; gap: .4rem; }
-  .field label { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--color-walnut); }
+  .field label { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--color-muted); }
   .input {
     width: 100%; min-height: 48px; padding: .75rem .9rem; border-radius: var(--radius-xs);
     background: var(--color-paper); border: 1px solid var(--color-oat); color: var(--color-espresso); font-size: 1rem;
     transition: border-color var(--duration-fast);
   }
-  .input:focus { outline: none; border-color: var(--color-walnut); box-shadow: 0 0 0 3px rgb(121 84 61 / .15); }
+  .input:focus { outline: none; border-color: var(--color-turquoise-deep); box-shadow: 0 0 0 3px rgb(34 184 222 / .22); }
   .input[aria-invalid="true"] { border-color: var(--color-danger); }
   .field-error { font-size: .8rem; color: var(--color-danger); }
 
   .grain::after {
     content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .18; mix-blend-mode: multiply;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.15 0 0 0 0 0.12 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.12 0 0 0 0 0.24 0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
 }
+
+@layer utilities {
+  .font-brand { font-family: var(--font-brand); }
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+  /* Inline photograph "pill" used inside editorial headlines */
+  .img-pill { display: inline-block; position: relative; vertical-align: middle; overflow: hidden; border-radius: 999px; height: .78em; width: 1.7em; margin: -.1em .08em 0; }
+}
+
+/* Mascot: an occasional blink, a little tilt when its link is hovered. */
+@media (prefers-reduced-motion: no-preference) {
+  .mascot-animated .mascot-eyes { animation: mascot-blink 6s infinite; }
+  .mascot-animated .mascot-body { transition: transform 500ms var(--ease-out-soft); }
+  a:hover .mascot-animated .mascot-body, .mascot-animated:hover .mascot-body { transform: rotate(-7deg); }
+}
+@keyframes mascot-blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }

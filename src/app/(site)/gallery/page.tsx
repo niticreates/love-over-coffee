@@ -13,7 +13,8 @@ export default async function GalleryPage() {
       <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <p className="eyebrow text-terracotta-ink">Gallery</p>
-          <h1 className="mt-5 text-display-lg">Moments, <em>poured.</em></h1>
+          <h1 className="mt-5 text-display-lg">Moments, <em className="text-turquoise-deep">poured</em><span className="text-pink">.</span></h1>
+          <p className="mt-6 max-w-md text-lg text-muted">The room, the cups and the plates — photographed at the café in Vijay Nagar.</p>
         </div>
         {settings.business.instagram_url && <a href={settings.business.instagram_url} target="_blank" rel="noopener noreferrer" className="btn btn-outline self-start">Follow on Instagram</a>}
       </div>

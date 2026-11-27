@@ -13,7 +13,7 @@ export function MobileActionBar({ phone }: { phone: string }) {
       <div className="h-[68px] md:hidden" aria-hidden />
       <nav aria-label="Quick actions" className="fixed inset-x-0 bottom-0 z-40 flex border-t border-oat bg-ivory/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
         <Link href="/menu" className={item}><ShoppingBag size={18} strokeWidth={1.6} />Order</Link>
-        <Link href="/reserve" className={`${item} bg-terracotta text-white`}><CalendarDays size={18} strokeWidth={1.6} />Reserve</Link>
+        <Link href="/reserve" className={`${item} bg-turquoise text-ink`}><CalendarDays size={18} strokeWidth={1.6} />Reserve</Link>
         <a href={`tel:${phone}`} className={item}><Phone size={18} strokeWidth={1.6} />Call</a>
       </nav>
     </>

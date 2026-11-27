@@ -16,10 +16,10 @@ const TILE: Record<string, { bg: string; fg: string; text: string; font?: string
 export function PlatformLogo({ p, className }: { p: Pick<ExternalPlatform, "platform_logo" | "brand" | "platform_name">; className?: string }) {
   if (p.platform_logo)
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={p.platform_logo} alt={`${p.platform_name} logo`} className={clsx("h-12 w-12 rounded-[10px] border border-oat bg-white object-contain p-1.5", className)} />;
+    return <img src={p.platform_logo} alt={`${p.platform_name} logo`} className={clsx("h-12 w-12 rounded-[12px] border border-oat bg-white object-contain p-1.5", className)} />;
   const t = TILE[p.brand] ?? { bg: "var(--color-espresso)", fg: "var(--color-ivory)", text: p.platform_name.slice(0, 2), font: "font-display text-lg" };
   return (
-    <span aria-hidden className={clsx("grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-[10px] border border-oat text-[11px]", t.font, className)} style={{ background: t.bg, color: t.fg }}>
+    <span aria-hidden className={clsx("grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-[12px] border border-oat text-[11px]", t.font, className)} style={{ background: t.bg, color: t.fg }}>
       {t.text}
     </span>
   );
@@ -31,7 +31,7 @@ export function PlatformCard({ p, cta }: { p: ExternalPlatform; cta: string }) {
       href={p.platform_url!}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex h-full flex-col border border-oat bg-paper p-6 transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-walnut/50 hover:shadow-soft md:p-7"
+      className="group flex h-full flex-col rounded-[22px] border border-oat bg-paper p-6 transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-walnut/50 hover:shadow-soft md:p-7"
     >
       <div className="flex items-start justify-between gap-4">
         <PlatformLogo p={p} />

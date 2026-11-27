@@ -66,7 +66,7 @@ export function AdminShell({ name, role, preview, children }: { name: string; ro
         </div>
       )}
       <div className="min-w-0">
-        {preview && <div className="bg-terracotta px-4 py-2 text-center text-xs text-white">Preview mode — data is held in memory and resets when the server restarts.</div>}
+        {preview && <div className="bg-turquoise px-4 py-2 text-center text-xs text-ink">Preview mode — data is held in memory and resets when the server restarts.</div>}
         <div className="mx-auto max-w-6xl p-4 md:p-8">{children}</div>
       </div>
     </div>
