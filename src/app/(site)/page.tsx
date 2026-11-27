@@ -101,22 +101,24 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* D — The café experience */}
-      <section className="relative overflow-hidden bg-ink py-section text-ivory">
-        <div className="container-site">
-          <div className="grid gap-10 md:grid-cols-12 md:items-end">
+      {/* D — The café experience: three matching arches on the light-blue ground */}
+      <section className="relative overflow-hidden bg-turquoise-soft py-section text-ink">
+        <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-turquoise/15 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -bottom-48 -left-40 h-[26rem] w-[26rem] rounded-full bg-blush/40 blur-3xl" />
+        <div className="container-site relative">
+          <div className="grid gap-8 md:grid-cols-12 md:items-end">
             <Reveal className="md:col-span-7">
-              <p className="eyebrow flex items-center gap-3 text-turquoise"><span className="font-display text-sm italic normal-case tracking-normal">04</span><span className="h-px w-8 bg-turquoise/60" />The café</p>
-              <h2 className="mt-6 text-[clamp(3rem,1.2rem+7vw,8.5rem)] leading-[.92]">Stay <em className="text-blush">a while.</em></h2>
+              <p className="eyebrow flex items-center gap-3 text-turquoise-deep"><span className="font-display text-sm italic normal-case tracking-normal text-pink">04</span><span className="h-px w-8 bg-turquoise-deep/60" />The café</p>
+              <h2 className="mt-6 text-[clamp(3rem,1.2rem+6vw,7.5rem)] leading-[.98]">Stay <em className="text-turquoise-deep">a while</em><span className="text-pink">.</span></h2>
             </Reveal>
             <Reveal className="md:col-span-4 md:col-start-9" delay={0.1}>
-              <p className="leading-relaxed text-ivory/75">Indoors under the navy ceiling, out front at the white wicker tables, or upstairs in the party hall — ask us about celebrations and groups.</p>
+              <p className="text-lg leading-relaxed text-ink/75">Indoors under the navy ceiling, out front at the white wicker tables, or upstairs in the party hall — ask us about celebrations and groups.</p>
             </Reveal>
           </div>
-          <div className="mt-16 md:mt-24">
+          <div className="mt-16 md:mt-20">
             <RoomStrip frames={[
               { media: MEDIA.diningRoom, caption: "Blush velvet and green sofas" },
-              { media: MEDIA.counterParty, caption: "The counter, and the steps to the party hall" },
+              { media: MEDIA.counterParty, caption: "The counter and the party hall" },
               { media: MEDIA.storefrontCup, caption: "Coffee to go, out front" },
             ]} />
           </div>

@@ -1,25 +1,76 @@
 "use client";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
 import type { Media } from "@/lib/media";
 
-/** Three portrait frames drifting at different speeds — a gentle depth effect, off under reduced motion. */
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * Three matching arched frames, aligned on all sides. Each frame unveils upward in turn
+ * as the row scrolls into view, then the photographs drift gently inside their frames
+ * (the frames themselves never move, so the row stays aligned). Off under reduced motion.
+ */
 export function RoomStrip({ frames }: { frames: { media: Media; caption: string }[] }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLUListElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const speeds = [useTransform(scrollYProgress, [0, 1], ["8%", "-8%"]), useTransform(scrollYProgress, [0, 1], ["-4%", "10%"]), useTransform(scrollYProgress, [0, 1], ["14%", "-12%"])];
+  const drift = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
   return (
-    <div ref={ref} className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3">
+    <ul ref={ref} className="grid gap-x-6 gap-y-12 sm:grid-cols-3 lg:gap-x-10">
       {frames.map((f, i) => (
-        <motion.figure key={f.media.src} style={reduce ? undefined : { y: speeds[i % 3] }} className={i === 1 ? "md:mt-24" : i === 2 ? "col-span-2 md:col-span-1 md:mt-8" : ""}>
-          <div className={`relative overflow-hidden rounded-[20px] ${i === 2 ? "aspect-[4/3] md:aspect-[3/4]" : "aspect-[3/4]"} ${i === 0 ? "rounded-t-[999px]" : ""}`}>
-            <Image src={f.media.src} alt={f.media.alt} fill sizes="(min-width:768px) 30vw, 50vw" className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] hover:scale-[1.04]" style={{ objectPosition: f.media.position }} />
-          </div>
-          <figcaption className="mt-3 text-sm text-ivory/70"><span className="mr-2 font-display italic text-turquoise">{String(i + 1).padStart(2, "0")}</span>{f.caption}</figcaption>
-        </motion.figure>
+        <Frame key={f.media.src} f={f} i={i} drift={drift} reduce={!!reduce} />
       ))}
-    </div>
+    </ul>
+  );
+}
+
+function Frame({ f, i, drift, reduce }: { f: { media: Media; caption: string }; i: number; drift: MotionValue<string>; reduce: boolean }) {
+  const delay = i * 0.15;
+  const view = { once: true, margin: "0px 0px -12% 0px" } as const;
+  return (
+    <li className="group">
+      <motion.figure
+        initial={reduce ? undefined : "hidden"}
+        whileInView={reduce ? undefined : "show"}
+        viewport={view}
+        variants={{ hidden: { opacity: 0, y: 60 }, show: { opacity: 1, y: 0, transition: { duration: 1.1, delay, ease: EASE } } }}
+      >
+        <div className="relative">
+          {/* offset outline arch: settles behind the photo, then shifts on hover */}
+          <motion.span
+            aria-hidden
+            className="absolute inset-0 rounded-b-[28px] rounded-t-[999px] border-[1.5px] border-turquoise-deep/35 transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:translate-x-3 group-hover:translate-y-3"
+            variants={{ hidden: { opacity: 0, x: 0, y: 0 }, show: { opacity: 1, x: 12, y: 12, transition: { duration: 1, delay: delay + 0.6, ease: EASE } } }}
+          />
+          <motion.div
+            className="relative aspect-[3/4] overflow-hidden rounded-b-[28px] rounded-t-[999px] bg-navy shadow-[0_30px_60px_-30px_rgb(14_31_61/.45)]"
+            variants={{ hidden: { clipPath: "inset(100% 0% 0% 0%)" }, show: { clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 1.3, delay: delay + 0.1, ease: EASE } } }}
+          >
+            <motion.div
+              className="absolute inset-[-8%_0]"
+              style={reduce ? undefined : { y: drift }}
+              variants={{ hidden: { scale: 1.25 }, show: { scale: 1, transition: { duration: 1.8, delay: delay + 0.1, ease: EASE } } }}
+            >
+              <Image
+                src={f.media.src}
+                alt={f.media.alt}
+                fill
+                sizes="(min-width:640px) 30vw, 90vw"
+                className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]"
+                style={{ objectPosition: f.media.position }}
+              />
+            </motion.div>
+            <span aria-hidden className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/45 to-transparent" />
+            <span className="absolute bottom-5 left-5 grid h-11 w-11 place-items-center rounded-full bg-ivory font-display text-base italic text-turquoise-deep shadow-[0_8px_20px_-8px_rgb(14_31_61/.5)] transition-transform duration-500 group-hover:-rotate-12 group-hover:scale-110">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+          </motion.div>
+        </div>
+        <figcaption className="mt-7 text-center">
+          <span className="font-display text-xl text-ink md:text-2xl">{f.caption}</span>
+        </figcaption>
+      </motion.figure>
+    </li>
   );
 }
