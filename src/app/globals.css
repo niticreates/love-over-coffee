@@ -206,3 +206,6 @@ html.aos-ready [data-aos].aos-in { will-change: auto; }
 @media (prefers-reduced-motion: reduce) {
   html.aos-ready [data-aos] { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
 }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

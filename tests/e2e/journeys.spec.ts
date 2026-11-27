@@ -41,10 +41,10 @@ test.describe("public site", () => {
 
   test("menu search, filters and product detail", async ({ page }) => {
     await page.goto("/menu");
-    await page.getByPlaceholder(/Search coffee/).fill("frappe");
+    await page.getByRole("searchbox", { name: "Search the menu" }).fill("frappe");
     await expect(page.getByRole("heading", { name: "Cafe Frappe" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Tex-Mex Nachos" })).toHaveCount(0);
-    await page.getByPlaceholder(/Search coffee/).fill("zzzz");
+    await page.getByRole("searchbox", { name: "Search the menu" }).fill("zzzz");
     await expect(page.getByText(/Nothing matches/)).toBeVisible();
     await page.getByRole("button", { name: "Clear filters" }).click();
     await page.getByRole("toolbar", { name: "Filter by category" }).getByRole("button", { name: "Pasta" }).click();

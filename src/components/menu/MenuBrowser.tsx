@@ -20,6 +20,16 @@ export function MenuBrowser({ categories, products, orderingEnabled, sample }: {
   const barRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
+  // Sit the sticky filter bar just under the fixed header, whatever its current height.
+  const [navH, setNavH] = useState(84);
+  useEffect(() => {
+    const header = document.querySelector<HTMLElement>("body header");
+    if (!header) return;
+    const ro = new ResizeObserver(() => setNavH(Math.round(header.getBoundingClientRect().height)));
+    ro.observe(header);
+    return () => ro.disconnect();
+  }, []);
+
   useEffect(() => {
     const hash = decodeURIComponent(location.hash.slice(1));
     const c = categories.find((x) => x.slug === hash);
@@ -40,32 +50,58 @@ export function MenuBrowser({ categories, products, orderingEnabled, sample }: {
 
   return (
     <div>
-      <div ref={barRef} className="sticky top-[68px] z-30 -mx-[var(--spacing-gutter)] border-b border-oat bg-ivory/95 px-[var(--spacing-gutter)] py-4 backdrop-blur-md">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-          <label className="relative block lg:w-80">
+      <div ref={barRef} className="sticky z-30 py-3 transition-[top] duration-500" style={{ top: navH }}>
+        <div className="flex flex-col gap-2 rounded-[26px] border border-turquoise/25 bg-paper/95 p-2 shadow-[0_18px_40px_-28px_rgb(14_31_61/.45)] backdrop-blur-md md:flex-row md:items-center md:rounded-full">
+          <label className="group relative block shrink-0 md:w-56 lg:w-64">
             <span className="sr-only">Search the menu</span>
-            <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
-            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search coffee, pasta, frappe…" className="input rounded-full pl-11 pr-10" />
-            {query && <button onClick={() => setQuery("")} className="absolute right-2 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center" aria-label="Clear search"><X size={14} /></button>}
-          </label>
-          <div className="isolate -mx-[var(--spacing-gutter)] flex gap-2 overflow-x-auto px-[var(--spacing-gutter)] lg:mx-0 lg:flex-1 lg:px-0" role="toolbar" aria-label="Filter by category">
-            {[{ id: "all", name: "All", slug: "" }, ...categories.filter((c) => counts[c.id])].map((c) => (
-              <button
-                key={c.id}
-                aria-pressed={active === c.id}
-                onClick={() => {
-                  setActive(c.id);
-                  history.replaceState(null, "", c.slug ? `#${c.slug}` : location.pathname);
-                }}
-                className={clsx("relative shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-[13px] font-medium transition-colors", active === c.id ? "border-ink text-ivory" : "border-oat hover:border-ink")}
-              >
-                {active === c.id && <motion.span layoutId="menu-chip" className="absolute inset-0 -z-10 rounded-full bg-ink" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
-                <span className="relative">{c.name}</span>
+            <Search size={15} strokeWidth={2.4} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-turquoise-deep" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search the menu"
+              className="h-10 w-full rounded-full border border-transparent bg-turquoise-soft pl-10 pr-9 text-sm text-ink placeholder:text-turquoise-deep/70 transition-[border-color,box-shadow,background-color] focus:border-turquoise-deep focus:bg-paper focus:shadow-[0_0_0_3px_rgb(34_184_222/.22)] focus:outline-none [&::-webkit-search-cancel-button]:appearance-none"
+            />
+            {query && (
+              <button onClick={() => setQuery("")} className="absolute right-1.5 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full bg-ink text-ivory" aria-label="Clear search">
+                <X size={12} strokeWidth={2.6} />
               </button>
-            ))}
+            )}
+          </label>
+          <span aria-hidden className="hidden h-6 w-px shrink-0 bg-turquoise/30 md:block" />
+          <div className="relative min-w-0 flex-1">
+            <div
+              className="no-scrollbar isolate flex gap-1 overflow-x-auto scroll-smooth pr-8 [mask-image:linear-gradient(to_right,#000_calc(100%-3rem),transparent)]"
+              role="toolbar"
+              aria-label="Filter by category"
+            >
+              {[{ id: "all", name: "All", slug: "" }, ...categories.filter((c) => counts[c.id])].map((c) => {
+                const on = active === c.id;
+                const n = c.id === "all" ? products.length : counts[c.id];
+                return (
+                  <button
+                    key={c.id}
+                    aria-pressed={on}
+                    onClick={(e) => {
+                      setActive(c.id);
+                      history.replaceState(null, "", c.slug ? `#${c.slug}` : location.pathname);
+                      e.currentTarget.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest", inline: "center" });
+                    }}
+                    className={clsx(
+                      "relative flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[13px] font-semibold transition-colors",
+                      on ? "text-ink" : "text-ink/65 hover:bg-turquoise-soft hover:text-ink",
+                    )}
+                  >
+                    {on && <motion.span layoutId="menu-chip" className="absolute inset-0 -z-10 rounded-full bg-turquoise shadow-[0_6px_16px_-8px_rgb(10_111_140/.8)]" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
+                    <span className="relative">{c.name}</span>
+                    <span className={clsx("relative font-display text-[11px] italic", on ? "text-ink/70" : "text-pink")}>{n}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
           {anyVegKnown && (
-            <label className="flex shrink-0 cursor-pointer items-center gap-2 text-sm">
+            <label className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-3 text-sm text-ink">
               <input type="checkbox" checked={vegOnly} onChange={(e) => setVegOnly(e.target.checked)} className="accent-[var(--color-veg)]" /> Veg only
             </label>
           )}
