@@ -68,7 +68,7 @@ export interface Store {
   getOrderByToken(token: string): Promise<Order | null>;
   getOrderByRazorpayOrderId(rzpOrderId: string): Promise<Order | null>;
   listOrders(f?: OrderFilter): Promise<Order[]>;
-  updateOrder(id: string, patch: Partial<Pick<Order, "status" | "payment_status" | "razorpay_order_id" | "razorpay_payment_id">>): Promise<Order>;
+  updateOrder(id: string, patch: Partial<Pick<Order, "status" | "payment_status" | "razorpay_order_id" | "razorpay_payment_id">>, actor?: string): Promise<Order>;
   /**
    * Atomically mark an order paid. Returns false if this payment id was already
    * recorded (duplicate callback / webhook) — callers must treat that as success-noop.
@@ -90,7 +90,7 @@ export interface Store {
   listReservations(f?: ReservationFilter): Promise<Reservation[]>;
   getReservationByToken(token: string): Promise<Reservation | null>;
   getReservation(id: string): Promise<Reservation | null>;
-  updateReservation(id: string, patch: Partial<Pick<Reservation, "status" | "date" | "time" | "guests" | "staff_note" | "table_id">>): Promise<Reservation>;
+  updateReservation(id: string, patch: Partial<Pick<Reservation, "status" | "date" | "time" | "guests" | "staff_note" | "table_id">>, actor?: string): Promise<Reservation>;
 
   /** publicOnly → active, verified, with a URL; sorted by display_order. */
   listPlatforms(opts?: { publicOnly?: boolean }): Promise<ExternalPlatform[]>;

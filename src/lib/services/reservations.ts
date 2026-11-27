@@ -47,13 +47,14 @@ const NEXT: Record<ReservationStatus, ReservationStatus[]> = {
 export async function changeReservation(
   id: string,
   patch: { status?: ReservationStatus; date?: string; time?: string; guests?: number; staff_note?: string | null; table_id?: string | null },
+  actor?: string,
 ) {
   const store = getStore();
   const r = await store.getReservation(id);
   if (!r) return { ok: false as const, status: 404, message: "Reservation not found." };
   if (patch.status && patch.status !== r.status && !NEXT[r.status].includes(patch.status))
     return { ok: false as const, status: 409, message: `Can't move a ${r.status} booking to ${patch.status}.` };
-  const updated = await store.updateReservation(id, patch);
+  const updated = await store.updateReservation(id, patch, actor);
   if (patch.status && patch.status !== r.status && ["confirmed", "rejected", "cancelled"].includes(patch.status))
     await notifyReservation(updated, patch.status as "confirmed" | "rejected" | "cancelled");
   return { ok: true as const, reservation: updated };

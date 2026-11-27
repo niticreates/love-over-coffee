@@ -14,6 +14,12 @@ function sb(): SupabaseClient {
   return client;
 }
 
+/** "menu/abc.webp" for a URL in this project's public media bucket; null for local /images paths or other hosts. */
+function storagePath(url: string | null | undefined): string | null {
+  const prefix = `${env.supabaseUrl}/storage/v1/object/public/media/`;
+  return url && env.supabaseUrl && url.startsWith(prefix) ? decodeURIComponent(url.slice(prefix.length)) : null;
+}
+
 function must<T>(res: { data: T; error: { message: string; code?: string } | null }): T {
   if (res.error) {
     if (res.error.code === "23505") throw new StoreError("conflict", "That value is already in use.");
@@ -59,6 +65,12 @@ function toReservation(r: any): Reservation {
 }
 
 const ORDER_SELECT = "*, order_items(*)";
+const isUuid = (s?: string) => !!s && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+
+/** Runs a batch of updates and fails loudly if any of them failed. */
+async function all(results: PromiseLike<{ error: { message: string; code?: string } | null }>[]) {
+  for (const r of await Promise.all(results)) must({ data: null, error: r.error });
+}
 
 export const supabaseStore: Store = {
   mode: "supabase",
@@ -114,17 +126,8 @@ export const supabaseStore: Store = {
     return r ? toProduct(r) : null;
   },
   async upsertProduct(p) {
-    const { customizations, image_url, image_alt, ...row } = p;
-    must(await sb().from("products").upsert(row));
-    // Replace customizations (small sets; simplest correct approach).
-    must(await sb().from("product_customizations").delete().eq("product_id", p.id));
-    for (const [i, c] of customizations.entries()) {
-      must(await sb().from("product_customizations").insert({ id: c.id, product_id: p.id, name: c.name, required: c.required, max_select: c.max_select, sort_order: i }));
-      if (c.options.length)
-        must(await sb().from("customization_options").insert(c.options.map((o, j) => ({ ...o, customization_id: c.id, sort_order: j }))));
-    }
-    must(await sb().from("product_images").delete().eq("product_id", p.id));
-    if (image_url) must(await sb().from("product_images").insert({ product_id: p.id, url: image_url, alt: image_alt ?? p.name, is_primary: true }));
+    // One transaction: the product, its customisations and its photo are saved together or not at all.
+    must(await sb().rpc("save_product", { p: { ...p, image_path: storagePath(p.image_url) } }));
     return p;
   },
   async deleteProduct(id) {
@@ -172,8 +175,8 @@ export const supabaseStore: Store = {
     }
     return (must(await q) ?? []).map(toOrder);
   },
-  async updateOrder(id, patch) {
-    const r = must(await sb().from("orders").update(patch).eq("id", id).select(ORDER_SELECT).single());
+  async updateOrder(id, patch, actor) {
+    const r = must(await sb().from("orders").update({ ...patch, ...(isUuid(actor) ? { updated_by: actor } : {}) }).eq("id", id).select(ORDER_SELECT).single());
     return toOrder(r);
   },
   async recordPayment(p) {
@@ -229,8 +232,8 @@ export const supabaseStore: Store = {
     const r = must(await sb().from("reservations").select("*").eq("id", id).maybeSingle());
     return r ? toReservation(r) : null;
   },
-  async updateReservation(id, patch) {
-    const res = await sb().from("reservations").update(patch).eq("id", id).select("*").single();
+  async updateReservation(id, patch, actor) {
+    const res = await sb().from("reservations").update({ ...patch, ...(isUuid(actor) ? { updated_by: actor } : {}) }).eq("id", id).select("*").single();
     if (res.error?.code === "23P01") throw new StoreError("conflict", "That table is already booked for an overlapping time.");
     return toReservation(must(res));
   },
@@ -247,21 +250,23 @@ export const supabaseStore: Store = {
     must(await sb().from("external_platforms").delete().eq("id", id));
   },
   async reorderPlatforms(ids) {
-    await Promise.all(ids.map((id, i) => sb().from("external_platforms").update({ display_order: i }).eq("id", id)));
+    await all(ids.map((id, i) => sb().from("external_platforms").update({ display_order: i }).eq("id", id)));
   },
 
   async listGallery() {
     return must(await sb().from("gallery_images").select("*").order("sort_order")) as GalleryImage[];
   },
   async upsertGalleryImage(g) {
-    must(await sb().from("gallery_images").upsert(g));
+    must(await sb().from("gallery_images").upsert({ ...g, storage_path: storagePath(g.url) }));
     return g;
   },
   async deleteGalleryImage(id) {
-    must(await sb().from("gallery_images").delete().eq("id", id));
+    const row = must(await sb().from("gallery_images").delete().eq("id", id).select("storage_path").maybeSingle()) as { storage_path: string | null } | null;
+    // Remove the file too, so deleted photos don't linger in the public bucket.
+    if (row?.storage_path) await sb().storage.from("media").remove([row.storage_path]);
   },
   async reorderGallery(ids) {
-    await Promise.all(ids.map((id, i) => sb().from("gallery_images").update({ sort_order: i }).eq("id", id)));
+    await all(ids.map((id, i) => sb().from("gallery_images").update({ sort_order: i }).eq("id", id)));
   },
 
   async uploadImage(path, file) {

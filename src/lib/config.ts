@@ -56,6 +56,21 @@ export function paymentMode(): "razorpay" | "simulated" {
   return env.razorpayKeyId && env.razorpayKeySecret ? "razorpay" : "simulated";
 }
 
+/**
+ * The in-memory store is for local preview, development and CI only. A production server
+ * (NODE_ENV=production) refuses to fall back to it unless ALLOW_MEMORY_STORE=true is set on
+ * purpose, so a missing Supabase variable can never make orders "succeed" into memory.
+ */
+export function memoryStoreAllowed(): boolean {
+  return process.env.NODE_ENV !== "production" || process.env.ALLOW_MEMORY_STORE === "true";
+}
+
+/** Simulated payments: never with real Razorpay keys, and never in production unless explicitly allowed. */
+export function simulatedPaymentsAllowed(): boolean {
+  if (paymentMode() !== "simulated") return false;
+  return process.env.NODE_ENV !== "production" || process.env.ALLOW_SIMULATED_PAYMENTS === "true";
+}
+
 export function isProduction() {
   return process.env.NODE_ENV === "production" && process.env.VERCEL_ENV !== "preview";
 }

@@ -3,11 +3,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import { timingSafeEqual } from "node:crypto";
-import { dataMode, env } from "./config";
+import { dataMode, env, memoryStoreAllowed } from "./config";
 import { hasRole, SESSION_COOKIE, SESSION_TTL_SECONDS, signSession, verifySession, type Role, type SessionPayload } from "./session";
 
 export async function authenticate(email: string, password: string): Promise<SessionPayload | { error: string }> {
   if (dataMode() === "memory") {
+    if (!memoryStoreAllowed()) return { error: "Sign-in is unavailable: the database isn't configured." };
     const expected = env.demoAdminPassword;
     if (!expected) return { error: "Admin is disabled: set DEMO_ADMIN_PASSWORD for preview mode, or configure Supabase." };
     const a = Buffer.from(password);
@@ -48,7 +49,7 @@ export async function currentAdmin(): Promise<SessionPayload | null> {
     if (!data?.is_active) return null;
     return { ...p, role: data.role };
   }
-  return p;
+  return memoryStoreAllowed() ? p : null;
 }
 
 export class AuthError extends Error {

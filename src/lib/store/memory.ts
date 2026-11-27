@@ -156,7 +156,7 @@ export const memoryStore: Store = {
     }
     return clone(list.slice(0, f.limit ?? 200));
   },
-  async updateOrder(id, patch) {
+  async updateOrder(id, patch, _actor) {
     const o = db().orders.find((x) => x.id === id);
     if (!o) throw new StoreError("not_found", "Order not found");
     Object.assign(o, patch, { updated_at: now() });
@@ -210,7 +210,7 @@ export const memoryStore: Store = {
   async getReservation(id) {
     return clone(db().reservations.find((r) => r.id === id) ?? null);
   },
-  async updateReservation(id, patch) {
+  async updateReservation(id, patch, _actor) {
     const r = db().reservations.find((x) => x.id === id);
     if (!r) throw new StoreError("not_found", "Reservation not found");
     Object.assign(r, patch, { updated_at: now() });
