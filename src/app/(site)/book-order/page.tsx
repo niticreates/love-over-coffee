@@ -61,7 +61,7 @@ export default async function BookOrderPage() {
       <section id="reserve" className="container-site scroll-mt-28 py-section">
         <Reveal><SectionHeading index="A" eyebrow="Reserve your table" title={<>A table, <em className="text-turquoise-deep">held for you.</em></>} /></Reveal>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {reserve.map((p) => <Reveal key={p.id}><PlatformCard p={p} cta="Book a Table" /></Reveal>)}
+          {reserve.map((p, i) => <div key={p.id} data-aos="flip-up" data-aos-delay={String(i * 110)}><PlatformCard p={p} cta="Book a Table" /></div>)}
           <Reveal>
             <Link href="/reserve" className="group flex h-full flex-col rounded-[22px] border border-oat bg-paper p-6 transition-[border-color,box-shadow] duration-300 hover:border-walnut/50 hover:shadow-soft md:p-7">
               <span className="grid h-12 w-12 place-items-center rounded-[12px] bg-turquoise" aria-hidden><Mascot className="h-auto w-[55%]" title={null} animated={false} /></span>
@@ -98,7 +98,7 @@ export default async function BookOrderPage() {
                 </Link>
               </Reveal>
             )}
-            {order.map((p) => <Reveal key={p.id}><PlatformCard p={p} cta="Order Now" /></Reveal>)}
+            {order.map((p, i) => <div key={p.id} data-aos="flip-up" data-aos-delay={String((i + 1) * 110)}><PlatformCard p={p} cta="Order Now" /></div>)}
           </div>
           {waOrder && (
             <p className="mt-8 text-sm text-ivory/70">

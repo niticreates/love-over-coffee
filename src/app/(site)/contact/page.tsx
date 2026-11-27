@@ -72,8 +72,8 @@ export default async function ContactPage() {
         <section className="lg:col-span-6 lg:col-start-7" aria-labelledby="faq">
           <h2 id="faq" className="text-display-md">Good <em className="text-turquoise-deep">questions</em><span className="text-pink">.</span></h2>
           <div className="mt-8 divide-y divide-oat border-y border-oat">
-            {faqs.map((f) => (
-              <details key={f.q} className="group py-5">
+            {faqs.map((f, i) => (
+              <details key={f.q} data-aos="fade-up" data-aos-delay={String(i * 70)} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-2xl">
                   {f.q}<span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-turquoise text-ink transition-transform duration-300 group-open:rotate-45" aria-hidden>+</span>
                 </summary>

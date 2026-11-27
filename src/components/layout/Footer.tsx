@@ -21,7 +21,7 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
           </div>
         </div>
         <div className="grid grid-cols-2 gap-10 md:col-span-4">
-          <div>
+          <div data-aos="fade-up" data-aos-delay="0">
             <p className="eyebrow text-turquoise">Explore</p>
             <ul className="mt-5 space-y-2.5 text-sm text-ivory/80">
               {[["/", "Home"], ["/story", "Our Story"], ["/menu", "Menu"], ["/book-order", "Book & Order"], ["/gallery", "Gallery"], ["/reserve", "Reservations"], ["/contact", "Contact"]].map(([h, l]) => (
@@ -29,7 +29,7 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
               ))}
             </ul>
           </div>
-          <div>
+          <div data-aos="fade-up" data-aos-delay="90">
             <p className="eyebrow text-turquoise">Menu</p>
             <ul className="mt-5 space-y-2.5 text-sm text-ivory/80">
               {categories.slice(0, 7).map((c) => (
@@ -39,7 +39,7 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
           </div>
         </div>
         <div className="space-y-8 text-sm text-ivory/80 md:col-span-4">
-          <div>
+          <div data-aos="fade-up" data-aos-delay="180">
             <p className="eyebrow text-turquoise">Visit</p>
             <address className="mt-5 not-italic leading-relaxed">
               {b.address_lines.map((l) => <span key={l} className="block">{l}</span>)}
@@ -47,21 +47,21 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
             </address>
             <a href={b.maps_place_url} target="_blank" rel="noopener noreferrer" className="link-underline mt-3 inline-block text-ivory">Google Maps ↗</a>
           </div>
-          <div>
+          <div data-aos="fade-up" data-aos-delay="270">
             <p className="eyebrow text-turquoise">Contact</p>
             <a href={`tel:${b.phone_e164}`} className="link-underline mt-5 inline-block text-ivory">{b.phone_display}</a>
             {b.instagram_url && (
               <a href={b.instagram_url} target="_blank" rel="noopener noreferrer" className="mt-3 flex items-center gap-2 text-ivory"><InstagramIcon className="h-4 w-4" /> Instagram</a>
             )}
           </div>
-          <div>
+          <div data-aos="fade-up" data-aos-delay="360">
             <p className="eyebrow text-turquoise">Hours</p>
             <Hours business={b} className="mt-5 max-w-xs" />
           </div>
         </div>
       </div>
       <div aria-hidden className="container-site select-none overflow-hidden pb-6 pt-4 md:pb-10">
-        <p className="font-brand whitespace-nowrap text-[clamp(2.6rem,11.6vw,10.5rem)] font-bold leading-[1.15] tracking-[-.04em] text-ivory/[.07]">
+        <p data-aos="blur-in" className="font-brand whitespace-nowrap text-[clamp(2.6rem,11.6vw,10.5rem)] font-bold leading-[1.15] tracking-[-.04em] text-ivory/[.07]">
           loveOverCoffee.
         </p>
       </div>

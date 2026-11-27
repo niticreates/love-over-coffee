@@ -47,11 +47,11 @@ export function SignatureMenu({ products, orderingEnabled, sample }: { products:
         ))}
       </ul>
       {listed.length > 0 && (
-        <Reveal className="mt-24">
-          <p className="eyebrow text-turquoise">Also on the regulars&apos; list</p>
+        <div className="mt-24">
+          <p data-aos="fade-right" className="eyebrow text-turquoise">Also on the regulars&apos; list</p>
           <ul className="mt-6 grid gap-x-14 border-t border-ivory/15 md:grid-cols-2">
             {listed.map((p, i) => (
-              <li key={p.id} className="group border-b border-ivory/15 py-5">
+              <li key={p.id} data-aos="fade-up" data-aos-delay={String((i % 2) * 120)} className="group border-b border-ivory/15 py-5">
                 <div className="flex items-start gap-5">
                   <Thumb categoryId={p.category_id} />
                   <span className="mt-2 font-display text-sm italic text-ivory/45">{String(pictured.length + i + 1).padStart(2, "0")}</span>
@@ -70,7 +70,7 @@ export function SignatureMenu({ products, orderingEnabled, sample }: { products:
               </li>
             ))}
           </ul>
-        </Reveal>
+        </div>
       )}
     </>
   );

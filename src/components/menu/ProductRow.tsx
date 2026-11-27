@@ -7,7 +7,7 @@ import { Price } from "./Price";
 
 export function ProductRow({ product: p, orderingEnabled, sample }: { product: PublicProduct; orderingEnabled: boolean; sample: boolean }) {
   return (
-    <li className={`group flex gap-5 border-b border-oat py-6 ${p.is_available ? "" : "opacity-60"}`}>
+    <li data-aos="fade-up" className={`group flex gap-5 border-b border-oat py-6 ${p.is_available ? "" : "opacity-60"}`}>
       {p.image_url && <Link href={`/menu/${p.slug}`} className="w-24 shrink-0 sm:w-28" tabIndex={-1} aria-hidden>
         <div className="overflow-hidden rounded-[18px]">
           <div className="transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]">
