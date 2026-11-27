@@ -154,6 +154,17 @@
   .link-underline { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size var(--duration-base) var(--ease-out-soft); }
   .link-underline:hover { background-size: 100% 1px; }
 
+  /* ---- Admin dashboard surfaces ---- */
+  .admin-surface { background: var(--color-paper); border: 1px solid rgb(14 31 61 / .08); border-radius: 22px; box-shadow: 0 1px 0 rgb(14 31 61 / .03), 0 18px 40px -30px rgb(14 31 61 / .35); }
+  .admin-surface:where(section, div, ul, form) { overflow: hidden; }
+  .admin-pill-tabs { display: inline-flex; gap: .25rem; padding: .3rem; border-radius: 999px; background: var(--color-turquoise-soft); }
+  .admin-pill-tabs > button { border-radius: 999px; padding: .5rem 1.1rem; font-size: .85rem; font-weight: 600; color: var(--color-ink); transition: background-color var(--duration-base), color var(--duration-base); }
+  .admin-pill-tabs > button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-ivory); }
+  .admin-pill-tabs > button[aria-pressed="false"]:hover { background: rgb(255 255 255 / .7); }
+  .admin .input { min-height: 44px; border-radius: 12px; }
+  .admin .btn { min-height: 42px; }
+  .admin input[type="checkbox"] { accent-color: var(--color-turquoise-deep); width: 1.05rem; height: 1.05rem; }
+
   .field { display: grid; gap: .4rem; }
   .field label { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--color-muted); }
   .input {

@@ -9,7 +9,7 @@ export function ImageUpload({ folder, value, onChange, label = "Photo" }: { fold
     <div className="field">
       <label>{label}</label>
       <div className="flex items-center gap-4">
-        <div className="h-20 w-20 shrink-0 overflow-hidden border border-oat bg-oat">
+        <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-ink/10 bg-turquoise-soft">
           {value ? <img src={value} alt="" className="h-full w-full object-cover" /> : <span className="grid h-full place-items-center text-[10px] text-muted">None</span>}
         </div>
         <div className="flex flex-wrap gap-2">

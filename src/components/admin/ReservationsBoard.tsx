@@ -13,13 +13,13 @@ const LABEL: Partial<Record<ReservationStatus, string>> = { confirmed: "Approve"
 export function ReservationsBoard({ reservations }: { reservations: Reservation[] }) {
   const { run, busy } = useAdminAction();
   const [editing, setEditing] = useState<string | null>(null);
-  if (!reservations.length) return <p className="border border-oat bg-ivory p-8 text-center text-muted">No reservations in this range.</p>;
+  if (!reservations.length) return <p className="admin-surface p-8 text-center text-muted">No reservations in this range.</p>;
   const byDate = reservations.reduce<Record<string, Reservation[]>>((a, r) => ((a[r.date] ??= []).push(r), a), {});
   return (
     <div className="grid gap-6">
       {Object.entries(byDate).map(([date, list]) => (
-        <section key={date} className="border border-oat bg-ivory">
-          <h2 className="border-b border-oat px-5 py-3 font-display text-2xl">
+        <section key={date} className="admin-surface">
+          <h2 className="border-b border-ink/8 bg-turquoise-soft/60 px-5 py-4 font-display text-2xl text-ink">
             {new Date(`${date}T00:00:00Z`).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" })}
             <span className="ml-3 font-sans text-xs text-muted">{list.filter((r) => r.status === "confirmed").reduce((a, r) => a + r.guests, 0)} confirmed guests</span>
           </h2>

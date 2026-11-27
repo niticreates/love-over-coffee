@@ -25,8 +25,8 @@ export function MenuManager({ categories, products, canEdit }: { categories: Cat
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        <div className="flex border border-oat">
-          {(["items", "categories"] as const).map((t) => <button key={t} onClick={() => setTab(t)} className={clsx("px-4 py-2 text-sm capitalize", tab === t ? "bg-espresso text-ivory" : "bg-ivory")}>{t}</button>)}
+        <div className="admin-pill-tabs" role="group" aria-label="Menu view">
+          {(["items", "categories"] as const).map((t) => <button key={t} type="button" aria-pressed={tab === t} onClick={() => setTab(t)} className="capitalize">{t}</button>)}
         </div>
         {tab === "items" && <input value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Search items" className="input w-auto flex-1" aria-label="Search items" />}
         {canEdit && tab === "items" && <button className="btn btn-primary min-h-[44px]" onClick={() => setEditing(blank())}><Plus size={14} /> Add item</button>}
@@ -38,8 +38,8 @@ export function MenuManager({ categories, products, canEdit }: { categories: Cat
             const items = list.filter((p) => p.category_id === c.id);
             if (!items.length) return null;
             return (
-              <section key={c.id} className="border border-oat bg-ivory">
-                <h2 className="border-b border-oat px-5 py-3 font-display text-2xl">{c.name} {!c.is_active && <Badge value="hidden" />}</h2>
+              <section key={c.id} className="admin-surface">
+                <h2 className="border-b border-ink/8 bg-turquoise-soft/60 px-5 py-4 font-display text-2xl text-ink">{c.name} {!c.is_active && <Badge value="hidden" />}</h2>
                 <ul className="divide-y divide-oat">
                   {items.map((p) => (
                     <li key={p.id} className="flex flex-wrap items-center gap-3 px-5 py-3 text-sm">
@@ -89,9 +89,9 @@ function ProductEditor({ product, categories, busy, onClose, onSave, onDelete }:
   const setCz = (i: number, cz: ProductCustomization | null) => setP((x) => ({ ...x, customizations: cz ? x.customizations.map((c, j) => (j === i ? cz : c)) : x.customizations.filter((_, j) => j !== i) }));
   return (
     <div className="fixed inset-0 z-[60] flex justify-end">
-      <div className="absolute inset-0 bg-espresso/40" onClick={onClose} />
+      <div className="absolute inset-0 bg-navy/50 backdrop-blur-sm" onClick={onClose} />
       <form
-        className="relative h-full w-full max-w-xl overflow-y-auto bg-ivory p-6 shadow-drawer md:p-8"
+        className="relative h-full w-full max-w-xl overflow-y-auto bg-ivory p-6 shadow-drawer sm:rounded-l-[28px] md:p-8"
         onSubmit={(e) => { e.preventDefault(); onSave(p, price.trim() === "" ? null : Number(price)); }}
         role="dialog" aria-modal="true" aria-label={p.id ? `Edit ${p.name}` : "New item"}
       >
@@ -119,18 +119,18 @@ function ProductEditor({ product, categories, busy, onClose, onSave, onDelete }:
           <ImageUpload folder="menu" value={p.image_url} onChange={(url) => setP((x) => ({ ...x, image_url: url, image_alt: url ? x.image_alt ?? x.name : null }))} />
 
           <div className="border-t border-oat pt-4">
-            <div className="flex items-center justify-between"><p className="eyebrow text-walnut">Customisations</p>
+            <div className="flex items-center justify-between"><p className="eyebrow text-turquoise-deep">Customisations</p>
               <button type="button" className="text-sm underline" onClick={() => set("customizations", [...p.customizations, { id: rid("cz"), name: "", required: false, max_select: 1, options: [{ id: rid("opt"), label: "", price_delta: 0 }] }])}>+ Add group</button>
             </div>
             {p.customizations.map((c, i) => (
-              <div key={c.id} className="mt-3 grid gap-2 border border-oat p-3">
+              <div key={c.id} className="mt-3 grid gap-2 rounded-2xl border border-ink/10 bg-ivory p-3">
                 <div className="flex gap-2">
                   <input className="input flex-1" placeholder="Group name, e.g. Milk" value={c.name} onChange={(e) => setCz(i, { ...c, name: e.target.value })} aria-label="Group name" />
                   <button type="button" className="px-2 text-danger" onClick={() => setCz(i, null)} aria-label="Remove group"><Trash2 size={16} /></button>
                 </div>
                 <div className="flex gap-4 text-xs">
                   <label className="flex items-center gap-1"><input type="checkbox" checked={c.required} onChange={(e) => setCz(i, { ...c, required: e.target.checked })} /> Required</label>
-                  <label className="flex items-center gap-1">Max choices <input type="number" min={1} max={10} className="w-14 border border-oat px-1" value={c.max_select} onChange={(e) => setCz(i, { ...c, max_select: Number(e.target.value) || 1 })} /></label>
+                  <label className="flex items-center gap-1">Max choices <input type="number" min={1} max={10} className="w-14 rounded-md border border-ink/15 px-1" value={c.max_select} onChange={(e) => setCz(i, { ...c, max_select: Number(e.target.value) || 1 })} /></label>
                 </div>
                 {c.options.map((o, j) => (
                   <div key={o.id} className="flex gap-2">
@@ -158,7 +158,7 @@ function CategoryManager({ categories, products, canEdit }: { categories: Catego
   const { run, busy } = useAdminAction();
   const [name, setName] = useState("");
   return (
-    <div className="border border-oat bg-ivory">
+    <div className="admin-surface">
       <ul className="divide-y divide-oat">
         {categories.map((c, i) => (
           <li key={c.id} className="flex flex-wrap items-center gap-3 px-5 py-3 text-sm">

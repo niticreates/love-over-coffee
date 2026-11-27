@@ -20,7 +20,7 @@ export function SettingsEditor({ settings, isOwner, integrations }: { settings: 
 
   return (
     <div className="grid gap-6">
-      {!isOwner && <p className="border border-oat bg-ivory p-4 text-sm">Business, payment and notification settings can only be changed by the owner. You can edit reservation capacity.</p>}
+      {!isOwner && <p className="admin-surface p-4 text-sm">Business, payment and notification settings can only be changed by the owner. You can edit reservation capacity.</p>}
 
       <Card title="Business information" action={<Save disabled={busy || lock} onClick={() => run("/api/admin/settings", { business: { ...b, hours: b.hours } }, "PATCH", "Business info saved")} />}>
         <fieldset disabled={lock} className="grid gap-4 md:grid-cols-2">
@@ -40,7 +40,7 @@ export function SettingsEditor({ settings, isOwner, integrations }: { settings: 
         </fieldset>
 
         <fieldset disabled={lock} className="mt-6 border-t border-oat pt-5">
-          <legend className="eyebrow text-walnut">Opening hours</legend>
+          <legend className="eyebrow text-turquoise-deep">Opening hours</legend>
           <label className="mt-3 flex items-center gap-2 text-sm"><input type="checkbox" checked={b.hours != null} onChange={(e) => setB({ ...b, hours: e.target.checked ? hours : null })} /> Publish opening hours</label>
           {b.hours && (
             <div className="mt-3 grid gap-2">
@@ -72,7 +72,7 @@ export function SettingsEditor({ settings, isOwner, integrations }: { settings: 
           <Text label="Minimum order value (₹)" value={rupees(c.min_order_value)} onChange={(v) => setC({ ...c, min_order_value: toPaise(v) ?? 0 })} />
         </fieldset>
         <dl className="mt-5 grid gap-1 border-t border-oat pt-4 text-sm">
-          <p className="eyebrow mb-2 text-walnut">Payment gateway</p>
+          <p className="eyebrow mb-2 text-turquoise-deep">Payment gateway</p>
           <div className="flex justify-between"><dt>Razorpay</dt><dd>{integrations.payments}</dd></div>
           <div className="flex justify-between"><dt>Razorpay webhook</dt><dd>{integrations.webhook}</dd></div>
           <p className="mt-2 text-xs text-muted">API keys are stored as server environment variables, never in the database or browser. See docs/INTEGRATIONS.md.</p>

@@ -25,7 +25,7 @@ export function GalleryManager({ images }: { images: GalleryImage[] }) {
   };
   return (
     <>
-      <div className="mb-6 flex flex-wrap items-end gap-4 border border-oat bg-ivory p-4">
+      <div className="mb-6 flex flex-wrap items-end gap-4 admin-surface p-4">
         <div className="field"><label htmlFor="newcat">Category</label>
           <select id="newcat" className="input w-auto" value={newCat} onChange={(e) => setNewCat(e.target.value as typeof newCat)}>{CATS.map((c) => <option key={c}>{c}</option>)}</select>
         </div>
@@ -37,8 +37,8 @@ export function GalleryManager({ images }: { images: GalleryImage[] }) {
       </div>
       <ul className="grid gap-3">
         {images.map((g, i) => (
-          <li key={g.id} className="grid gap-3 border border-oat bg-ivory p-3 sm:grid-cols-[96px_1fr_auto] sm:items-center">
-            <div className="h-24 w-24 overflow-hidden bg-oat">{g.url ? <img src={g.url} alt="" className="h-full w-full object-cover" /> : <span className="grid h-full place-items-center text-[10px] text-muted">Placeholder</span>}</div>
+          <li key={g.id} className="grid gap-3 admin-surface p-3 sm:grid-cols-[96px_1fr_auto] sm:items-center">
+            <div className="h-24 w-24 overflow-hidden rounded-t-full rounded-b-2xl bg-turquoise-soft">{g.url ? <img src={g.url} alt="" className="h-full w-full object-cover" /> : <span className="grid h-full place-items-center text-[10px] text-muted">Placeholder</span>}</div>
             <form className="grid gap-2 sm:grid-cols-3" onSubmit={(e) => {
               e.preventDefault();
               const f = Object.fromEntries(new FormData(e.currentTarget)) as Record<string, string>;

@@ -24,7 +24,7 @@ export function LoginForm() {
       <div className="field"><label htmlFor="email">Email</label><input id="email" name="email" type="email" autoComplete="username" className="input" required /></div>
       <div className="field"><label htmlFor="password">Password</label><input id="password" name="password" type="password" autoComplete="current-password" className="input" required /></div>
       {err && <p className="field-error" role="alert">{err}</p>}
-      <button className="btn btn-dark mt-2" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
+      <button className="btn btn-primary mt-2 w-full" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
     </form>
   );
 }

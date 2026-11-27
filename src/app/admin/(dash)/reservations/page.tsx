@@ -15,7 +15,7 @@ export default async function ReservationsPage({ searchParams }: { searchParams:
   return (
     <>
       <PageTitle title="Reservations" />
-      <form className="mb-6 flex flex-wrap gap-3 border border-oat bg-ivory p-4" method="get">
+      <form className="mb-6 flex flex-wrap gap-3 admin-surface p-4" method="get">
         <input type="date" name="date" defaultValue={sp.date} className="input w-auto" aria-label="Date" />
         <select name="status" defaultValue={status ?? ""} className="input w-auto" aria-label="Status">
           <option value="">All statuses</option>

@@ -42,25 +42,27 @@ export default async function Overview() {
 
   return (
     <>
-      <PageTitle title="Today" />
+      <PageTitle title="Today">
+        <p className="rounded-full bg-paper px-4 py-2 text-sm text-muted ring-1 ring-ink/8">{new Date(`${today}T00:00:00Z`).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" })}</p>
+      </PageTitle>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-        <Stat label="Orders today" value={paid.length} />
-        <Stat label="Revenue today" value={formatINR(revenue)} hint="Paid, not cancelled" />
+        <Stat label="Orders today" value={paid.length} tone="turquoise" />
+        <Stat label="Revenue today" value={formatINR(revenue)} hint="Paid, not cancelled" tone="navy" />
         <Stat label="New orders" value={pendingOrders.length} hint="Awaiting acceptance" />
         <Stat label="Completed" value={completed.length} />
-        <Stat label="Table requests" value={pendingRes.length} hint="Awaiting approval" />
+        <Stat label="Table requests" value={pendingRes.length} hint="Awaiting approval" tone="blush" />
       </div>
 
       {todo.length > 0 && (
-        <Card title="Before going live" className="mt-6 border-terracotta/40">
+        <Card title="Before going live" className="mt-6 border-l-4 border-l-pink">
           <ul className="grid gap-2 text-sm md:grid-cols-2">
-            {todo.map((t) => <li key={t.label}><Link href={t.href} className="hover:underline">○ {t.label}</Link></li>)}
+            {todo.map((t) => <li key={t.label}><Link href={t.href} className="group flex items-center gap-3 rounded-full px-2 py-1.5 transition-colors hover:bg-turquoise-soft"><span className="h-4 w-4 shrink-0 rounded-full border-2 border-turquoise-deep/50 group-hover:border-turquoise-deep" aria-hidden />{t.label}</Link></li>)}
           </ul>
         </Card>
       )}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <Card title="Needs attention" action={<Link href="/admin/orders" className="text-xs underline">All orders</Link>}>
+        <Card title="Needs attention" action={<Link href="/admin/orders" className="link-underline text-xs font-semibold text-turquoise-deep">All orders</Link>}>
           {[...pendingOrders, ...active].length === 0 ? <p className="text-sm text-muted">No open orders.</p> : (
             <ul className="divide-y divide-oat text-sm">
               {[...pendingOrders, ...active].slice(0, 8).map((o) => (
@@ -73,7 +75,7 @@ export default async function Overview() {
             </ul>
           )}
         </Card>
-        <Card title="Table requests" action={<Link href="/admin/reservations" className="text-xs underline">All reservations</Link>}>
+        <Card title="Table requests" action={<Link href="/admin/reservations" className="link-underline text-xs font-semibold text-turquoise-deep">All reservations</Link>}>
           {pendingRes.length === 0 ? <p className="text-sm text-muted">No pending requests.</p> : (
             <ul className="divide-y divide-oat text-sm">
               {pendingRes.slice(0, 8).map((r) => (

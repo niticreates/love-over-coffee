@@ -18,7 +18,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
   return (
     <>
       <PageTitle title="Orders" />
-      <form className="mb-6 grid gap-3 border border-oat bg-ivory p-4 sm:grid-cols-5" method="get">
+      <form className="mb-6 grid gap-3 admin-surface p-4 sm:grid-cols-5" method="get">
         <input name="q" defaultValue={sp.q} placeholder="Reference, name, phone" className="input sm:col-span-2" aria-label="Search orders" />
         <select name="status" defaultValue={status ?? ""} className="input" aria-label="Status">
           <option value="">All statuses</option>

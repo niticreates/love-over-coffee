@@ -23,22 +23,41 @@ export function AdminShell({ name, role, preview, children }: { name: string; ro
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const nav = NAV.filter((n) => RANK[role] >= RANK[n.role]);
+  const initial = name.trim().charAt(0).toUpperCase() || "L";
   const side = (
-    <nav className="flex h-full flex-col gap-1 p-4" aria-label="Dashboard">
-      <Link href="/" className="mb-6 px-3 pt-2 text-xs"><Wordmark /></Link>
+    <nav className="relative flex h-full flex-col gap-1 overflow-hidden p-4 text-ivory" aria-label="Dashboard">
+      {/* soft turquoise glow, echoing the neon in the café */}
+      <div className="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full bg-turquoise/25 blur-3xl" aria-hidden />
+      <Link href="/" className="relative mb-2 px-3 pt-3 text-[13px]" aria-label="View the website"><Wordmark tone="light" /></Link>
+      <p className="relative mb-6 px-3 text-[11px] uppercase tracking-[.18em] text-ivory/55">Staff dashboard</p>
       {nav.map((n) => {
         const active = n.href === "/admin" ? path === "/admin" : path.startsWith(n.href);
         return (
-          <Link key={n.href} href={n.href} onClick={() => setOpen(false)} className={clsx("flex items-center gap-3 px-3 py-2.5 text-sm", active ? "bg-espresso text-ivory" : "hover:bg-oat")}>
-            <n.icon size={16} strokeWidth={1.6} /> {n.label}
+          <Link
+            key={n.href}
+            href={n.href}
+            onClick={() => setOpen(false)}
+            aria-current={active ? "page" : undefined}
+            className={clsx(
+              "relative flex items-center gap-3 rounded-full px-4 py-2.5 text-sm transition-colors duration-200",
+              active ? "bg-turquoise font-semibold text-ink shadow-[0_10px_24px_-14px_rgb(34_184_222)]" : "text-ivory/80 hover:bg-ivory/10 hover:text-ivory",
+            )}
+          >
+            <n.icon size={17} strokeWidth={active ? 2 : 1.6} /> {n.label}
+            {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-pink" aria-hidden />}
           </Link>
         );
       })}
-      <div className="mt-auto border-t border-oat px-3 pt-4 text-xs text-muted">
-        <p className="font-semibold text-espresso">{name}</p>
-        <p className="capitalize">{role}</p>
+      <div className="relative mt-auto rounded-[20px] bg-ivory/[.06] p-4 ring-1 ring-ivory/10">
+        <div className="flex items-center gap-3">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blush font-display text-lg text-berry" aria-hidden>{initial}</span>
+          <div className="min-w-0 text-xs">
+            <p className="truncate text-sm font-semibold text-ivory">{name}</p>
+            <p className="capitalize text-ivory/60">{role}</p>
+          </div>
+        </div>
         <button
-          className="mt-3 flex items-center gap-2 text-sm text-espresso hover:underline"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-ivory/25 py-2 text-xs font-semibold uppercase tracking-[.1em] text-ivory transition-colors hover:border-pink hover:bg-pink"
           onClick={async () => {
             await fetch("/api/admin/logout", { method: "POST" });
             router.push("/admin/login");
@@ -50,24 +69,24 @@ export function AdminShell({ name, role, preview, children }: { name: string; ro
     </nav>
   );
   return (
-    <div className="min-h-svh bg-paper lg:grid lg:grid-cols-[240px_1fr]">
-      <aside className="hidden border-r border-oat bg-ivory lg:block">{side}</aside>
-      <div className="flex items-center justify-between border-b border-oat bg-ivory px-4 py-3 lg:hidden">
-        <Wordmark className="text-xs" />
-        <button onClick={() => setOpen(true)} className="grid h-11 w-11 place-items-center" aria-label="Open dashboard menu"><MenuIcon size={20} /></button>
+    <div className="admin min-h-svh bg-ivory lg:grid lg:grid-cols-[260px_1fr]">
+      <aside className="hidden bg-navy lg:sticky lg:top-0 lg:block lg:h-svh">{side}</aside>
+      <div className="sticky top-0 z-40 flex items-center justify-between bg-navy px-4 py-3 lg:hidden">
+        <Link href="/admin" className="text-[11px] text-ivory" aria-label="Dashboard home"><Wordmark tone="light" /></Link>
+        <button onClick={() => setOpen(true)} className="grid h-11 w-11 place-items-center rounded-full text-ivory hover:bg-ivory/10" aria-label="Open dashboard menu"><MenuIcon size={20} /></button>
       </div>
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-espresso/40" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 w-72 bg-ivory">
-            <button onClick={() => setOpen(false)} className="absolute right-2 top-2 grid h-11 w-11 place-items-center" aria-label="Close"><X size={18} /></button>
+          <div className="absolute inset-0 bg-navy/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <aside className="absolute inset-y-0 left-0 w-72 rounded-r-[28px] bg-navy">
+            <button onClick={() => setOpen(false)} className="absolute right-3 top-3 z-10 grid h-11 w-11 place-items-center rounded-full text-ivory hover:bg-ivory/10" aria-label="Close"><X size={18} /></button>
             {side}
           </aside>
         </div>
       )}
       <div className="min-w-0">
-        {preview && <div className="bg-turquoise px-4 py-2 text-center text-xs text-ink">Preview mode — data is held in memory and resets when the server restarts.</div>}
-        <div className="mx-auto max-w-6xl p-4 md:p-8">{children}</div>
+        {preview && <div className="bg-turquoise px-4 py-2 text-center text-xs font-medium text-ink">Preview mode: data is held in memory and resets when the server restarts.</div>}
+        <div className="mx-auto max-w-6xl p-4 md:p-8 lg:p-10">{children}</div>
       </div>
     </div>
   );

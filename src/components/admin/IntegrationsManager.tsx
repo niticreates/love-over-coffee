@@ -52,7 +52,7 @@ export function IntegrationsManager({ platforms, business }: { platforms: Extern
         <ul className="grid gap-4">
           {adding && <li><PlatformForm initial={blank(platforms.length)} busy={busy} onCancel={() => setAdding(false)} onSave={(d) => run("/api/admin/platforms", d, "POST", "Platform added").then((ok) => ok && setAdding(false))} /></li>}
           {platforms.map((p, i) => (
-            <li key={p.id} className="grid gap-3 border border-oat p-4 sm:grid-cols-[1fr_auto]">
+            <li key={p.id} className="grid gap-3 rounded-2xl border border-ink/10 bg-ivory p-4 sm:grid-cols-[1fr_auto]">
               <PlatformForm initial={strip(p)} busy={busy} onSave={(d) => run("/api/admin/platforms", d, "POST", "Saved")} />
               <div className="flex gap-1 sm:flex-col">
                 <button className="px-3 py-1" disabled={i === 0 || busy} onClick={() => move(i, -1)} aria-label={`Move ${p.platform_name} up`}>↑</button>
