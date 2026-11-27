@@ -6,9 +6,10 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:30
 
 export const OG_IMAGE = { url: "/images/og/love-over-coffee-vijay-nagar.jpg", width: 1200, height: 630, alt: "Love Over Coffee café storefront in Vijay Nagar, Indore" };
 
+/** Titles are written in full, keyword first, so they bypass the layout's title template. */
 export function pageMeta(title: string, description: string, path: string): Metadata {
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: path },
     openGraph: { title, description, url: path, siteName: "Love Over Coffee — Vijay Nagar", locale: "en_IN", type: "website", images: [OG_IMAGE] },

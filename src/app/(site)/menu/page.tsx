@@ -9,7 +9,7 @@ import { breadcrumbJsonLd, JsonLd, pageMeta, SITE_URL } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 
 export const revalidate = 60;
-export const metadata = pageMeta("Menu — Coffee, Frappes, Pasta & Desserts", "Browse the Love Over Coffee menu: coffee, frappes and shakes, nachos, garlic bread, pasta and desserts in Vijay Nagar, Indore. Order online for pickup.", "/menu");
+export const metadata = pageMeta("Love Over Coffee Menu, Vijay Nagar Indore | Cold Coffee, Frappes, Pasta", "Love Over Coffee Vijay Nagar menu: cappuccino, cold coffee, frappes, shakes, mocktails, nachos, garlic bread, pasta and desserts. Order online in Indore.", "/menu");
 
 export default async function MenuPage() {
   const { categories, products, settings, flags, platforms } = await getSiteData();

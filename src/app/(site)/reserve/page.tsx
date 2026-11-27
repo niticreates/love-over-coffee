@@ -11,7 +11,7 @@ import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
-export const metadata = pageMeta("Reserve a Table", "Request a table at Love Over Coffee, Vijay Nagar, Indore — for coffee dates, catch-ups and celebrations.", "/reserve");
+export const metadata = pageMeta("Reserve a Table | Love Over Coffee, Vijay Nagar Indore", "Request a table at Love Over Coffee, Vijay Nagar, Indore for coffee dates, catch-ups, birthdays and small celebrations. Staff confirm every request.", "/reserve");
 
 export default async function ReservePage() {
   const { settings, platforms } = await getSiteData();

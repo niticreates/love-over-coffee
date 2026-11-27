@@ -12,7 +12,7 @@ import { whatsappLink } from "@/lib/whatsapp";
 import { getSiteData } from "@/lib/site";
 
 export const revalidate = 300;
-export const metadata = pageMeta("Contact & Location", "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Call +91 93296 97769, get directions, or send us a message.", "/contact");
+export const metadata = pageMeta("Love Over Coffee Vijay Nagar, Indore | Address, Directions & Phone", "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Call +91 93296 97769, get directions, or send us a message.", "/contact");
 
 export default async function ContactPage() {
   const { settings, platforms } = await getSiteData();

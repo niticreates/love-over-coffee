@@ -9,7 +9,7 @@ import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 
 export const revalidate = 300;
-export const metadata = pageMeta("Our Story", "The Love Over Coffee experience in Vijay Nagar, Indore: coffee, comforting food, a navy-and-blush dining room and a wall of books.", "/our-story");
+export const metadata = pageMeta("Our Story | Love Over Coffee, Vijay Nagar Indore", "The story of Love Over Coffee in Vijay Nagar, Indore: carefully made coffee, comfort food, a navy-and-blush room, a wall of books and a party hall.", "/our-story");
 
 /** Photograph for each story section id; unknown ids fall back by position. */
 const SECTION_MEDIA: Record<string, Media> = {

@@ -33,7 +33,7 @@ export function Hero({ headline, subhead, image, orderingEnabled }: { headline: 
         {/* Copy */}
         <div className="relative z-10 lg:col-span-6 lg:pt-28 lg:pb-10">
           <motion.p className="eyebrow flex items-center gap-3 text-turquoise-deep" {...fade(0.05)}>
-            <span className="h-px w-8 bg-turquoise-deep/60" /> Vijay Nagar · Indore
+            <span className="h-px w-8 bg-turquoise-deep/60" /> Café in Vijay Nagar · Indore
           </motion.p>
           <h1 className="mt-6 text-[clamp(2.9rem,1.1rem+5.4vw,6.4rem)] text-ink lg:text-[clamp(3.2rem,0.4rem+4.3vw,5.9rem)]">
             {ls.map((l, i) => {

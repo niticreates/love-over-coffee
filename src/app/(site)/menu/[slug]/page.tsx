@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { products } = await getSiteData();
   const p = products.find((x) => x.slug === slug);
   if (!p) return {};
-  return pageMeta(p.name, `${p.description ?? p.name} — at Love Over Coffee, Vijay Nagar, Indore.`, `/menu/${p.slug}`);
+  return pageMeta(`${p.name} in Vijay Nagar, Indore | Love Over Coffee`, `${p.description ?? p.name} Order ${p.name} at Love Over Coffee, Vijay Nagar, Indore — dine in or pick up.`, `/menu/${p.slug}`);
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {

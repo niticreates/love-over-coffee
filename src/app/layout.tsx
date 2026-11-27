@@ -12,9 +12,9 @@ const brand = Quicksand({ subsets: ["latin"], weight: ["700"], variable: "--font
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "Love Over Coffee — Café in Vijay Nagar, Indore", template: "%s · Love Over Coffee, Vijay Nagar" },
-  description: "Love Over Coffee is a café in Scheme 113, Vijay Nagar, Indore for coffee, frappes, comfort food and board games. Order online for pickup or reserve a table.",
-  keywords: ["café in Vijay Nagar", "cafe in Indore", "coffee shop Vijay Nagar Indore", "Love Over Coffee", "cafe near Scheme 113", "frappe Indore", "board game cafe Indore"],
+  title: { default: "Love Over Coffee Indore | Café in Vijay Nagar, Scheme 113", template: "%s | Love Over Coffee Indore" },
+  description: "Love Over Coffee is a cosy café in Vijay Nagar (Scheme 113), Indore for cold coffee, frappes, nachos, pasta and desserts. Reserve a table or order online.",
+  keywords: ["love over coffee indore", "love over coffee vijay nagar", "cafe in vijay nagar indore", "cafe in indore", "vijay nagar restaurants", "best coffee in indore", "cold coffee indore", "birthday celebration cafe in indore", "cafe for couples in indore", "aesthetic cafe in indore"],
   category: "Café",
   applicationName: "Love Over Coffee",
   formatDetection: { telephone: true },

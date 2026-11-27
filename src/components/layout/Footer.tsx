@@ -24,7 +24,7 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
           <div data-aos="fade-up" data-aos-delay="0">
             <p className="eyebrow text-turquoise">Explore</p>
             <ul className="mt-5 space-y-2.5 text-sm text-ivory/80">
-              {[["/", "Home"], ["/our-story", "Our Story"], ["/menu", "Menu"], ["/book-order", "Book & Order"], ["/gallery", "Gallery"], ["/reserve", "Reservations"], ["/contact", "Contact"]].map(([h, l]) => (
+              {[["/", "Home"], ["/our-story", "Our Story"], ["/menu", "Menu"], ["/book-order", "Book & Order"], ["/gallery", "Gallery"], ["/reserve", "Reservations"], ["/contact", "Contact"], ["/cafe-in-vijay-nagar-indore", "Café in Vijay Nagar"]].map(([h, l]) => (
                 <li key={h}><Link className="link-underline" href={h}>{l}</Link></li>
               ))}
             </ul>

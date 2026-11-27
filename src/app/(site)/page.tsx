@@ -18,7 +18,7 @@ import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { alternates: { canonical: "/" } };
+export const metadata: Metadata = { title: { absolute: "Love Over Coffee Indore | Café in Vijay Nagar, Scheme 113" }, alternates: { canonical: "/" } };
 
 export const revalidate = 60;
 

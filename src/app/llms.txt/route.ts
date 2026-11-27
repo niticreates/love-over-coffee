@@ -35,6 +35,7 @@ export async function GET() {
 - [Reserve a table](${SITE_URL}/reserve): table request form
 - [Gallery](${SITE_URL}/gallery): photographs of the café, coffee and food
 - [Contact & location](${SITE_URL}/contact): address, directions, phone and FAQs
+- [Café in Vijay Nagar, Indore](${SITE_URL}/cafe-in-vijay-nagar-indore): what to expect, popular dishes, celebrations and FAQs
 ${links.length ? `\n## Official listings\n${links.map((p) => `- [${p.platform_name}](${p.platform_url})`).join("\n")}\n` : ""}`;
   return new Response(body, { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" } });
 }

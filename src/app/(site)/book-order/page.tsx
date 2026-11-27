@@ -16,8 +16,8 @@ import { whatsappLink } from "@/lib/whatsapp";
 
 export const revalidate = 60;
 export const metadata = pageMeta(
-  "Book & Order",
-  "Book a table or order Love Over Coffee, Vijay Nagar, Indore through District, Zomato or Swiggy — or message us on WhatsApp.",
+  "Book a Table or Order Online | Love Over Coffee Vijay Nagar, Indore",
+  "Book a table at Love Over Coffee, Vijay Nagar, Indore on District, order on Zomato or Swiggy, order online for pickup, or ask about birthdays on WhatsApp.",
   "/book-order",
 );
 

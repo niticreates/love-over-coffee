@@ -7,7 +7,7 @@ import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 
 export const revalidate = 300;
-export const metadata = pageMeta("Gallery", "Photos of Love Over Coffee in Vijay Nagar, Indore: the navy-and-blush dining room, the coffee counter, latte art, cold coffees, nachos, pizza and garlic bread.", "/gallery");
+export const metadata = pageMeta("Photos & Ambience | Love Over Coffee, Vijay Nagar Indore", "Photos of Love Over Coffee in Vijay Nagar, Indore: the navy-and-blush dining room, the coffee counter, latte art, cold coffees, nachos, pizza and garlic bread.", "/gallery");
 
 export default async function GalleryPage() {
   const { gallery, settings } = await getSiteData();
