@@ -37,10 +37,10 @@ export function PlatformCard({ p, cta }: { p: ExternalPlatform; cta: string }) {
         <PlatformLogo p={p} />
         <ArrowUpRight size={18} className="text-muted transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-espresso" aria-hidden />
       </div>
-      <h3 className="mt-6 text-3xl">{p.platform_name}</h3>
+      <h3 className="mt-6 text-3xl text-ink">{p.platform_name}</h3>
       {p.description && <p className="mt-2 text-sm leading-relaxed text-muted">{p.description}</p>}
       <span className="mt-auto pt-6">
-        <span className="btn btn-outline min-h-[42px] w-full group-hover:bg-espresso group-hover:text-ivory">
+        <span className="btn btn-outline min-h-[42px] w-full text-ink group-hover:bg-ink group-hover:text-ivory">
           {cta} <span className="sr-only">on {p.platform_name} (opens in a new tab)</span>
         </span>
       </span>
