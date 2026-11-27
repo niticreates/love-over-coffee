@@ -18,14 +18,15 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
   return (
     <>
       <PageTitle title="Orders" />
-      <form className="mb-6 grid gap-3 admin-surface p-4 sm:grid-cols-5" method="get">
-        <input name="q" defaultValue={sp.q} placeholder="Reference, name, phone" className="input sm:col-span-2" aria-label="Search orders" />
+      <form className="mb-6 grid gap-3 admin-surface p-4 sm:grid-cols-2 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto]" method="get">
+        <input name="q" defaultValue={sp.q} placeholder="Reference, name, phone" className="input min-w-0 sm:col-span-2 lg:col-span-1" aria-label="Search orders" />
         <select name="status" defaultValue={status ?? ""} className="input" aria-label="Status">
           <option value="">All statuses</option>
           {ORDER_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, " ")}</option>)}
         </select>
         <input type="date" name="from" defaultValue={sp.from} className="input" aria-label="From date" />
-        <div className="flex gap-2"><input type="date" name="to" defaultValue={sp.to} className="input" aria-label="To date" /><button className="btn btn-dark px-4">Filter</button></div>
+        <input type="date" name="to" defaultValue={sp.to} className="input min-w-0" aria-label="To date" />
+        <button className="btn btn-dark shrink-0 px-6 sm:col-span-2 lg:col-span-1">Filter</button>
       </form>
       <OrdersTable orders={orders.map((o) => ({ ...o, next: allowedNextStatuses(o) }))} openId={sp.open} />
     </>

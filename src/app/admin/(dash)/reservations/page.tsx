@@ -21,7 +21,7 @@ export default async function ReservationsPage({ searchParams }: { searchParams:
           <option value="">All statuses</option>
           {RESERVATION_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, " ")}</option>)}
         </select>
-        <button className="btn btn-dark px-4">Filter</button>
+        <button className="btn btn-dark shrink-0 px-6">Filter</button>
         <a href="/admin/reservations" className="btn btn-outline px-4">Next 7 days</a>
       </form>
       {settings.reservations.max_covers_per_slot == null && (
