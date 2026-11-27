@@ -28,7 +28,11 @@ test.describe("public site", () => {
   test("mobile navigation and action bar", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
-    await page.getByRole("button", { name: "Open menu" }).click();
+    // Retry until hydrated: a click before React attaches handlers is a no-op.
+    await expect(async () => {
+      await page.getByRole("button", { name: /menu/i }).first().click();
+      await expect(page.locator("#mobile-menu")).toBeVisible({ timeout: 1000 });
+    }).toPass({ timeout: 15000 });
     await page.locator("#mobile-menu").getByRole("link", { name: "Our Story" }).click();
     await expect(page).toHaveURL(/\/story$/);
     const bar = page.getByRole("navigation", { name: "Quick actions" });
