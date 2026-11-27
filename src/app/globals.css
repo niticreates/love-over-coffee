@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+/*
+ * Love Over Coffee — design tokens.
+ * Single source of truth for colour, type, spacing, radii, shadows, motion.
+ * The palette is the brief's preliminary estimate from interior photos; it has
+ * NOT yet been verified against licensed photography (see docs/BRAND.md).
+ * Contrast ratios noted are against --color-ivory (#F2EBDD).
+ */
+@theme {
+  /* Core palette */
+  --color-ivory: #f2ebdd;        /* background */
+  --color-paper: #f8f4ec;        /* raised surfaces */
+  --color-oat: #e7dccb;          /* hairlines, quiet fills */
+  --color-sage: #a9b99a;         /* secondary — ornament & fills only (not text on ivory) */
+  --color-sage-deep: #6f7f62;    /* sage for text/icons on light: 4.0:1 large text only */
+  --color-terracotta: #a65f40;   /* accent fill; white text on it = 4.85:1 */
+  --color-terracotta-ink: #8f4f33; /* accent as text on ivory = 5.31:1 */
+  --color-walnut: #79543d;       /* secondary text/ui = 5.62:1 */
+  --color-charcoal: #29343a;     /* dark sections; ivory on it = 10.75:1 */
+  --color-espresso: #292720;     /* primary text = 12.6:1 */
+  --color-muted: #6b6457;        /* body-secondary = 4.94:1 */
+  --color-veg: #2f7d32;
+  --color-nonveg: #a3361f;
+  --color-success: #3f6b3a;
+  --color-danger: #a3361f;
+
+  /* Typography */
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-manrope), "Manrope", system-ui, sans-serif;
+
+  --text-eyebrow: 0.6875rem;   /* 11px tracked caps */
+  --text-eyebrow--letter-spacing: 0.22em;
+  --text-display-sm: clamp(2rem, 1.5rem + 2vw, 2.75rem);
+  --text-display-md: clamp(2.5rem, 1.6rem + 3.6vw, 4.25rem);
+  --text-display-lg: clamp(3rem, 1.4rem + 6.4vw, 7rem);
+
+  /* Spacing rhythm for sections */
+  --spacing-section: clamp(5rem, 3.5rem + 6vw, 10rem);
+  --spacing-gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+
+  /* Containers */
+  --container-prose: 38rem;
+  --container-site: 88rem;
+
+  /* Radii — restrained */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-arch: 999px 999px 4px 4px;
+
+  /* Shadows — soft, warm */
+  --shadow-soft: 0 1px 2px rgb(41 39 32 / 0.06), 0 8px 24px -12px rgb(41 39 32 / 0.18);
+  --shadow-drawer: -24px 0 60px -20px rgb(41 39 32 / 0.35);
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 160ms;
+  --duration-base: 320ms;
+  --duration-slow: 700ms;
+
+  /* Breakpoints (Tailwind defaults kept, plus a wide desktop) */
+  --breakpoint-3xl: 120rem;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-espresso);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+  }
+  ::selection { background: var(--color-sage); color: var(--color-espresso); }
+  :focus-visible { outline: 2px solid var(--color-terracotta); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+}
+
+@layer components {
+  .container-site { width: 100%; max-width: var(--container-site); margin-inline: auto; padding-inline: var(--spacing-gutter); }
+  .eyebrow { font-size: var(--text-eyebrow); letter-spacing: var(--text-eyebrow--letter-spacing); text-transform: uppercase; font-weight: 600; }
+  .hairline { height: 1px; background: color-mix(in oklab, var(--color-espresso) 14%, transparent); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+    min-height: 48px; padding: 0 1.5rem; border-radius: var(--radius-xs);
+    font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
+    transition: background-color var(--duration-fast) var(--ease-out-soft), color var(--duration-fast), border-color var(--duration-fast), transform var(--duration-fast);
+    white-space: nowrap;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-primary { background: var(--color-terracotta); color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: var(--color-terracotta-ink); }
+  .btn-dark { background: var(--color-espresso); color: var(--color-ivory); }
+  .btn-dark:hover:not(:disabled) { background: var(--color-charcoal); }
+  .btn-outline { border: 1px solid currentColor; }
+  .btn-outline:hover:not(:disabled) { background: var(--color-espresso); color: var(--color-ivory); border-color: var(--color-espresso); }
+  .btn-ghost-light { border: 1px solid rgb(242 235 221 / .6); color: var(--color-ivory); }
+  .btn-ghost-light:hover { background: var(--color-ivory); color: var(--color-espresso); }
+
+  .link-underline { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size var(--duration-base) var(--ease-out-soft); }
+  .link-underline:hover { background-size: 100% 1px; }
+
+  .field { display: grid; gap: .4rem; }
+  .field label { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--color-walnut); }
+  .input {
+    width: 100%; min-height: 48px; padding: .75rem .9rem; border-radius: var(--radius-xs);
+    background: var(--color-paper); border: 1px solid var(--color-oat); color: var(--color-espresso); font-size: 1rem;
+    transition: border-color var(--duration-fast);
+  }
+  .input:focus { outline: none; border-color: var(--color-walnut); box-shadow: 0 0 0 3px rgb(121 84 61 / .15); }
+  .input[aria-invalid="true"] { border-color: var(--color-danger); }
+  .field-error { font-size: .8rem; color: var(--color-danger); }
+
+  .grain::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .18; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.15 0 0 0 0 0.12 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+}

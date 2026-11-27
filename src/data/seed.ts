@@ -1,0 +1,209 @@
+/**
+ * Seed data — the ONLY place initial business data lives.
+ *
+ * Provenance rules (see docs/DATA-PROVENANCE.md):
+ *  - Business name, address, phone: supplied by the client brief; address
+ *    cross-checked with the Swiggy listing for the "Scheme 113" outlet.
+ *  - Prices: NONE are public in a verifiable form. Every price is null until
+ *    the owner enters it in Admin → Menu. Null-priced items cannot be ordered.
+ *  - Veg indicators: null (unverified) for all items.
+ *  - Descriptions: neutral, written by us, flagged owner_to_confirm.
+ *  - Opening hours, seating capacity, delivery, tax rate: unknown → null/disabled.
+ */
+import type {
+  Category,
+  Coupon,
+  GalleryImage,
+  Product,
+  ProductCustomization,
+  WebsiteSettings,
+} from "@/lib/types";
+
+export const categories: Category[] = [
+  ["coffee", "Coffee"],
+  ["hot-beverages", "Hot Beverages"],
+  ["cold-coffee", "Cold Coffee"],
+  ["frappes-shakes", "Frappes & Shakes"],
+  ["mocktails-refreshers", "Mocktails & Refreshers"],
+  ["starters", "Starters"],
+  ["nachos-fries", "Nachos & Fries"],
+  ["garlic-bread", "Garlic Bread"],
+  ["sandwiches-wraps", "Sandwiches & Wraps"],
+  ["pasta", "Pasta"],
+  ["pizza", "Pizza"],
+  ["main-course", "Main Course"],
+  ["desserts", "Desserts"],
+].map(([slug, name], i) => ({ id: `cat_${slug}`, slug, name, sort_order: i, is_active: true }));
+
+type SeedRow = [slug: string, name: string, category: string, description: string, featured?: boolean, note?: string];
+
+const rows: SeedRow[] = [
+  ["lotus-biscoff-coffee", "Lotus Biscoff Coffee", "coffee", "Coffee with the caramelised warmth of Lotus Biscoff.", false, "Named as a must-try by Free Press Journal (Feb 2026)."],
+  ["biscoff-cappuccino", "Biscoff Cappuccino", "coffee", "A cappuccino finished with Biscoff — creamy, spiced, comforting.", true, "Owner to confirm whether this is the same item as Lotus Biscoff Coffee."],
+  ["cappuccino", "Cappuccino", "coffee", "Espresso with steamed milk and a soft layer of foam.", false],
+  ["cold-coffee", "Cold Coffee", "cold-coffee", "Chilled, creamy and made for long afternoons.", false],
+  ["cafe-frappe", "Cafe Frappe", "frappes-shakes", "Blended iced coffee, smooth and frothy.", true],
+  ["dark-chocolate-frappe", "Dark Chocolate Frappe", "frappes-shakes", "Iced coffee blended with deep dark chocolate.", true],
+  ["tiramisu-frappe", "Tiramisu Frappe", "frappes-shakes", "A frappe inspired by the classic Italian dessert.", false, "Named as a must-try by Free Press Journal (Feb 2026); not in the client's list — confirm."],
+  ["kit-kat-shake", "Kit-Kat Shake", "frappes-shakes", "A thick shake blended with Kit-Kat.", false],
+  ["mango-mojito", "Mango Mojito", "mocktails-refreshers", "Mango, mint and lime over ice.", false],
+  ["lemon-mint-ice-tea", "Lemon Mint Ice Tea", "mocktails-refreshers", "Iced tea brightened with lemon and fresh mint.", false],
+  ["pinky-lemonade", "Pinky Lemonade", "mocktails-refreshers", "A pink twist on chilled lemonade.", false],
+  ["potato-cheese-shots", "Potato Cheese Shots", "starters", "Crisp potato bites with a molten cheese centre.", true],
+  ["cheese-fondue", "Cheese Fondue", "starters", "Warm melted cheese for sharing, with dippers.", false],
+  ["tex-mex-nachos", "Tex-Mex Nachos", "nachos-fries", "Tortilla chips loaded with Tex-Mex toppings.", true],
+  ["nachos-fries", "Nachos Fries", "nachos-fries", "Fries dressed up nacho-style.", false],
+  ["masala-pull-apart-garlic-bread", "Masala Pull-A-Part Garlic Bread", "garlic-bread", "Pull-apart garlic bread with an Indian masala twist.", true],
+  ["otc-garlic-bread", "OTC Garlic Bread", "garlic-bread", "Garlic bread from the house selection.", false, "Owner to confirm what “OTC” stands for and the description."],
+  ["penne-arrabiata-red", "Penne Arrabiata Red", "pasta", "Penne in a spicy red tomato sauce.", true, "Featured list calls it “Penne Arrabiata”."],
+  ["penne-mix-sauce-pasta", "Penne Mix Sauce Pasta", "pasta", "Penne in a blend of red and white sauces.", false],
+  ["cheese-maggi", "Cheese Maggi", "main-course", "The comfort classic, finished with cheese.", false, "Category guessed — confirm."],
+  ["oreo-brownie-sundae", "Oreo Brownie Sundae", "desserts", "Brownie, ice cream and Oreo, layered into a sundae.", true],
+  ["tiramisu", "Tiramisu", "desserts", "Coffee-soaked layers and mascarpone cream.", false],
+];
+
+export const products: Product[] = rows.map(([slug, name, cat, description, featured, note], i) => ({
+  id: `prd_${slug}`,
+  slug,
+  category_id: `cat_${cat}`,
+  name,
+  description,
+  price: null,
+  is_veg: null,
+  is_available: true,
+  is_featured: Boolean(featured),
+  image_url: null,
+  image_alt: null,
+  sort_order: i,
+  customizations: [],
+  verification: "owner_to_confirm",
+  source_note: note,
+}));
+
+/** Display order for the homepage "Signature favourites", per the brief. */
+export const featuredOrder = [
+  "biscoff-cappuccino",
+  "cafe-frappe",
+  "dark-chocolate-frappe",
+  "tex-mex-nachos",
+  "potato-cheese-shots",
+  "penne-arrabiata-red",
+  "masala-pull-apart-garlic-bread",
+  "oreo-brownie-sundae",
+];
+
+/**
+ * PREVIEW-ONLY sample prices (paise). Used solely when DEMO_SAMPLE_DATA=true so the
+ * ordering journey can be exercised before the owner enters real prices. Every
+ * surface that shows them is labelled "Sample price". Never seeded into Supabase.
+ */
+export const demoSamplePrices: Record<string, number> = Object.fromEntries(
+  rows.map(([slug], i) => [slug, (150 + ((i * 37) % 200)) * 100]),
+);
+
+export const demoCustomizations: ProductCustomization[] = [
+  {
+    id: "cz_sweetness",
+    name: "Sweetness",
+    required: false,
+    max_select: 1,
+    options: [
+      { id: "opt_regular", label: "Regular", price_delta: 0 },
+      { id: "opt_less", label: "Less sweet", price_delta: 0 },
+    ],
+  },
+];
+
+export const coupons: Coupon[] = [];
+
+export const galleryImages: GalleryImage[] = (
+  [
+    ["interiors", "Café interior — seating", 4, 5],
+    ["beverages", "Signature coffee", 4, 5],
+    ["food", "Food from the kitchen", 5, 4],
+    ["interiors", "Window corner", 3, 4],
+    ["desserts", "Dessert", 1, 1],
+    ["experiences", "Board games with friends", 5, 4],
+    ["beverages", "Frappe", 3, 4],
+    ["food", "Pasta", 4, 5],
+    ["experiences", "Conversations over coffee", 4, 3],
+    ["desserts", "Sundae", 4, 5],
+  ] as const
+).map(([category, alt, w, h], i) => ({
+  id: `gal_${i + 1}`,
+  category,
+  url: null,
+  alt,
+  caption: null,
+  sort_order: i,
+  width: w * 300,
+  height: h * 300,
+}));
+
+export const defaultSettings: WebsiteSettings = {
+  business: {
+    name: "Love Over Coffee — Vijay Nagar",
+    short_name: "Love Over Coffee",
+    address_lines: ["Plot No. 11, Scheme No. 51, Scheme No. 113", "Vijay Nagar"],
+    locality: "Vijay Nagar",
+    city: "Indore",
+    region: "Madhya Pradesh",
+    postal_code: "452010",
+    country: "IN",
+    phone_display: "+91 93296 97769",
+    phone_e164: "+919329697769",
+    whatsapp_e164: null, // owner to confirm the number is on WhatsApp
+    email: null,
+    instagram_url: null, // no verified official handle found
+    maps_query: "Love Over Coffee, Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010",
+    maps_place_url:
+      "https://www.google.com/maps/search/?api=1&query=Love+Over+Coffee+Scheme+113+Vijay+Nagar+Indore",
+    geo: null, // set the exact pin from the Google Business Profile
+    price_range: "₹200–₹400 per person",
+    hours: null,
+    hours_verification: "owner_to_confirm",
+    rating_note: "Rated 4.7 on Google by around 1,000 guests", // owner to confirm before showing
+    fssai: null,
+  },
+  commerce: {
+    ordering_enabled: false, // turns on once real prices + tax are set
+    delivery_enabled: false, // pickup only until the café confirms website delivery
+    tax_bps: null,
+    tax_inclusive: false,
+    delivery_fee: 0,
+    free_delivery_above: null,
+    min_order_value: 0,
+    currency: "INR",
+  },
+  reservations: {
+    enabled: true,
+    slot_minutes: 30,
+    seating_minutes: 90,
+    max_guests_per_booking: 10,
+    max_covers_per_slot: null,
+    min_lead_minutes: 60,
+    max_days_ahead: 30,
+    last_booking_before_close_minutes: 60,
+  },
+  content: {
+    hero_headline: "Good Coffee. Beautiful Moments.",
+    hero_image_url: null,
+    hero_subhead:
+      "Your favourite corner in Vijay Nagar for exceptional coffee, comforting food, and moments worth slowing down for.",
+    intro_headline: "More Than Just Coffee.",
+    intro_body:
+      "Love Over Coffee is where the day slows down. Come for a carefully made cup, stay for comforting plates, a board game, and the kind of conversation that runs longer than planned.",
+    reservation_headline: "Your Table Is Waiting.",
+    reservation_body:
+      "Planning a coffee date, catching up with friends, or simply taking a break? Reserve your favourite spot.",
+    announcement: null,
+    story_sections: [
+      { id: "experience", title: "The Love Over Coffee experience", body: "A warm room, an easy pace, and a cup that is worth sitting with. We built this corner of Vijay Nagar for the moments in between — the catch-ups, the first dates, the long afternoons with a laptop.", needs_owner_review: true },
+      { id: "coffee", title: "Our approach to coffee", body: "From the everyday cappuccino to the indulgent Biscoff and dark-chocolate frappes, the menu is built around coffee that rewards slowing down.", needs_owner_review: true },
+      { id: "food", title: "Food and flavours", body: "Comfort food with Italian and Mexican accents — loaded nachos, pull-apart garlic bread, penne in rich sauces, and desserts made for sharing.", needs_owner_review: true },
+      { id: "ambience", title: "Our ambience", body: "Soft light, warm wood, sage and terracotta tones. A space designed to feel like a favourite room rather than a waiting room.", needs_owner_review: true },
+      { id: "conversations", title: "A place for conversations", body: "Board games on the shelf, books within reach, and tables made for lingering. Bring your people.", needs_owner_review: true },
+    ],
+  },
+  notifications: { admin_emails: [], admin_whatsapp: [], email_enabled: false, whatsapp_enabled: false },
+};
