@@ -1,6 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 import { Photo } from "@/components/ui/Photo";
@@ -39,7 +39,7 @@ export function Lightbox({ images, index, onChange }: { images: GalleryImage[]; 
           <button className="absolute right-2 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full text-ivory hover:bg-ivory/10 md:right-6" aria-label="Next photo" onClick={(e) => { e.stopPropagation(); go(1); }}><ChevronRight /></button>
           <motion.figure key={current.id} initial={{ opacity: 0, scale: 0.97, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="relative w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
             <div className="relative mx-auto max-h-[78vh] overflow-hidden rounded-[16px]" style={{ aspectRatio: `${current.width}/${current.height}`, maxWidth: `calc(78vh * ${current.width / current.height})` }}>
-              {current.url ? <Image src={current.url} alt={current.alt} fill sizes="90vw" className="object-contain" unoptimized={current.url.startsWith("data:")} /> : <Photo alt={current.alt} tone={current.category} className="h-full w-full" />}
+              {current.url ? <SafeImage src={current.url} alt={current.alt} fill sizes="90vw" className="object-contain" fallback={<Photo alt={current.alt} tone={current.category} className="h-full w-full" />} /> : <Photo alt={current.alt} tone={current.category} className="h-full w-full" />}
             </div>
             <figcaption className="mt-4 flex items-center justify-center gap-3 text-sm text-ivory/80">
               <span className="font-display text-lg italic text-ivory">{current.caption ?? current.alt}</span>
