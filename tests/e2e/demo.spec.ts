@@ -48,4 +48,35 @@ test.describe("public demo mode", () => {
     const after = await page.goto(orderUrl);
     expect(after?.status()).toBe(404);
   });
+
+  test("no real café contact channel or partner link reaches any public page", async ({ page, request }) => {
+    const pages = ["/", "/menu", "/our-story", "/gallery", "/reserve", "/contact", "/book-order", "/cafe-in-vijay-nagar-indore", "/checkout", "/llms.txt"];
+    for (const path of pages) {
+      const html = await (await request.get(path)).text();
+      for (const leak of ["9329697769", "93296 97769", "tel:", "wa.me", "zomato.com", "swiggy.com", "district.in", "instagram.com"])
+        expect(html, `${path} contains ${leak}`).not.toContain(leak);
+    }
+    await page.goto("/contact");
+    await expect(page.getByText("Contact options are disabled in this demo.").first()).toBeVisible();
+    await expect(page.getByTestId("demo-contact-notice")).toBeVisible();
+    await expect(page.locator('a[href^="tel:"], a[href*="wa.me"]')).toHaveCount(0);
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.goto("/");
+    await expect(page.getByLabel("Chat with us on WhatsApp (opens WhatsApp)")).toHaveCount(0);
+    await expect(page.getByRole("navigation", { name: "Quick actions" }).getByText("Call off in demo")).toBeVisible();
+  });
+
+  test("a signed-in demo admin cannot change the WhatsApp destination", async ({ page }) => {
+    await page.goto("/admin/login");
+    await page.getByLabel("Email").fill("demo@example.com");
+    await page.getByLabel("Password").fill(process.env.E2E_DEMO_ADMIN_PASSWORD ?? "preview-admin");
+    await page.getByRole("button", { name: "Sign in" }).click();
+    await expect(page.getByRole("heading", { name: "Today" })).toBeVisible();
+    const res = await page.request.patch("/api/admin/whatsapp", {
+      headers: { origin: new URL(page.url()).origin },
+      data: { whatsapp_e164: "+919999999999", whatsapp_messages: { general: "hi", reservation: "hi", ordering: "hi", group: "hi" } },
+    });
+    expect(res.status()).toBe(403);
+    expect((await res.json()).error.message).toContain("Contact options are disabled in this demo.");
+  });
 });

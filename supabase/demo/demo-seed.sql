@@ -51,3 +51,12 @@ update website_settings
  where key = 'business';
 
 update reservation_settings set max_covers_per_slot = 24, updated_at = now() where id;
+
+-- No real contact channels in the demo database: no phone, WhatsApp, email or Instagram, and
+-- partner booking/delivery links switched off. (The app also blanks these at runtime in DEMO_MODE.)
+update website_settings
+   set value = value || '{"phone_display":"","phone_e164":"","whatsapp_e164":null,"email":null,"instagram_url":null}'::jsonb,
+       updated_at = now()
+ where key = 'business';
+
+update external_platforms set is_active = false where platform_type <> 'location';

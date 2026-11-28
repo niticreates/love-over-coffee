@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { adminRoute } from "@/lib/admin-api";
+import { demoMode } from "@/lib/config";
+import { CONTACT_DISABLED } from "@/lib/demo-copy";
 import { fail, json, parseBody } from "@/lib/http";
 import { getStore } from "@/lib/store";
 
@@ -11,6 +13,8 @@ const schema = z.object({
 
 /** Managers can change the public WhatsApp number and prefilled messages without touching other business settings. */
 export const PATCH = adminRoute("manager", async (req) => {
+  // Public demo: nobody may point the WhatsApp destination anywhere.
+  if (demoMode()) return fail(403, "demo_locked", `${CONTACT_DISABLED} The WhatsApp number and messages can't be changed here.`);
   const body = await parseBody(req, schema);
   if (!body.ok) return body.res;
   const store = getStore();

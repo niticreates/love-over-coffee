@@ -29,7 +29,7 @@ export function localBusinessJsonLd(s: WebsiteSettings, platforms: ExternalPlatf
     "@id": `${SITE_URL}/#cafe`,
     name: b.name,
     url: SITE_URL,
-    telephone: b.phone_e164,
+    ...(b.phone_e164 ? { telephone: b.phone_e164 } : {}),
     image: [`${SITE_URL}/images/exterior/storefront-signage.webp`, `${SITE_URL}/images/interior/dining-room.webp`, `${SITE_URL}/images/coffee/latte-art.webp`],
     logo: `${SITE_URL}/icon.svg`,
     description: "Neighbourhood café in Vijay Nagar, Indore serving coffee, frappes and shakes, nachos, garlic bread, pasta and desserts. Dine in, order online for pickup, or reserve a table.",

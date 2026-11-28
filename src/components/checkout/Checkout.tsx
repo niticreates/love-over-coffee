@@ -9,6 +9,7 @@ import { QtyStepper } from "@/components/cart/QtyStepper";
 import { postJSON } from "@/components/forms/api";
 import { Field, TextArea, TextInput } from "@/components/forms/Field";
 import { formatINR } from "@/lib/money";
+import { PhoneLink } from "@/components/ui/PhoneLink";
 
 interface Totals { subtotal: number; discount: number; tax: number; delivery_fee: number; total: number }
 interface CheckoutResp {
@@ -260,7 +261,7 @@ export function Checkout({ deliveryEnabled, taxNote, phone }: { deliveryEnabled:
             {formError && <p className="field-error mt-4" role="alert">{formError}</p>}
             <button className="btn btn-primary mt-6 w-full" disabled={busy || !totals}>{busy ? "Processing…" : totals ? `Pay ${formatINR(totals.total)}` : "Pay"}</button>
             <p className="mt-3 text-center text-xs text-muted">Secure payment by Razorpay · UPI, cards, net banking, wallets</p>
-            <p className="mt-2 text-center text-xs text-muted">Questions? Call <a className="underline" href={`tel:${phone.replace(/\s/g, "")}`}>{phone}</a></p>
+            <p className="mt-2 text-center text-xs text-muted">{phone ? <>Questions? Call <PhoneLink e164={phone} className="underline">{phone}</PhoneLink></> : <PhoneLink e164={null}>{null}</PhoneLink>}</p>
           </div>
         </aside>
       </form>

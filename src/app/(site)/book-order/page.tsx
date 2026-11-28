@@ -13,6 +13,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
+import { PhoneLink } from "@/components/ui/PhoneLink";
+import { DemoContactNotice } from "@/components/layout/DemoNotice";
 
 export const revalidate = 60;
 export const metadata = pageMeta(
@@ -41,7 +43,7 @@ export default async function BookOrderPage() {
     ...(waReserve ? [{ q: "Is a WhatsApp message a confirmed booking?", a: "No. A WhatsApp message is an enquiry. Your table or order is confirmed only when café staff reply to confirm it." }] : []),
     ...(direct ? [{ q: "Can I order online for pickup?", a: "Yes. Add items from the menu on this website, pay at checkout and collect your order from the café." }] : []),
     ...(order.length ? [{ q: "Does Love Over Coffee deliver?", a: `Delivery is available through ${names(order)}. Orders placed there are handled by those platforms.` }] : []),
-    { q: "Where is Love Over Coffee in Indore?", a: `At ${address}, in Vijay Nagar. Call ${b.phone_display} for directions.` },
+    { q: "Where is Love Over Coffee in Indore?", a: `At ${address}, in Vijay Nagar.${b.phone_display ? ` Call ${b.phone_display} for directions.` : ""}` },
   ];
 
   return (
@@ -54,6 +56,7 @@ export default async function BookOrderPage() {
         accent={MEDIA.latteArt}
         intro={<p>Reserve your table or order your favourites through your preferred platform.</p>}
       />
+      <div className="container-site"><DemoContactNotice className="mb-8" /></div>
 
       {/* Three ways in */}
       <div className="container-site"><nav aria-label="Ways to visit" className="grid gap-px overflow-hidden rounded-[28px] bg-navy/60 sm:grid-cols-3">
@@ -132,12 +135,12 @@ export default async function BookOrderPage() {
               <SectionHeading index="C" eyebrow="Discover our location" title="Find your way to us." />
               <div className="mt-10 space-y-6">
                 <div className="flex gap-4"><MapPin className="mt-1 shrink-0 text-terracotta-ink" size={18} /><address className="not-italic leading-relaxed">{b.address_lines.join(", ")}<br />{b.city}, {b.region} {b.postal_code}</address></div>
-                <div className="flex gap-4"><Phone className="mt-1 shrink-0 text-terracotta-ink" size={18} /><a href={`tel:${b.phone_e164}`} className="link-underline">{b.phone_display}</a></div>
+                <div className="flex gap-4"><Phone className="mt-1 shrink-0 text-terracotta-ink" size={18} /><PhoneLink e164={b.phone_e164} className="link-underline">{b.phone_display}</PhoneLink></div>
                 <div className="border-t border-oat pt-6"><p className="eyebrow text-walnut">Opening hours</p><Hours business={b} className="mt-3 max-w-sm text-muted" /></div>
               </div>
               <div className="mt-10 flex flex-wrap gap-3">
                 <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="btn btn-dark">Get Directions <ArrowUpRight size={14} /></a>
-                <a href={`tel:${b.phone_e164}`} className="btn btn-outline"><Phone size={14} /> Call</a>
+                <PhoneLink e164={b.phone_e164} className="btn btn-outline"><Phone size={14} /> Call</PhoneLink>
                 {waGroup && <a href={waGroup} target="_blank" rel="noopener noreferrer" className="btn btn-outline"><WhatsAppIcon className="h-4 w-4" /> Group visit</a>}
               </div>
             </Reveal>

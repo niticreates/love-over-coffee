@@ -20,8 +20,7 @@ export async function GET() {
 ## Key facts
 - Name: ${b.name}
 - Address: ${b.address_lines.join(", ")}, ${b.city}, ${b.region} ${b.postal_code}, India
-- Phone / WhatsApp: ${b.phone_display}
-- Area: Vijay Nagar (Scheme 113), Indore
+${b.phone_display ? `- Phone / WhatsApp: ${b.phone_display}\n` : ""}- Area: Vijay Nagar (Scheme 113), Indore
 - Opening hours: ${hoursVerified ? "see " + SITE_URL + "/contact" : "not yet confirmed by the café — please call before visiting"}
 - Reservations: requested on the website or by WhatsApp; a request is confirmed only when café staff confirm it
 - Prices: shown on the menu page once confirmed by the café

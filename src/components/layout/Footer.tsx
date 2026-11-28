@@ -3,6 +3,7 @@ import { Hours } from "./Hours";
 import { InstagramIcon } from "@/components/ui/icons";
 import { Wordmark } from "@/components/ui/Wordmark";
 import type { Category, WebsiteSettings } from "@/lib/types";
+import { PhoneLink } from "@/components/ui/PhoneLink";
 
 export function Footer({ settings, categories }: { settings: WebsiteSettings; categories: Category[] }) {
   const b = settings.business;
@@ -49,7 +50,7 @@ export function Footer({ settings, categories }: { settings: WebsiteSettings; ca
           </div>
           <div data-aos="fade-up" data-aos-delay="270">
             <p className="eyebrow text-turquoise">Contact</p>
-            <a href={`tel:${b.phone_e164}`} className="link-underline mt-5 inline-block text-ivory">{b.phone_display}</a>
+            <PhoneLink e164={b.phone_e164} className="link-underline mt-5 inline-block text-ivory">{b.phone_display}</PhoneLink>
             {b.instagram_url && (
               <a href={b.instagram_url} target="_blank" rel="noopener noreferrer" className="mt-3 flex items-center gap-2 text-ivory"><InstagramIcon className="h-4 w-4" /> Instagram</a>
             )}

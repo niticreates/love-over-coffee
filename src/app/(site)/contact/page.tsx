@@ -10,10 +10,19 @@ import { MEDIA } from "@/lib/media";
 import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { whatsappLink } from "@/lib/whatsapp";
 import { getSiteData } from "@/lib/site";
-import { DemoFormNotice } from "@/components/layout/DemoNotice";
+import { DemoContactNotice, DemoFormNotice } from "@/components/layout/DemoNotice";
+import { PhoneLink } from "@/components/ui/PhoneLink";
+import { demoMode } from "@/lib/config";
 
 export const revalidate = 300;
-export const metadata = pageMeta("Love Over Coffee Vijay Nagar, Indore | Address, Directions & Phone", "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Call +91 93296 97769, get directions, or send us a message.", "/contact");
+export const metadata = pageMeta(
+  "Love Over Coffee Vijay Nagar, Indore | Address, Directions & Phone",
+  // The public demo never states the café's real phone number.
+  demoMode()
+    ? "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Get directions or send us a message."
+    : "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Call +91 93296 97769, get directions, or send us a message.",
+  "/contact",
+);
 
 export default async function ContactPage() {
   const { settings, platforms } = await getSiteData();
@@ -39,10 +48,11 @@ export default async function ContactPage() {
         intro={<p>Call, WhatsApp or drop in — we&apos;re on Scheme 113 in Vijay Nagar, Indore.</p>}
       >
         <div className="flex flex-wrap gap-3">
-          <a href={`tel:${b.phone_e164}`} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</a>
+          <PhoneLink e164={b.phone_e164} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</PhoneLink>
           {whatsappLink(b, "general") && <a href={whatsappLink(b, "general")!} target="_blank" rel="noopener noreferrer" className="btn btn-outline"><WhatsAppIcon className="h-4 w-4" /> WhatsApp</a>}
         </div>
       </PageHero>
+      <div className="container-site"><DemoContactNotice className="mb-8" /></div>
       <Ticker words={["Call us", "WhatsApp us", "Drop in", "Scheme 113", "Vijay Nagar", "Indore"]} />
       <section className="bg-cream py-section">
       <div className="container-site grid gap-14 lg:grid-cols-12">
@@ -52,7 +62,7 @@ export default async function ContactPage() {
             <address className="mt-4 font-display text-3xl not-italic leading-snug">{b.address_lines.map((l) => <span key={l} className="block">{l}</span>)}{b.city}, {b.region} {b.postal_code}</address>
           </div>
           <div className="flex flex-wrap gap-3">
-            <a href={`tel:${b.phone_e164}`} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</a>
+            <PhoneLink e164={b.phone_e164} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</PhoneLink>
             {whatsappLink(b, "general") && <a href={whatsappLink(b, "general")!} target="_blank" rel="noopener noreferrer" className="btn btn-outline"><WhatsAppIcon className="h-4 w-4" /> WhatsApp</a>}
             <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="btn btn-outline">Get directions <ArrowUpRight size={14} /></a>
           </div>

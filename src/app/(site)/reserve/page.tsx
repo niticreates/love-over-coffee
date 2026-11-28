@@ -9,7 +9,7 @@ import { MEDIA } from "@/lib/media";
 import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
-import { DemoFormNotice } from "@/components/layout/DemoNotice";
+import { DemoContactNotice, DemoFormNotice } from "@/components/layout/DemoNotice";
 
 export const dynamic = "force-dynamic";
 export const metadata = pageMeta("Reserve a Table | Love Over Coffee, Vijay Nagar Indore", "Request a table at Love Over Coffee, Vijay Nagar, Indore for coffee dates, catch-ups, birthdays and small celebrations. Staff confirm every request.", "/reserve");
@@ -33,6 +33,7 @@ export default async function ReservePage() {
       >
         <a href="#request" className="btn btn-primary">Request a table</a>
       </PageHero>
+      <div className="container-site"><DemoContactNotice className="mb-8" /></div>
       <Ticker words={["Coffee dates", "Catch-ups", "Celebrations", "Long afternoons", "Party hall"]} tone="blush" />
       <section className="bg-cream py-section">
         <div className="container-site grid gap-12 lg:grid-cols-12">

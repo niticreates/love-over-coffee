@@ -17,6 +17,8 @@ echo SEED_LOADS
 $PSQL -d loc_seed -f supabase/demo/demo-seed.sql
 test "$($PSQL -d loc_seed -tAc "select count(*) from products where price is null")" = "0"
 test "$($PSQL -d loc_seed -tAc "select value->>'ordering_enabled' from website_settings where key='commerce'")" = "true"
+test "$($PSQL -d loc_seed -tAc "select coalesce(value->>'phone_e164','') || coalesce(value->>'whatsapp_e164','') from website_settings where key='business'")" = ""
+test "$($PSQL -d loc_seed -tAc "select count(*) from external_platforms where is_active and platform_type <> 'location'")" = "0"
 $PSQL -d loc_seed -c "with u as (insert into auth.users (id) values (gen_random_uuid()) returning id) insert into admin_profiles (user_id, display_name, role) select id, 'Existing owner', 'owner' from u;"
 if $PSQL -d loc_seed -f supabase/demo/demo-seed.sql 2>/dev/null; then echo "demo seed ran on a database that already has staff accounts"; exit 1; fi
 echo DEMO_SEED_LOADS

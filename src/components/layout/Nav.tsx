@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { PhoneLink } from "@/components/ui/PhoneLink";
 
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -100,7 +101,7 @@ export function Nav({ phone, announcement, demoBanner }: { phone: string; announ
             <div className="mt-auto grid gap-3">
               <Link href="/menu" className="btn btn-dark">Order Online</Link>
               <Link href="/reserve" className="btn btn-primary">Reserve a Table</Link>
-              <a href={`tel:${phone}`} className="btn btn-outline">Call the café</a>
+              <PhoneLink e164={phone} className="btn btn-outline">Call the café</PhoneLink>
             </div>
           </motion.div>
         )}

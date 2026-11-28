@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { postJSON } from "./api";
 import { Field, TextArea, TextInput } from "./Field";
+import { PhoneLink } from "@/components/ui/PhoneLink";
 
 interface Slot { time: string; available: boolean; remaining: number | null }
 const OCCASIONS = ["", "Coffee date", "Birthday", "Anniversary", "Catch-up with friends", "Work meeting", "Other"];
@@ -63,7 +64,7 @@ export function ReservationForm({ maxGuests, maxDays, enabled, phone }: { maxGue
   }
 
   if (!enabled)
-    return <p className="text-lg">Online reservations are paused right now. Please call us on <a className="link-underline" href={`tel:${phone}`}>{phone}</a>.</p>;
+    return <p className="text-lg">Online reservations are paused right now. {phone ? <>Please call us on <PhoneLink e164={phone} className="link-underline">{phone}</PhoneLink>.</> : <PhoneLink e164={null}>{null}</PhoneLink>}</p>;
 
   if (done)
     return (
