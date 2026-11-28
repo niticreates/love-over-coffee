@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import Image from "next/image";
+import { SafeImage } from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { AddToCart, type PublicProduct } from "@/components/menu/AddToCart";
 import { Price } from "@/components/menu/Price";
@@ -27,7 +28,7 @@ export function SignatureMenu({ products, orderingEnabled, sample }: { products:
             <Reveal className="h-full" delay={(i % 2) * 0.1}>
               <article className="group flex h-full flex-col">
                 <Link href={`/menu/${p.slug}`} tabIndex={-1} aria-hidden className={clsx("relative block aspect-[4/5] overflow-hidden rounded-b-[24px] rounded-t-[999px] bg-ink", pictured.length === 3 && i === 2 && "sm:aspect-[16/9] lg:aspect-[4/5]")}>
-                  <Image src={p.image_url!} alt={`${p.name} at Love Over Coffee, Vijay Nagar`} fill sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 90vw" className="object-cover transition-transform duration-[1100ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.05]" />
+                  <SafeImage src={p.image_url!} alt={`${p.name} at Love Over Coffee, Vijay Nagar`} fill sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 90vw" className="object-cover transition-transform duration-[1100ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.05]" />
                 </Link>
                 <div className="mt-6 flex-1">
                   <p className="font-display text-sm italic text-turquoise">{String(i + 1).padStart(2, "0")}</p>

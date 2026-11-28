@@ -1,6 +1,7 @@
 "use client";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
+import { SafeImage } from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { useRef } from "react";
 import { Mascot } from "@/components/ui/Mascot";
@@ -69,7 +70,7 @@ export function Hero({ headline, subhead, image, orderingEnabled }: { headline: 
             {...(reduce ? {} : { initial: { clipPath: "inset(100% 0 0 0 round 28px)" }, animate: { clipPath: "inset(0% 0 0 0 round 0px)" }, transition: { duration: 1.4, delay: 0.2, ease: EASE } })}
           >
             <motion.div className="absolute inset-[-8%_0]" style={reduce ? undefined : { y: imgY }}>
-              <Image src={main.src} alt={main.alt} fill priority sizes="(min-width:1024px) 45vw, 90vw" className="object-cover" style={{ objectPosition: main.position }} />
+              <SafeImage src={main.src} alt={main.alt} fill priority sizes="(min-width:1024px) 45vw, 90vw" className="object-cover" style={{ objectPosition: main.position }} />
             </motion.div>
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-navy/35 via-transparent to-transparent" />
           </motion.div>

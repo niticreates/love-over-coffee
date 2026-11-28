@@ -10,9 +10,19 @@ import { MEDIA } from "@/lib/media";
 import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { whatsappLink } from "@/lib/whatsapp";
 import { getSiteData } from "@/lib/site";
+import { DemoContactNotice, DemoFormNotice } from "@/components/layout/DemoNotice";
+import { PhoneLink } from "@/components/ui/PhoneLink";
+import { demoMode } from "@/lib/config";
 
 export const revalidate = 300;
-export const metadata = pageMeta("Love Over Coffee Vijay Nagar, Indore | Address, Directions & Phone", "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Call +91 93296 97769, get directions, or send us a message.", "/contact");
+export const metadata = pageMeta(
+  "Love Over Coffee Vijay Nagar, Indore | Address, Directions & Phone",
+  // The public demo never states the café's real phone number.
+  demoMode()
+    ? "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Get directions or send us a message."
+    : "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Call +91 93296 97769, get directions, or send us a message.",
+  "/contact",
+);
 
 export default async function ContactPage() {
   const { settings, platforms } = await getSiteData();
@@ -20,9 +30,10 @@ export default async function ContactPage() {
   const c = settings.commerce;
   const mapsLink = platforms.find((p) => p.platform_type === "location")?.platform_url ?? b.maps_place_url;
   const waGroup = whatsappLink(b, "group");
+  const demo = demoMode();
   const faqs = [
-    { q: "Can I reserve a table?", a: "Yes. Send a request on our reservations page with your date, time and number of guests. Your booking is confirmed once the café approves it — you'll get a confirmation from us." },
-    { q: "Do you take online orders?", a: c.ordering_enabled ? `Yes — order on this website and pay securely online${c.delivery_enabled ? " for pickup or delivery" : " for pickup at the café"}.` : "Online ordering is opening soon. Until then, please call the café to place an order." },
+    { q: "Can I reserve a table?", a: demo ? "Yes. Send a request on our reservations page with your date, time and number of guests. Your booking is confirmed once the café approves it." : "Yes. Send a request on our reservations page with your date, time and number of guests. Your booking is confirmed once the café approves it — you'll get a confirmation from us." },
+    { q: "Do you take online orders?", a: c.ordering_enabled ? (demo ? "Yes — order on this website for pickup. In this demo the payment step is simulated and no real charge is made." : `Yes — order on this website and pay securely online${c.delivery_enabled ? " for pickup or delivery" : " for pickup at the café"}.`) : demo ? "Online ordering is opening soon." : "Online ordering is opening soon. Until then, please call the café to place an order." },
     { q: "Do you have board games?", a: "Yes — games and books are available at the café for guests to enjoy." },
     { q: "Is the café good for working?", a: "Many guests come to work over coffee. Seating is first-come, first-served unless you reserve." },
     { q: "Where exactly are you?", a: `${b.address_lines.join(", ")}, ${b.city} ${b.postal_code}. Use “Get directions” for turn-by-turn navigation.` },
@@ -35,14 +46,15 @@ export default async function ContactPage() {
         title={<>Come say <em className="text-turquoise-deep">hello</em><span className="text-pink">.</span></>}
         media={MEDIA.diningRoom}
         accent={MEDIA.coldCoffees}
-        intro={<p>Call, WhatsApp or drop in — we&apos;re on Scheme 113 in Vijay Nagar, Indore.</p>}
+        intro={demo ? <p>Drop in — we&apos;re on Scheme 113 in Vijay Nagar, Indore. Phone and WhatsApp are switched off in this demo.</p> : <p>Call, WhatsApp or drop in — we&apos;re on Scheme 113 in Vijay Nagar, Indore.</p>}
       >
         <div className="flex flex-wrap gap-3">
-          <a href={`tel:${b.phone_e164}`} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</a>
+          <PhoneLink e164={b.phone_e164} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</PhoneLink>
           {whatsappLink(b, "general") && <a href={whatsappLink(b, "general")!} target="_blank" rel="noopener noreferrer" className="btn btn-outline"><WhatsAppIcon className="h-4 w-4" /> WhatsApp</a>}
         </div>
       </PageHero>
-      <Ticker words={["Call us", "WhatsApp us", "Drop in", "Scheme 113", "Vijay Nagar", "Indore"]} />
+      <div className="container-site"><DemoContactNotice className="mb-8" /></div>
+      <Ticker words={demo ? ["Drop in", "Scheme 113", "Vijay Nagar", "Indore"] : ["Call us", "WhatsApp us", "Drop in", "Scheme 113", "Vijay Nagar", "Indore"]} />
       <section className="bg-cream py-section">
       <div className="container-site grid gap-14 lg:grid-cols-12">
         <div className="space-y-10 lg:col-span-5">
@@ -51,7 +63,7 @@ export default async function ContactPage() {
             <address className="mt-4 font-display text-3xl not-italic leading-snug">{b.address_lines.map((l) => <span key={l} className="block">{l}</span>)}{b.city}, {b.region} {b.postal_code}</address>
           </div>
           <div className="flex flex-wrap gap-3">
-            <a href={`tel:${b.phone_e164}`} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</a>
+            <PhoneLink e164={b.phone_e164} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</PhoneLink>
             {whatsappLink(b, "general") && <a href={whatsappLink(b, "general")!} target="_blank" rel="noopener noreferrer" className="btn btn-outline"><WhatsAppIcon className="h-4 w-4" /> WhatsApp</a>}
             <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="btn btn-outline">Get directions <ArrowUpRight size={14} /></a>
           </div>
@@ -68,6 +80,7 @@ export default async function ContactPage() {
           <h2 id="msg" className="text-display-md">Send a <em className="text-turquoise-deep">message</em><span className="text-pink">.</span></h2>
           <p className="mt-4 text-muted">For events, large groups or anything else.</p>
           {waGroup && <p className="mt-3 text-sm text-muted">Coming with a group? <a href={waGroup} target="_blank" rel="noopener noreferrer" className="link-underline text-espresso">Message us on WhatsApp</a> and our team will confirm what we can arrange.</p>}
+          <DemoFormNotice className="mt-8" />
           <div className="mt-8"><ContactForm /></div>
         </section>
         <section className="lg:col-span-6 lg:col-start-7" aria-labelledby="faq">

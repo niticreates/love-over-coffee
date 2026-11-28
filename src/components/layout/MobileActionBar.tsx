@@ -2,6 +2,7 @@
 import { CalendarDays, Phone, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { PhoneLink } from "@/components/ui/PhoneLink";
 
 /** Mobile-only bottom bar. Hidden on checkout/admin so it never covers payment controls. */
 export function MobileActionBar({ phone }: { phone: string }) {
@@ -14,7 +15,7 @@ export function MobileActionBar({ phone }: { phone: string }) {
       <nav aria-label="Quick actions" className="fixed inset-x-0 bottom-0 z-40 flex border-t border-oat bg-ivory/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
         <Link href="/menu" className={item}><ShoppingBag size={18} strokeWidth={1.6} />Order</Link>
         <Link href="/reserve" className={`${item} bg-turquoise text-ink`}><CalendarDays size={18} strokeWidth={1.6} />Reserve</Link>
-        <a href={`tel:${phone}`} className={item}><Phone size={18} strokeWidth={1.6} />Call</a>
+        <PhoneLink e164={phone} className={phone ? item : `${item} text-muted`} disabledLabel="Call off in demo"><Phone size={18} strokeWidth={1.6} />Call</PhoneLink>
       </nav>
     </>
   );

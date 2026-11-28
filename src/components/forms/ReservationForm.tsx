@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { postJSON } from "./api";
 import { Field, TextArea, TextInput } from "./Field";
+import { PhoneLink } from "@/components/ui/PhoneLink";
 
 interface Slot { time: string; available: boolean; remaining: number | null }
 const OCCASIONS = ["", "Coffee date", "Birthday", "Anniversary", "Catch-up with friends", "Work meeting", "Other"];
@@ -22,7 +23,7 @@ const fmt12 = (t: string) => {
   return `${((h + 11) % 12) + 1}:${String(m).padStart(2, "0")} ${h < 12 ? "am" : "pm"}`;
 };
 
-export function ReservationForm({ maxGuests, maxDays, enabled, phone }: { maxGuests: number; maxDays: number; enabled: boolean; phone: string }) {
+export function ReservationForm({ maxGuests, maxDays, enabled, phone, demo = false }: { maxGuests: number; maxDays: number; enabled: boolean; phone: string; demo?: boolean }) {
   const today = useMemo(istToday, []);
   const [date, setDate] = useState(today);
   const [guests, setGuests] = useState(2);
@@ -63,7 +64,7 @@ export function ReservationForm({ maxGuests, maxDays, enabled, phone }: { maxGue
   }
 
   if (!enabled)
-    return <p className="text-lg">Online reservations are paused right now. Please call us on <a className="link-underline" href={`tel:${phone}`}>{phone}</a>.</p>;
+    return <p className="text-lg">Online reservations are paused right now. {phone ? <>Please call us on <PhoneLink e164={phone} className="link-underline">{phone}</PhoneLink>.</> : <PhoneLink e164={null}>{null}</PhoneLink>}</p>;
 
   if (done)
     return (
@@ -85,7 +86,7 @@ export function ReservationForm({ maxGuests, maxDays, enabled, phone }: { maxGue
         <Field label="Date" name="date" error={errors.date}>
           <TextInput name="date" type="date" value={date} min={today} max={addDays(today, maxDays)} onChange={(e) => setDate(e.target.value)} required />
         </Field>
-        <Field label="Guests" name="guests" error={errors.guests} hint={`For more than ${maxGuests}, please call us.`}>
+        <Field label="Guests" name="guests" error={errors.guests} hint={demo ? `Online bookings are for up to ${maxGuests} guests.` : `For more than ${maxGuests}, please call us.`}>
           <select id="guests" name="guests" className="input" value={guests} onChange={(e) => setGuests(Number(e.target.value))}>
             {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n} {n === 1 ? "guest" : "guests"}</option>)}
           </select>

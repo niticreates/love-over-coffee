@@ -5,6 +5,8 @@ import { OrderStatus } from "@/components/checkout/OrderStatus";
 import { PageHero } from "@/components/ui/PageHero";
 import { formatINR } from "@/lib/money";
 import { getStore } from "@/lib/store";
+import { demoMode } from "@/lib/config";
+import { DEMO_ORDER_INTRO } from "@/lib/demo-copy";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your order", robots: { index: false } };
@@ -15,13 +17,14 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const o = await getStore().getOrderByToken(token);
   if (!o) notFound();
   const paid = o.payment_status === "paid";
+  const demo = demoMode();
   return (
     <>
     <PageHero
       size="compact"
       eyebrow={`Order ${o.reference}`}
-      title={paid ? (isNew ? <>Thank you — <em className="text-turquoise-deep">payment received</em><span className="text-pink">.</span></> : <>Your <em className="text-turquoise-deep">order</em><span className="text-pink">.</span></>) : <>Payment <em className="text-turquoise-deep">not completed</em><span className="text-pink">.</span></>}
-      intro={paid && o.status === "pending" ? <p>Your order has been sent to the café. You&apos;ll see it change to “Accepted” once the café confirms it{o.customer_email ? ", and we'll email you" : ""}.</p> : undefined}
+      title={paid ? (isNew ? (demo ? <>Thank you — <em className="text-turquoise-deep">simulated payment complete</em><span className="text-pink">.</span></> : <>Thank you — <em className="text-turquoise-deep">payment received</em><span className="text-pink">.</span></>) : <>Your <em className="text-turquoise-deep">order</em><span className="text-pink">.</span></>) : <>Payment <em className="text-turquoise-deep">not completed</em><span className="text-pink">.</span></>}
+      intro={paid && demo ? <p>{DEMO_ORDER_INTRO}{o.status === "pending" ? " It changes to “Accepted” once staff confirm it." : ""}</p> : paid && o.status === "pending" ? <p>Your order has been sent to the café. You&apos;ll see it change to “Accepted” once the café confirms it{o.customer_email ? ", and we'll email you" : ""}.</p> : undefined}
     />
     <div className="container-site max-w-3xl pb-section">
       <OrderStatus token={token} initial={{ status: o.status, payment_status: o.payment_status, fulfilment: o.fulfilment }} />

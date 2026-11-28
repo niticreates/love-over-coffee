@@ -3,12 +3,15 @@ import { fail, json } from "@/lib/http";
 import { uuid } from "@/lib/ids";
 import { getStore } from "@/lib/store";
 
+const FOLDERS = new Set(["menu", "gallery", "site", "platforms"]);
 const TYPES: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/avif": "avif" };
 
 export const POST = adminRoute("manager", async (req) => {
   const form = await req.formData();
   const file = form.get("file");
-  const folder = String(form.get("folder") ?? "misc").replace(/[^a-z]/g, "") || "misc";
+  // Fixed folders: menu photos, gallery, site banners/hero, partner and brand logos.
+  const folder = String(form.get("folder") ?? "");
+  if (!FOLDERS.has(folder)) return fail(422, "bad_folder", "Unknown upload folder.");
   if (!(file instanceof File)) return fail(422, "no_file", "Choose an image to upload.");
   const ext = TYPES[file.type];
   if (!ext) return fail(415, "bad_type", "Upload a JPG, PNG, WebP or AVIF image.");

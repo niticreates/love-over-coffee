@@ -3,11 +3,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import { timingSafeEqual } from "node:crypto";
-import { dataMode, env } from "./config";
+import { assertDemoSafe, dataMode, env, memoryStoreAllowed } from "./config";
 import { hasRole, SESSION_COOKIE, SESSION_TTL_SECONDS, signSession, verifySession, type Role, type SessionPayload } from "./session";
 
 export async function authenticate(email: string, password: string): Promise<SessionPayload | { error: string }> {
+  assertDemoSafe(); // an unsafe demo must never reach Supabase Auth
   if (dataMode() === "memory") {
+    if (!memoryStoreAllowed()) return { error: "Sign-in is unavailable: the database isn't configured." };
     const expected = env.demoAdminPassword;
     if (!expected) return { error: "Admin is disabled: set DEMO_ADMIN_PASSWORD for preview mode, or configure Supabase." };
     const a = Buffer.from(password);
@@ -40,6 +42,7 @@ export async function endSession() {
 
 /** Current admin, re-validated against admin_profiles so deactivated staff lose access immediately. */
 export async function currentAdmin(): Promise<SessionPayload | null> {
+  assertDemoSafe();
   const p = await verifySession((await cookies()).get(SESSION_COOKIE)?.value);
   if (!p) return null;
   if (dataMode() === "supabase") {
@@ -48,7 +51,7 @@ export async function currentAdmin(): Promise<SessionPayload | null> {
     if (!data?.is_active) return null;
     return { ...p, role: data.role };
   }
-  return p;
+  return memoryStoreAllowed() ? p : null;
 }
 
 export class AuthError extends Error {

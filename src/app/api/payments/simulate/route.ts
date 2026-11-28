@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { paymentMode } from "@/lib/config";
+import { simulatedPaymentsAllowed } from "@/lib/config";
 import { fail, json, limit, parseBody } from "@/lib/http";
 import { uuid } from "@/lib/ids";
 import { confirmPayment, simulatedSignature } from "@/lib/services/orders";
@@ -9,7 +9,7 @@ const schema = z.object({ order_id: z.string().uuid(), outcome: z.enum(["success
 
 /** Preview-only stand-in for Razorpay Checkout. Disabled whenever real Razorpay keys exist. */
 export async function POST(req: Request) {
-  if (paymentMode() !== "simulated" || (process.env.NODE_ENV === "production" && process.env.ALLOW_SIMULATED_PAYMENTS !== "true"))
+  if (!simulatedPaymentsAllowed())
     return fail(404, "not_found", "Not found.");
   const limited = limit(req, "simulate", 20, 60_000);
   if (limited) return limited;

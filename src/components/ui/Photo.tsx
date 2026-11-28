@@ -1,5 +1,5 @@
-import Image from "next/image";
 import clsx from "clsx";
+import { SafeImage } from "./SafeImage";
 import { Mascot } from "./Mascot";
 
 /** Placeholder palettes drawn from the café interior. */
@@ -40,18 +40,18 @@ export function Photo({
   position?: string;
 }) {
   const radius = shape === "arch" ? "rounded-t-[999px] rounded-b-[20px]" : shape === "round" ? "rounded-full" : "rounded-[20px]";
-  if (src) {
-    return (
-      <div style={style} className={clsx("relative overflow-hidden bg-oat", radius, className)}>
-        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" style={position ? { objectPosition: position } : undefined} unoptimized={src.startsWith("data:")} />
-      </div>
-    );
-  }
-  return (
+  const tile = (
     <div style={style} role="img" aria-label={`${alt} — photograph coming soon`} className={clsx("relative isolate flex flex-col justify-between overflow-hidden p-4 sm:p-5", radius, TONES[tone], className)}>
       <Mascot className="absolute -bottom-[8%] -right-[6%] -z-10 h-[62%] w-auto opacity-[.13] grayscale" title={null} animated={false} />
       <span className="self-end whitespace-nowrap text-[9px] font-bold tracking-[.2em] uppercase opacity-60">Photo to come</span>
       {label?.trim() && <span className="font-display text-[clamp(1.25rem,1rem+1.2vw,2rem)] italic leading-[1.05] text-balance">{label}</span>}
+    </div>
+  );
+  if (!src) return tile;
+  // If the photo can't load, show the labelled tile rather than a broken image.
+  return (
+    <div style={style} className={clsx("relative overflow-hidden bg-oat", radius, className)}>
+      <SafeImage src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" style={position ? { objectPosition: position } : undefined} fallback={<div className="absolute inset-0 [&>*]:h-full [&>*]:w-full">{tile}</div>} />
     </div>
   );
 }

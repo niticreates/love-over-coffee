@@ -17,6 +17,7 @@ import { toPublic } from "@/lib/public";
 import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import type { Metadata } from "next";
+import { PhoneLink } from "@/components/ui/PhoneLink";
 
 export const metadata: Metadata = { title: { absolute: "Love Over Coffee Indore | Café in Vijay Nagar, Scheme 113" }, alternates: { canonical: "/" } };
 
@@ -153,7 +154,7 @@ export default async function Home() {
                 </div>
                 <div className="flex gap-4">
                   <Phone className="mt-1 shrink-0 text-turquoise-deep" size={18} />
-                  <a href={`tel:${b.phone_e164}`} className="link-underline">{b.phone_display}</a>
+                  <PhoneLink e164={b.phone_e164} className="link-underline">{b.phone_display}</PhoneLink>
                 </div>
                 <div className="border-t border-ink/10 pt-6">
                   <p className="eyebrow text-muted">Opening hours</p>
@@ -162,7 +163,7 @@ export default async function Home() {
               </div>
               <div className="mt-10 flex flex-wrap gap-3">
                 <a href={b.maps_place_url} target="_blank" rel="noopener noreferrer" className="btn btn-dark">Get directions <ArrowUpRight size={14} /></a>
-                <a href={`tel:${b.phone_e164}`} className="btn btn-outline"><Phone size={14} /> Call</a>
+                <PhoneLink e164={b.phone_e164} className="btn btn-outline"><Phone size={14} /> Call</PhoneLink>
               </div>
             </Reveal>
           </div>

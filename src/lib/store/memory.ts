@@ -156,7 +156,7 @@ export const memoryStore: Store = {
     }
     return clone(list.slice(0, f.limit ?? 200));
   },
-  async updateOrder(id, patch) {
+  async updateOrder(id, patch, _actor) {
     const o = db().orders.find((x) => x.id === id);
     if (!o) throw new StoreError("not_found", "Order not found");
     Object.assign(o, patch, { updated_at: now() });
@@ -210,7 +210,7 @@ export const memoryStore: Store = {
   async getReservation(id) {
     return clone(db().reservations.find((r) => r.id === id) ?? null);
   },
-  async updateReservation(id, patch) {
+  async updateReservation(id, patch, _actor) {
     const r = db().reservations.find((x) => x.id === id);
     if (!r) throw new StoreError("not_found", "Reservation not found");
     Object.assign(r, patch, { updated_at: now() });
@@ -284,6 +284,18 @@ export const memoryStore: Store = {
   },
   async listContactMessages(limit = 50) {
     return clone(db().contacts.slice(0, limit));
+  },
+
+  async purgeCustomerData() {
+    const d = db();
+    const removed = { payments: d.payments.length, orders: d.orders.length, reservations: d.reservations.length, contact_messages: d.contacts.length, notification_logs: d.notifications.length, webhook_events: d.webhookEvents.size };
+    d.payments = [];
+    d.orders = [];
+    d.reservations = [];
+    d.contacts = [];
+    d.notifications = [];
+    d.webhookEvents = new Set();
+    return removed;
   },
 
   async healthCheck() {

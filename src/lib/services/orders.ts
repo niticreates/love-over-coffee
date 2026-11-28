@@ -1,6 +1,6 @@
 import "server-only";
 import { createHmac } from "node:crypto";
-import { env, paymentMode } from "../config";
+import { demoMode, env, paymentMode, simulatedPaymentsAllowed } from "../config";
 import { shortRef, token } from "../ids";
 import { notifyOrderPlaced, notifyOrderStatus } from "../notify";
 import { computeTotals, PricingError, priceLines } from "../pricing";
@@ -23,6 +23,10 @@ export async function startCheckout(input: CheckoutData): Promise<CheckoutResult
   if (!c.ordering_enabled) return { ok: false, status: 409, code: "ordering_disabled", message: "Online ordering isn't open yet. Please call us to order." };
   if (input.fulfilment === "delivery" && !c.delivery_enabled)
     return { ok: false, status: 409, code: "no_delivery", message: "Delivery isn't available online yet — please choose pickup." };
+
+  // Refuse before creating an order that could never be paid.
+  if (paymentMode() === "simulated" && !simulatedPaymentsAllowed())
+    return { ok: false, status: 503, code: "payments_unavailable", message: "Online payment isn't set up yet. Please call us to order." };
 
   const products = await store.listProducts({ includeUnavailable: true });
   let items;
@@ -83,7 +87,7 @@ export async function confirmPayment(input: { order_id: string; razorpay_order_i
   if (order.payment_status === "paid") return { ok: true as const, order, duplicate: true };
 
   if (paymentMode() === "simulated") {
-    if (env.razorpayKeyId || process.env.NODE_ENV === "production" && process.env.ALLOW_SIMULATED_PAYMENTS !== "true")
+    if (!simulatedPaymentsAllowed())
       return { ok: false as const, status: 400, code: "simulation_disabled", message: "Payment simulation is disabled." };
     // Simulated signature uses the session secret so it can't be forged from the browser blindly.
     const expected = simulatedSignature(order.id, input.razorpay_payment_id);
@@ -116,7 +120,10 @@ export async function confirmPayment(input: { order_id: string; razorpay_order_i
 }
 
 export function simulatedSignature(orderId: string, paymentId: string) {
-  return createHmac("sha256", `sim:${process.env.ADMIN_SESSION_SECRET ?? "preview"}`).update(`${orderId}|${paymentId}`).digest("hex");
+  const secret = process.env.ADMIN_SESSION_SECRET;
+  // The public demo never signs with a known fallback key (demoConfigProblems also requires 32+ chars).
+  if (demoMode() && (!secret || secret.length < 32)) throw new Error("ADMIN_SESSION_SECRET is required in DEMO_MODE");
+  return createHmac("sha256", `sim:${secret ?? "preview"}`).update(`${orderId}|${paymentId}`).digest("hex");
 }
 
 /** Allowed status transitions — prevents e.g. completing a cancelled or unpaid order by mistake. */
@@ -132,7 +139,7 @@ const NEXT: Record<OrderStatus, OrderStatus[]> = {
 export const allowedNextStatuses = (o: Pick<Order, "status" | "fulfilment">) =>
   NEXT[o.status].filter((s) => !(o.fulfilment === "pickup" && s === "out_for_delivery") && !(o.fulfilment === "delivery" && s === "ready_for_pickup"));
 
-export async function changeOrderStatus(id: string, status: OrderStatus) {
+export async function changeOrderStatus(id: string, status: OrderStatus, actor?: string) {
   const store = getStore();
   const order = await store.getOrder(id);
   if (!order) return { ok: false as const, status: 404, message: "Order not found." };
@@ -140,7 +147,7 @@ export async function changeOrderStatus(id: string, status: OrderStatus) {
     return { ok: false as const, status: 409, message: "Unpaid orders can only be cancelled." };
   if (!allowedNextStatuses(order).includes(status))
     return { ok: false as const, status: 409, message: `Can't move an order from ${order.status} to ${status}.` };
-  const updated = await store.updateOrder(id, { status });
+  const updated = await store.updateOrder(id, { status }, actor);
   await notifyOrderStatus(updated);
   return { ok: true as const, order: updated };
 }

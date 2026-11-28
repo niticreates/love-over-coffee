@@ -9,6 +9,8 @@ import { QtyStepper } from "@/components/cart/QtyStepper";
 import { postJSON } from "@/components/forms/api";
 import { Field, TextArea, TextInput } from "@/components/forms/Field";
 import { formatINR } from "@/lib/money";
+import { PhoneLink } from "@/components/ui/PhoneLink";
+import { DEMO_PAYMENT_NOTE } from "@/lib/demo-copy";
 
 interface Totals { subtotal: number; discount: number; tax: number; delivery_fee: number; total: number }
 interface CheckoutResp {
@@ -45,7 +47,7 @@ function idempotencyKey(signature: string) {
   }
 }
 
-export function Checkout({ deliveryEnabled, taxNote, phone }: { deliveryEnabled: boolean; taxNote: string; phone: string }) {
+export function Checkout({ deliveryEnabled, taxNote, phone, demo = false }: { deliveryEnabled: boolean; taxNote: string; phone: string; demo?: boolean }) {
   const { lines, setQty, notes, setNotes, clear, hydrated } = useCart();
   const router = useRouter();
   const [fulfilment, setFulfilment] = useState<"pickup" | "delivery">("pickup");
@@ -259,8 +261,8 @@ export function Checkout({ deliveryEnabled, taxNote, phone }: { deliveryEnabled:
             </dl>
             {formError && <p className="field-error mt-4" role="alert">{formError}</p>}
             <button className="btn btn-primary mt-6 w-full" disabled={busy || !totals}>{busy ? "Processing…" : totals ? `Pay ${formatINR(totals.total)}` : "Pay"}</button>
-            <p className="mt-3 text-center text-xs text-muted">Secure payment by Razorpay · UPI, cards, net banking, wallets</p>
-            <p className="mt-2 text-center text-xs text-muted">Questions? Call <a className="underline" href={`tel:${phone.replace(/\s/g, "")}`}>{phone}</a></p>
+            <p className="mt-3 text-center text-xs text-muted" data-testid="payment-note">{demo ? DEMO_PAYMENT_NOTE : "Secure payment by Razorpay · UPI, cards, net banking, wallets"}</p>
+            <p className="mt-2 text-center text-xs text-muted">{phone ? <>Questions? Call <PhoneLink e164={phone} className="underline">{phone}</PhoneLink></> : <PhoneLink e164={null}>{null}</PhoneLink>}</p>
           </div>
         </aside>
       </form>
@@ -269,9 +271,9 @@ export function Checkout({ deliveryEnabled, taxNote, phone }: { deliveryEnabled:
         {sim && (
           <motion.div className="fixed inset-0 z-[80] grid place-items-center bg-espresso/60 p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div role="dialog" aria-modal="true" aria-labelledby="sim-title" className="w-full max-w-sm bg-ivory p-8 text-center shadow-drawer">
-              <p className="eyebrow text-terracotta-ink">Preview mode</p>
+              <p className="eyebrow text-terracotta-ink">{demo ? "Demo mode" : "Preview mode"}</p>
               <h3 id="sim-title" className="mt-3 text-3xl">Test payment</h3>
-              <p className="mt-3 text-sm text-muted">Razorpay keys aren&apos;t configured, so this simulates the payment step. Nothing is charged.</p>
+              <p className="mt-3 text-sm text-muted">{demo ? "This demo simulates the payment step. No real charge is made." : <>Razorpay keys aren&apos;t configured, so this simulates the payment step. Nothing is charged.</>}</p>
               <p className="mt-5 font-display text-4xl">{formatINR(sim.payment.amount)}</p>
               <div className="mt-6 grid gap-2">
                 <button className="btn btn-primary" disabled={busy} onClick={() => simulate("success")}>Simulate success</button>

@@ -11,6 +11,7 @@ import { MEDIA, type Media } from "@/lib/media";
 import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
+import { PhoneLink } from "@/components/ui/PhoneLink";
 
 export const revalidate = 300;
 export const metadata = pageMeta(
@@ -41,12 +42,12 @@ export default async function CafeInVijayNagarPage() {
   ];
 
   const faqs = [
-    { q: "Where is Love Over Coffee in Vijay Nagar, Indore?", a: `At ${address}. It is the Love Over Coffee café on Scheme 113 in Vijay Nagar. Call ${b.phone_display} if you need directions.` },
+    { q: "Where is Love Over Coffee in Vijay Nagar, Indore?", a: `At ${address}. It is the Love Over Coffee café on Scheme 113 in Vijay Nagar.${b.phone_display ? ` Call ${b.phone_display} if you need directions.` : ""}` },
     { q: "What can I order at this café in Vijay Nagar?", a: `The menu covers ${cats.map((c) => c.name.toLowerCase()).join(", ")}. Each dish has its own page on the menu.` },
     { q: "Is it a good café in Vijay Nagar for a coffee date or friends?", a: "The dining room has sofas, velvet chairs, books and board games, and tables are made for lingering. You can reserve a table in advance." },
     { q: "Can I celebrate a birthday at Love Over Coffee, Vijay Nagar?", a: "There is a party hall upstairs. Message the café on WhatsApp or call to ask about availability and arrangements for your group." },
     ...(delivery.length ? [{ q: "Does Love Over Coffee Vijay Nagar deliver in Indore?", a: `Delivery is available through ${delivery.map((p) => p.platform_name).join(" and ")}. You can also order on this website for pickup.` }] : []),
-    { q: "What are the opening hours?", a: b.hours_verification === "verified" ? "See the contact page for today's hours." : `Please call ${b.phone_display} to check today's hours before you visit.` },
+    { q: "What are the opening hours?", a: b.hours_verification === "verified" ? "See the contact page for today's hours." : b.phone_display ? `Please call ${b.phone_display} to check today's hours before you visit.` : "Hours shown on this demo are samples." },
     { q: "Is this the same as other Love Over Coffee outlets?", a: "Love Over Coffee has outlets in several cities and areas. This website is for the café at Plot No. 11, Scheme 113, Vijay Nagar, Indore; menus, prices and hours at other outlets may differ." },
   ];
 
@@ -120,7 +121,7 @@ export default async function CafeInVijayNagarPage() {
           <Reveal className="md:col-span-6">
             <SectionHeading index="03" eyebrow="Find us" title={<>On Scheme 113, <em className="text-turquoise-deep">Vijay Nagar.</em></>} />
             <address className="mt-8 flex gap-3 text-lg not-italic leading-relaxed text-ink"><MapPin className="mt-1 shrink-0 text-turquoise-deep" size={20} aria-hidden />{address}</address>
-            <a href={`tel:${b.phone_e164}`} className="mt-4 flex items-center gap-3 text-lg text-ink"><Phone className="text-turquoise-deep" size={20} aria-hidden />{b.phone_display}</a>
+            <PhoneLink e164={b.phone_e164} className="mt-4 flex items-center gap-3 text-lg text-ink"><Phone className="text-turquoise-deep" size={20} aria-hidden />{b.phone_display}</PhoneLink>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="btn btn-dark">Get directions <ArrowUpRight size={16} /></a>
               {waReserve && <a href={waReserve} target="_blank" rel="noopener noreferrer" className="btn btn-outline"><WhatsAppIcon className="h-4 w-4" /> WhatsApp us</a>}

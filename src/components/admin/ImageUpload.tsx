@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useToast } from "@/components/ui/Toast";
+import { resizeForUpload } from "@/lib/resize-image";
 
 export function ImageUpload({ folder, value, onChange, label = "Photo" }: { folder: string; value: string | null; onChange: (url: string | null) => void; label?: string }) {
   const [busy, setBusy] = useState(false);
@@ -18,9 +19,11 @@ export function ImageUpload({ folder, value, onChange, label = "Photo" }: { fold
             <input
               type="file" accept="image/jpeg,image/png,image/webp,image/avif" className="sr-only" disabled={busy}
               onChange={async (e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
+                const picked = e.target.files?.[0];
+                e.target.value = "";
+                if (!picked) return;
                 setBusy(true);
+                const file = await resizeForUpload(picked, folder);
                 const fd = new FormData();
                 fd.append("file", file);
                 fd.append("folder", folder);
@@ -35,7 +38,7 @@ export function ImageUpload({ folder, value, onChange, label = "Photo" }: { fold
           {value && <button type="button" className="btn min-h-[38px] px-3 text-danger" onClick={() => onChange(null)}>Remove</button>}
         </div>
       </div>
-      <p className="text-xs text-muted">Use the café&apos;s own photographs. JPG/PNG/WebP, under 8 MB; images are optimised automatically.</p>
+      <p className="text-xs text-muted">Use the café&apos;s own photographs. JPG, PNG or WebP. Large photos are resized before upload.</p>
     </div>
   );
 }
