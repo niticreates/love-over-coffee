@@ -1,5 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 
+// Same origin as the server under test (dev on :3000, or E2E_BASE_URL for a production build).
+const BASE = process.env.E2E_BASE_URL ?? "http://localhost:3000";
+
 const noOverflow = async (page: Page) => expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
 
 test.describe("public site", () => {
@@ -207,7 +210,7 @@ test.describe("reservations", () => {
 test.describe("security", () => {
   test("admin APIs require a session", async ({ request }) => {
     expect((await request.get("/api/admin/products")).status()).toBe(401);
-    const r = await request.patch("/api/admin/orders/00000000-0000-0000-0000-000000000000", { data: { status: "completed" }, headers: { origin: "http://localhost:3000" } });
+    const r = await request.patch("/api/admin/orders/00000000-0000-0000-0000-000000000000", { data: { status: "completed" }, headers: { origin: BASE } });
     expect(r.status()).toBe(401);
   });
   test("cross-site admin writes are rejected", async ({ request }) => {
@@ -233,7 +236,7 @@ test.describe("security", () => {
 });
 
 test.describe("book & order + whatsapp", () => {
-  const ORIGIN = { origin: "http://localhost:3000" };
+  const ORIGIN = { origin: BASE };
 
   test("book & order lists only verified outlet links, opening safely", async ({ page }) => {
     await page.goto("/book-order");
