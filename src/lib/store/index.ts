@@ -1,10 +1,11 @@
 import "server-only";
-import { dataMode, memoryStoreAllowed } from "../config";
+import { assertDemoSafe, dataMode, memoryStoreAllowed } from "../config";
 import { memoryStore } from "./memory";
 import { supabaseStore } from "./supabase";
 import type { Store } from "./types";
 
 export function getStore(): Store {
+  assertDemoSafe();
   if (dataMode() === "supabase") return supabaseStore;
   if (!memoryStoreAllowed())
     throw new Error(

@@ -44,6 +44,8 @@ const nextConfig: NextConfig = {
       { source: "/admin/(.*)", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "no-store" }] },
       // The reset link may carry a one-time token in its query: never cache it or leak it as a Referer.
       { source: "/auth/(.*)", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "no-store" }, { key: "Referrer-Policy", value: "no-referrer" }] },
+      // The public client demo (DEMO_MODE=true) carries sample prices: keep every page out of search.
+      ...(process.env.DEMO_MODE === "true" ? [{ source: "/(.*)", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }] : []),
     ];
   },
 };

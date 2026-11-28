@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Checkout } from "@/components/checkout/Checkout";
 import { PageHero } from "@/components/ui/PageHero";
 import { getSiteData } from "@/lib/site";
+import { DemoFormNotice } from "@/components/layout/DemoNotice";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Checkout", robots: { index: false } };
@@ -18,7 +19,10 @@ export default async function CheckoutPage() {
     <div className="container-site pb-section">
       <div>
         {c.ordering_enabled ? (
-          <Checkout deliveryEnabled={c.delivery_enabled} taxNote={taxNote} phone={settings.business.phone_display} />
+          <>
+            <DemoFormNotice className="mb-6" />
+            <Checkout deliveryEnabled={c.delivery_enabled} taxNote={taxNote} phone={settings.business.phone_display} />
+          </>
         ) : (
           <div className="max-w-xl">
             <p className="text-lg">Online ordering isn&apos;t open yet. Please call <a className="link-underline" href={`tel:${settings.business.phone_e164}`}>{settings.business.phone_display}</a> to order.</p>

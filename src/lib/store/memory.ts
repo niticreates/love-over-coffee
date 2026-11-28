@@ -286,6 +286,18 @@ export const memoryStore: Store = {
     return clone(db().contacts.slice(0, limit));
   },
 
+  async purgeCustomerData() {
+    const d = db();
+    const removed = { payments: d.payments.length, orders: d.orders.length, reservations: d.reservations.length, contact_messages: d.contacts.length, notification_logs: d.notifications.length, webhook_events: d.webhookEvents.size };
+    d.payments = [];
+    d.orders = [];
+    d.reservations = [];
+    d.contacts = [];
+    d.notifications = [];
+    d.webhookEvents = new Set();
+    return removed;
+  },
+
   async healthCheck() {
     return true;
   },

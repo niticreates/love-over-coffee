@@ -13,3 +13,10 @@ $PSQL -d loc_seed -f scripts/supabase-stub.sql
 for f in supabase/migrations/*.sql; do $PSQL -d loc_seed -f "$f"; done
 $PSQL -d loc_seed -f supabase/seed.sql
 echo SEED_LOADS
+# Demo seed (demo project only): loads on top of the seed, prices every product, and refuses the production database.
+$PSQL -d loc_seed -f supabase/demo/demo-seed.sql
+test "$($PSQL -d loc_seed -tAc "select count(*) from products where price is null")" = "0"
+test "$($PSQL -d loc_seed -tAc "select value->>'ordering_enabled' from website_settings where key='commerce'")" = "true"
+$PSQL -d loc_seed -c "insert into auth.users (id) values ('e2b155bd-f5b4-49fd-8f82-eebfcbbee60c'); insert into admin_profiles (user_id, display_name, role) values ('e2b155bd-f5b4-49fd-8f82-eebfcbbee60c', 'Owner', 'owner');"
+if $PSQL -d loc_seed -f supabase/demo/demo-seed.sql 2>/dev/null; then echo "demo seed ran on a production-like database"; exit 1; fi
+echo DEMO_SEED_LOADS

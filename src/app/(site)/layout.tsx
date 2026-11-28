@@ -6,14 +6,15 @@ import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
 import { MascotCursor } from "@/components/motion/MascotCursor";
 import { ScrollAnimations } from "@/components/motion/ScrollAnimations";
 import { ScrollCup } from "@/components/motion/ScrollCup";
+import { DEMO_BANNER } from "@/lib/demo-copy";
 import { whatsappLink } from "@/lib/whatsapp";
 import { getSiteData } from "@/lib/site";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const { settings, categories, products } = await getSiteData();
+  const { settings, categories, products, flags } = await getSiteData();
   return (
     <>
-      <Nav phone={settings.business.phone_e164} announcement={settings.content.announcement} />
+      <Nav phone={settings.business.phone_e164} announcement={settings.content.announcement} demoBanner={flags.demo ? DEMO_BANNER : null} />
       <main id="main">{children}</main>
       <Footer settings={settings} categories={categories.filter((c) => products.some((p) => p.category_id === c.id && p.is_available))} />
       <MobileActionBar phone={settings.business.phone_e164} />

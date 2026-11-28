@@ -288,6 +288,21 @@ export const supabaseStore: Store = {
     return (must(await sb().from("contact_messages").select("*").order("created_at", { ascending: false }).limit(limit)) ?? []) as ContactMessage[];
   },
 
+  async purgeCustomerData() {
+    // Children first: payments restrict order deletes; order items and status history cascade.
+    const tables: [string, string][] = [
+      ["payments", "id"], ["orders", "id"], ["reservations", "id"], ["contact_messages", "id"],
+      ["notification_logs", "id"], ["customers", "id"], ["webhook_events", "event_id"],
+    ];
+    const removed: Record<string, number> = {};
+    for (const [table, key] of tables) {
+      const res = await sb().from(table).delete({ count: "exact" }).not(key, "is", null);
+      if (res.error) throw new StoreError("unavailable", `${table}: ${res.error.message}`);
+      removed[table] = res.count ?? 0;
+    }
+    return removed;
+  },
+
   async healthCheck() {
     const r = await sb().from("categories").select("id").limit(1);
     return !r.error;

@@ -111,6 +111,9 @@ export interface Store {
   createContactMessage(m: Omit<ContactMessage, "id" | "created_at">): Promise<ContactMessage>;
   listContactMessages(limit?: number): Promise<ContactMessage[]>;
 
+  /** Demo only: delete every order, payment, reservation, message, notification log and customer. Returns rows removed per table. */
+  purgeCustomerData(): Promise<Record<string, number>>;
+
   healthCheck(): Promise<boolean>;
 }
 

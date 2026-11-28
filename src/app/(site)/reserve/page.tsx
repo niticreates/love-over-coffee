@@ -9,6 +9,7 @@ import { MEDIA } from "@/lib/media";
 import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
+import { DemoFormNotice } from "@/components/layout/DemoNotice";
 
 export const dynamic = "force-dynamic";
 export const metadata = pageMeta("Reserve a Table | Love Over Coffee, Vijay Nagar Indore", "Request a table at Love Over Coffee, Vijay Nagar, Indore for coffee dates, catch-ups, birthdays and small celebrations. Staff confirm every request.", "/reserve");
@@ -77,6 +78,7 @@ export default async function ReservePage() {
           <div id="request" className="scroll-mt-28 rounded-[28px] bg-paper p-6 shadow-[var(--shadow-soft)] md:p-10 lg:col-span-8">
             <h2 className="font-display text-[clamp(2rem,1.4rem+2vw,3rem)]">Request a table <em className="text-turquoise-deep">with the café</em><span className="text-pink">.</span></h2>
             <p className="mb-8 mt-2 text-sm text-muted">Requests are confirmed by our team — you&apos;ll get a confirmation from us.</p>
+            <DemoFormNotice className="mb-6" />
             <ReservationForm maxGuests={r.max_guests_per_booking} maxDays={r.max_days_ahead} enabled={r.enabled} phone={settings.business.phone_display} />
           </div>
         </div>

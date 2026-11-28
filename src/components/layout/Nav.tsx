@@ -17,7 +17,7 @@ export const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function Nav({ phone, announcement }: { phone: string; announcement?: string | null }) {
+export function Nav({ phone, announcement, demoBanner }: { phone: string; announcement?: string | null; demoBanner?: string | null }) {
   const path = usePathname();
   const overlayRoute = path === "/";
   const [scrolled, setScrolled] = useState(false);
@@ -46,6 +46,7 @@ export function Nav({ phone, announcement }: { phone: string; announcement?: str
           transparent ? "bg-transparent pb-5 text-ink" : "bg-ivory/90 pb-3 text-ink shadow-[0_1px_0_rgb(14_31_61/.08)] backdrop-blur-md",
         )}
       >
+        {demoBanner && <div role="note" data-testid="demo-banner" className="bg-terracotta-ink px-4 py-2 text-center text-[12px] font-semibold tracking-wide text-ivory">{demoBanner}</div>}
         {announcement && <div className="bg-ink px-4 py-1.5 text-center text-[11px] tracking-wide text-ivory">{announcement}</div>}
         <div className={transparent ? "pt-5" : "pt-3"}>
         <nav className="container-site flex items-center justify-between gap-6" aria-label="Main">

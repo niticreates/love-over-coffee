@@ -2,7 +2,7 @@
 // Each send is logged to notification_logs. A missing integration is logged as "skipped",
 // never thrown — a notification failure must not fail an order or reservation.
 import "server-only";
-import { env } from "./config";
+import { demoMode, env } from "./config";
 import { formatINR } from "./money";
 import { getStore } from "./store";
 import type { Order, Reservation, WebsiteSettings } from "./types";
@@ -54,6 +54,10 @@ ${line("Subtotal", o.subtotal)}${o.discount ? `<tr><td style="color:#6B6457">Dis
 
 async function sendEmail(to: string, subject: string, html: string, template: Template) {
   const store = getStore();
+  if (demoMode()) {
+    await store.logNotification({ channel: "email", template, recipient: to, status: "skipped", detail: "Demo mode: notifications are off" });
+    return;
+  }
   if (!env.resendKey || !env.emailFrom) {
     await store.logNotification({ channel: "email", template, recipient: to, status: "skipped", detail: "Resend not configured" });
     return;
@@ -77,6 +81,10 @@ async function sendEmail(to: string, subject: string, html: string, template: Te
  */
 async function sendWhatsApp(toE164: string, template: Template, params: string[]) {
   const store = getStore();
+  if (demoMode()) {
+    await store.logNotification({ channel: "whatsapp", template, recipient: toE164, status: "skipped", detail: "Demo mode: notifications are off" });
+    return;
+  }
   if (!env.whatsappToken || !env.whatsappPhoneNumberId) {
     await store.logNotification({ channel: "whatsapp", template, recipient: toE164, status: "skipped", detail: "WhatsApp not configured" });
     return;

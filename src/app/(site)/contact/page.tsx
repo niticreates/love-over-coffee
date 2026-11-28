@@ -10,6 +10,7 @@ import { MEDIA } from "@/lib/media";
 import { breadcrumbJsonLd, JsonLd, pageMeta } from "@/lib/seo";
 import { whatsappLink } from "@/lib/whatsapp";
 import { getSiteData } from "@/lib/site";
+import { DemoFormNotice } from "@/components/layout/DemoNotice";
 
 export const revalidate = 300;
 export const metadata = pageMeta("Love Over Coffee Vijay Nagar, Indore | Address, Directions & Phone", "Find Love Over Coffee at Plot No. 11, Scheme No. 113, Vijay Nagar, Indore 452010. Call +91 93296 97769, get directions, or send us a message.", "/contact");
@@ -68,6 +69,7 @@ export default async function ContactPage() {
           <h2 id="msg" className="text-display-md">Send a <em className="text-turquoise-deep">message</em><span className="text-pink">.</span></h2>
           <p className="mt-4 text-muted">For events, large groups or anything else.</p>
           {waGroup && <p className="mt-3 text-sm text-muted">Coming with a group? <a href={waGroup} target="_blank" rel="noopener noreferrer" className="link-underline text-espresso">Message us on WhatsApp</a> and our team will confirm what we can arrange.</p>}
+          <DemoFormNotice className="mt-8" />
           <div className="mt-8"><ContactForm /></div>
         </section>
         <section className="lg:col-span-6 lg:col-start-7" aria-labelledby="faq">

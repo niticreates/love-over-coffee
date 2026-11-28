@@ -18,7 +18,7 @@ const NAV = [
 ] as const;
 const RANK = { staff: 1, manager: 2, owner: 3 };
 
-export function AdminShell({ name, role, preview, children }: { name: string; role: "owner" | "manager" | "staff"; preview: boolean; children: ReactNode }) {
+export function AdminShell({ name, role, preview, demo = false, children }: { name: string; role: "owner" | "manager" | "staff"; preview: boolean; demo?: boolean; children: ReactNode }) {
   const path = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -85,6 +85,7 @@ export function AdminShell({ name, role, preview, children }: { name: string; ro
         </div>
       )}
       <div className="min-w-0">
+        {demo && <div role="note" data-testid="demo-banner" className="bg-turquoise-deep px-4 py-2 text-center text-xs font-semibold text-ivory">Demo dashboard: sample data only. Customer entries are deleted daily, and no payments or messages are sent.</div>}
         {preview && <div className="bg-turquoise px-4 py-2 text-center text-xs font-medium text-ink">Preview mode: data is held in memory and resets when the server restarts.</div>}
         <div className="mx-auto max-w-6xl p-4 md:p-8 lg:p-10">{children}</div>
       </div>
