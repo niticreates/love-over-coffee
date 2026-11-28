@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
 
-const PRIVATE = ["/admin", "/api", "/checkout", "/order/", "/reservation/"];
+const PRIVATE = ["/admin", "/auth", "/api", "/checkout", "/order/", "/reservation/"];
 
 export default function robots(): MetadataRoute.Robots {
   return {

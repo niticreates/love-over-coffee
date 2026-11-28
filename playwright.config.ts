@@ -20,7 +20,15 @@ export default defineConfig({
         url: "http://localhost:3000",
         reuseExistingServer: true,
         timeout: 120_000,
-        env: { DEMO_SAMPLE_DATA: "true", DEMO_ADMIN_PASSWORD: "preview-admin", ADMIN_SESSION_SECRET: "e2e-secret-e2e-secret-e2e-secret-e2e" },
+        env: {
+          DEMO_SAMPLE_DATA: "true",
+          DEMO_ADMIN_PASSWORD: "preview-admin",
+          ADMIN_SESSION_SECRET: "e2e-secret-e2e-secret-e2e-secret-e2e",
+          // Public Supabase values only (no service key, so data stays in memory). The recovery
+          // tests intercept this host's Auth API in the browser; nothing reaches Supabase.
+          NEXT_PUBLIC_SUPABASE_URL: "https://e2e-mock.supabase.co",
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "e2e-anon-key",
+        },
       },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
 });

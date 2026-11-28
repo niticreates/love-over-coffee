@@ -53,7 +53,14 @@ open **SQL Editor → New query**, paste the contents of `supabase/seed.sql` and
 ## 3. Auth settings (dashboard)
 
 - **Authentication → Sign In / Providers → Email**: keep Email enabled. Turn **Allow new users to sign up** OFF. Staff accounts are created only by the owner, never by public sign-up.
-- **Authentication → URL Configuration**: Site URL = your live domain (e.g. `https://www.loveovercoffee.in`). Add `http://localhost:3000` to Redirect URLs for local work. Sign-in happens on the server with email and password, so no other redirect URLs are needed.
+- **Authentication → URL Configuration**: Site URL = your live domain (e.g. `https://www.loveovercoffee.in`). Under Redirect URLs add `http://localhost:3000/auth/reset-password` for local work and `https://<your-domain>/auth/reset-password` once live. Sign-in itself happens on the server, so no other redirect URLs are needed.
+
+### Password reset
+
+- Staff click **Forgot password?** on `/admin/login`. The server asks Supabase to email a link that opens `/auth/reset-password`, and gives the same answer whether or not the email has an account.
+- The reset page reads the one-time token from the link, removes it from the address bar at once, keeps the session in memory only, and calls `updateUser({ password })`. On success it signs that recovery session out and sends you to `/admin/login`.
+- If the reset URL isn't on the Redirect URLs list, Supabase sends the link to the Site URL (the homepage) instead. The site forwards any recovery link that lands on another page to `/auth/reset-password`, so links sent from **Authentication → Users → Send password recovery** work too.
+- New passwords need at least 8 characters. To require more from Supabase itself, set **Authentication → Sign In / Providers → Email → Minimum password length**.
 
 ## 4. Create the owner login
 

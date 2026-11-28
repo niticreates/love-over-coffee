@@ -11,7 +11,8 @@ import { MEDIA } from "@/lib/media";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Staff sign in", robots: { index: false } };
 
-export default async function LoginPage() {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ reset?: string; forgot?: string }> }) {
+  const { reset, forgot } = await searchParams;
   if (await currentAdmin()) redirect("/admin");
   return (
     <div className="admin grid min-h-svh bg-navy lg:grid-cols-2">
@@ -35,7 +36,8 @@ export default async function LoginPage() {
           <h1 className="mt-2 text-4xl text-ink md:text-5xl">Welcome back<span className="text-pink">.</span></h1>
           <p className="mt-3 text-muted">Sign in to manage orders, table requests and the menu.</p>
           {dataMode() === "memory" && <p className="mt-4 rounded-2xl bg-turquoise-soft px-4 py-3 text-xs text-ink">Preview mode: use any email and the DEMO_ADMIN_PASSWORD.</p>}
-          <LoginForm />
+          {reset === "done" && <p className="mt-4 rounded-2xl bg-turquoise-soft px-4 py-3 text-sm text-ink" role="status">Password updated. Sign in with your new password.</p>}
+          <LoginForm canReset={dataMode() === "supabase"} startInReset={forgot === "1"} />
         </div>
       </div>
     </div>

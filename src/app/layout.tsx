@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces, Quicksand } from "next/font/google";
+import { RecoveryRedirect } from "@/components/auth/RecoveryRedirect";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { ToastProvider } from "@/components/ui/Toast";
 import { JsonLd, localBusinessJsonLd, OG_IMAGE, SITE_URL, websiteJsonLd } from "@/lib/seo";
@@ -37,6 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ToastProvider>
           <CartProvider>{children}</CartProvider>
         </ToastProvider>
+        <RecoveryRedirect />
         <JsonLd data={localBusinessJsonLd(settings, platforms)} />
         <JsonLd data={websiteJsonLd()} />
       </body>
