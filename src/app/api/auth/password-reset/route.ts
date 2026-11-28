@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import { dataMode, env } from "@/lib/config";
+import { dataMode, demoConfigProblems, env } from "@/lib/config";
 import { fail, json, limit, parseBody, sameOrigin } from "@/lib/http";
 import { RESET_PATH } from "@/lib/recovery";
 
@@ -16,6 +16,8 @@ export async function POST(req: Request) {
   if (limited) return limited;
   const body = await parseBody(req, schema);
   if (!body.ok) return body.res;
+  // An unsafe demo (e.g. pointed at the production project) must never send a reset email.
+  if (demoConfigProblems().length) return fail(503, "misconfigured", "Password reset is unavailable on this demo until its configuration is fixed.");
   if (dataMode() !== "supabase") return fail(503, "unavailable", "Password reset needs the Supabase database to be connected.");
 
   // Supabase only follows redirect URLs on the project's allow list, so a spoofed Host header

@@ -1,6 +1,6 @@
 import "server-only";
 import { createHmac } from "node:crypto";
-import { env, paymentMode, simulatedPaymentsAllowed } from "../config";
+import { demoMode, env, paymentMode, simulatedPaymentsAllowed } from "../config";
 import { shortRef, token } from "../ids";
 import { notifyOrderPlaced, notifyOrderStatus } from "../notify";
 import { computeTotals, PricingError, priceLines } from "../pricing";
@@ -120,7 +120,10 @@ export async function confirmPayment(input: { order_id: string; razorpay_order_i
 }
 
 export function simulatedSignature(orderId: string, paymentId: string) {
-  return createHmac("sha256", `sim:${process.env.ADMIN_SESSION_SECRET ?? "preview"}`).update(`${orderId}|${paymentId}`).digest("hex");
+  const secret = process.env.ADMIN_SESSION_SECRET;
+  // The public demo never signs with a known fallback key (demoConfigProblems also requires 32+ chars).
+  if (demoMode() && (!secret || secret.length < 32)) throw new Error("ADMIN_SESSION_SECRET is required in DEMO_MODE");
+  return createHmac("sha256", `sim:${secret ?? "preview"}`).update(`${orderId}|${paymentId}`).digest("hex");
 }
 
 /** Allowed status transitions — prevents e.g. completing a cancelled or unpaid order by mistake. */

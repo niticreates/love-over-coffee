@@ -6,11 +6,13 @@
 -- None of these numbers come from the café. The deployed demo labels them as samples
 -- (DEMO_MODE=true) and wipes customer entries daily.
 
--- Refuse to run on the production project (its owner account is known).
+-- Refuse to run on any database that already has staff accounts. The real café database has
+-- its owner account; a brand-new demo project has none, because the demo manager is created
+-- only AFTER this file has run (see docs/DEMO.md).
 do $$
 begin
-  if exists (select 1 from public.admin_profiles where user_id = 'e2b155bd-f5b4-49fd-8f82-eebfcbbee60c') then
-    raise exception 'This is the production database. The demo seed was not applied.';
+  if exists (select 1 from public.admin_profiles) then
+    raise exception 'admin_profiles already has rows: this may be the production database. The demo seed was not applied. Run it on a new demo project before creating the demo manager.';
   end if;
 end $$;
 

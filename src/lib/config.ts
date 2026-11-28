@@ -63,11 +63,48 @@ export function demoMode(): boolean {
 /** The real café database. A demo deployment must never point at it. */
 export const PRODUCTION_SUPABASE_REF = "fzbhkwzcaezfvmeejtuk";
 
+/** "<ref>" from a https://<ref>.supabase.co URL; null for any other host. */
+export function supabaseRefFromUrl(url: string): string | null {
+  try {
+    const host = new URL(url).hostname;
+    return host.endsWith(".supabase.co") ? host.slice(0, -".supabase.co".length) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The project ref inside a legacy Supabase API key (a JWT whose payload carries "ref").
+ * Only the payload is decoded, the signature is not needed. New-style opaque keys
+ * (sb_publishable_..., sb_secret_...) carry no ref and return null.
+ */
+export function supabaseRefFromKey(key: string): string | null {
+  const parts = key.split(".");
+  if (parts.length !== 3) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(parts[1].replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8"));
+    return typeof payload?.ref === "string" ? payload.ref : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Names (never values) of settings that make a demo unsafe. Empty when not in demo mode. */
 export function demoConfigProblems(): string[] {
   if (!demoMode()) return [];
   const problems: string[] = [];
+  const urlRef = supabaseRefFromUrl(env.supabaseUrl);
   if (env.supabaseUrl.includes(PRODUCTION_SUPABASE_REF)) problems.push("the production Supabase project (use the separate demo project)");
+  for (const [name, value] of [["SUPABASE_SERVICE_ROLE_KEY", env.supabaseServiceKey], ["NEXT_PUBLIC_SUPABASE_ANON_KEY", env.supabaseAnonKey]] as const) {
+    const keyRef = value ? supabaseRefFromKey(value) : null;
+    if (keyRef === PRODUCTION_SUPABASE_REF) problems.push(`${name} from the production Supabase project`);
+    else if (keyRef && urlRef && keyRef !== urlRef) problems.push(`${name} from a different Supabase project than NEXT_PUBLIC_SUPABASE_URL`);
+  }
+  const sessionSecret = process.env.ADMIN_SESSION_SECRET ?? "";
+  const cronSecret = process.env.CRON_SECRET ?? "";
+  if (sessionSecret.length < 32) problems.push("ADMIN_SESSION_SECRET missing or shorter than 32 characters");
+  if (cronSecret.length < 32) problems.push("CRON_SECRET missing or shorter than 32 characters");
+  if (sessionSecret && sessionSecret === cronSecret) problems.push("CRON_SECRET must differ from ADMIN_SESSION_SECRET");
   if (env.razorpayKeyId || env.razorpayKeySecret || env.razorpayWebhookSecret) problems.push("Razorpay keys");
   if (env.resendKey) problems.push("RESEND_API_KEY");
   if (env.whatsappToken || env.whatsappPhoneNumberId) problems.push("WhatsApp keys");
@@ -80,9 +117,17 @@ export function demoConfigProblems(): string[] {
   return problems;
 }
 
+export class DemoConfigError extends Error {
+  constructor(problems: string[]) {
+    super(`DEMO_MODE refuses to run with: ${problems.join("; ")}. Fix this deployment's environment variables.`);
+    this.name = "DemoConfigError";
+  }
+}
+
+/** Throws before any database, Auth or payment call when a demo deployment is unsafe. No-op outside DEMO_MODE. */
 export function assertDemoSafe() {
   const problems = demoConfigProblems();
-  if (problems.length) throw new Error(`DEMO_MODE refuses to run with: ${problems.join("; ")}. Remove them from this deployment's environment.`);
+  if (problems.length) throw new DemoConfigError(problems);
 }
 
 /** Payments are "live" only with real keys; "simulated" lets the flow run in preview and in the demo. */
