@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta("Reserve a Table | Love Over Coffee, Vijay Nagar Indore", "Request a table at Love Over Coffee, Vijay Nagar, Indore for coffee dates, catch-ups, birthdays and small celebrations. Staff confirm every request.", "/reserve");
 
 export default async function ReservePage() {
-  const { settings, platforms } = await getSiteData();
+  const { settings, platforms, flags } = await getSiteData();
   const r = settings.reservations;
   const booking = platforms.filter((p) => p.platform_type === "reservation");
   const wa = whatsappLink(settings.business, "reservation");
@@ -80,7 +80,7 @@ export default async function ReservePage() {
             <h2 className="font-display text-[clamp(2rem,1.4rem+2vw,3rem)]">Request a table <em className="text-turquoise-deep">with the café</em><span className="text-pink">.</span></h2>
             <p className="mb-8 mt-2 text-sm text-muted">Requests are confirmed by our team — you&apos;ll get a confirmation from us.</p>
             <DemoFormNotice className="mb-6" />
-            <ReservationForm maxGuests={r.max_guests_per_booking} maxDays={r.max_days_ahead} enabled={r.enabled} phone={settings.business.phone_display} />
+            <ReservationForm maxGuests={r.max_guests_per_booking} maxDays={r.max_days_ahead} enabled={r.enabled} phone={settings.business.phone_display} demo={flags.demo} />
           </div>
         </div>
       </section>

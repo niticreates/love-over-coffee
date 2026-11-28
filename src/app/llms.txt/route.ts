@@ -1,5 +1,6 @@
 import { SITE_URL } from "@/lib/seo";
 import { getSiteData } from "@/lib/site";
+import { demoMode } from "@/lib/config";
 
 export const revalidate = 3600;
 
@@ -11,6 +12,7 @@ export async function GET() {
   const { settings, categories, products, platforms } = await getSiteData();
   const b = settings.business;
   const cats = categories.filter((c) => products.some((p) => p.category_id === c.id)).map((c) => c.name);
+  const demo = demoMode();
   const hoursVerified = b.hours_verification === "verified" && b.hours;
   const links = platforms.filter((p) => p.is_active && p.is_verified && p.platform_url && p.platform_type !== "location");
   const body = `# ${b.short_name} — café in Vijay Nagar, Indore
@@ -21,8 +23,8 @@ export async function GET() {
 - Name: ${b.name}
 - Address: ${b.address_lines.join(", ")}, ${b.city}, ${b.region} ${b.postal_code}, India
 ${b.phone_display ? `- Phone / WhatsApp: ${b.phone_display}\n` : ""}- Area: Vijay Nagar (Scheme 113), Indore
-- Opening hours: ${hoursVerified ? "see " + SITE_URL + "/contact" : "not yet confirmed by the café — please call before visiting"}
-- Reservations: requested on the website or by WhatsApp; a request is confirmed only when café staff confirm it
+- Opening hours: ${hoursVerified ? "see " + SITE_URL + "/contact" : (demo ? "not yet confirmed by the café" : "not yet confirmed by the café — please call before visiting")}
+- Reservations: requested on the website${demo ? "" : " or by WhatsApp"}; a request is confirmed only when café staff confirm it
 - Prices: shown on the menu page once confirmed by the café
 - Menu categories: ${cats.join(", ")}
 

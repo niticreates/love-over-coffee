@@ -33,9 +33,15 @@ test.describe("public demo mode", () => {
     await expect(page.getByRole("note").filter({ hasText: "made-up details" })).toBeVisible();
     await page.getByLabel("Name").fill("Demo Visitor");
     await page.getByLabel("Mobile number").fill("98765 43210");
+    await expect(page.getByTestId("payment-note")).toHaveText("Demo checkout: payment is simulated. No real charge is made.");
+    await expect(page.getByText("Secure payment by Razorpay")).toHaveCount(0);
     await page.getByRole("button", { name: /^Pay/ }).click();
+    await expect(page.getByRole("dialog")).toContainText("This demo simulates the payment step. No real charge is made.");
     await page.getByRole("button", { name: "Simulate success" }).click();
     await expect(page).toHaveURL(/\/order\/.+\?new=1/);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("simulated payment complete");
+    await expect(page.getByText("The payment was simulated and no money was charged.")).toBeVisible();
+    await expect(page.getByText("payment received")).toHaveCount(0);
     const orderUrl = page.url().replace("?new=1", "");
 
     expect((await request.get("/api/cron/demo-purge")).status()).toBe(401);
@@ -47,6 +53,15 @@ test.describe("public demo mode", () => {
 
     const after = await page.goto(orderUrl);
     expect(after?.status()).toBe(404);
+  });
+
+  test("public pages don't tell visitors to call, WhatsApp or pay for real", async ({ request }) => {
+    const pages = ["/", "/menu", "/our-story", "/gallery", "/reserve", "/contact", "/book-order", "/cafe-in-vijay-nagar-indore", "/checkout", "/llms.txt"];
+    const misleading = ["WhatsApp us", "Call us", "please call", "Please call", "Call, WhatsApp", "or by WhatsApp", "Secure payment by Razorpay", "payment received", "on Zomato or Swiggy", "pay securely online", "pay at checkout and collect"];
+    for (const path of pages) {
+      const html = await (await request.get(path)).text();
+      for (const phrase of misleading) expect(html, `${path} contains "${phrase}"`).not.toContain(phrase);
+    }
   });
 
   test("no real café contact channel or partner link reaches any public page", async ({ page, request }) => {

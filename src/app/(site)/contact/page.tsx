@@ -30,9 +30,10 @@ export default async function ContactPage() {
   const c = settings.commerce;
   const mapsLink = platforms.find((p) => p.platform_type === "location")?.platform_url ?? b.maps_place_url;
   const waGroup = whatsappLink(b, "group");
+  const demo = demoMode();
   const faqs = [
-    { q: "Can I reserve a table?", a: "Yes. Send a request on our reservations page with your date, time and number of guests. Your booking is confirmed once the café approves it — you'll get a confirmation from us." },
-    { q: "Do you take online orders?", a: c.ordering_enabled ? `Yes — order on this website and pay securely online${c.delivery_enabled ? " for pickup or delivery" : " for pickup at the café"}.` : "Online ordering is opening soon. Until then, please call the café to place an order." },
+    { q: "Can I reserve a table?", a: demo ? "Yes. Send a request on our reservations page with your date, time and number of guests. Your booking is confirmed once the café approves it." : "Yes. Send a request on our reservations page with your date, time and number of guests. Your booking is confirmed once the café approves it — you'll get a confirmation from us." },
+    { q: "Do you take online orders?", a: c.ordering_enabled ? (demo ? "Yes — order on this website for pickup. In this demo the payment step is simulated and no real charge is made." : `Yes — order on this website and pay securely online${c.delivery_enabled ? " for pickup or delivery" : " for pickup at the café"}.`) : demo ? "Online ordering is opening soon." : "Online ordering is opening soon. Until then, please call the café to place an order." },
     { q: "Do you have board games?", a: "Yes — games and books are available at the café for guests to enjoy." },
     { q: "Is the café good for working?", a: "Many guests come to work over coffee. Seating is first-come, first-served unless you reserve." },
     { q: "Where exactly are you?", a: `${b.address_lines.join(", ")}, ${b.city} ${b.postal_code}. Use “Get directions” for turn-by-turn navigation.` },
@@ -45,7 +46,7 @@ export default async function ContactPage() {
         title={<>Come say <em className="text-turquoise-deep">hello</em><span className="text-pink">.</span></>}
         media={MEDIA.diningRoom}
         accent={MEDIA.coldCoffees}
-        intro={<p>Call, WhatsApp or drop in — we&apos;re on Scheme 113 in Vijay Nagar, Indore.</p>}
+        intro={demo ? <p>Drop in — we&apos;re on Scheme 113 in Vijay Nagar, Indore. Phone and WhatsApp are switched off in this demo.</p> : <p>Call, WhatsApp or drop in — we&apos;re on Scheme 113 in Vijay Nagar, Indore.</p>}
       >
         <div className="flex flex-wrap gap-3">
           <PhoneLink e164={b.phone_e164} className="btn btn-dark"><Phone size={14} /> {b.phone_display}</PhoneLink>
@@ -53,7 +54,7 @@ export default async function ContactPage() {
         </div>
       </PageHero>
       <div className="container-site"><DemoContactNotice className="mb-8" /></div>
-      <Ticker words={["Call us", "WhatsApp us", "Drop in", "Scheme 113", "Vijay Nagar", "Indore"]} />
+      <Ticker words={demo ? ["Drop in", "Scheme 113", "Vijay Nagar", "Indore"] : ["Call us", "WhatsApp us", "Drop in", "Scheme 113", "Vijay Nagar", "Indore"]} />
       <section className="bg-cream py-section">
       <div className="container-site grid gap-14 lg:grid-cols-12">
         <div className="space-y-10 lg:col-span-5">

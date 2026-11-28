@@ -15,11 +15,15 @@ import { getSiteData } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import { PhoneLink } from "@/components/ui/PhoneLink";
 import { DemoContactNotice } from "@/components/layout/DemoNotice";
+import { demoMode } from "@/lib/config";
 
 export const revalidate = 60;
 export const metadata = pageMeta(
   "Book a Table or Order Online | Love Over Coffee Vijay Nagar, Indore",
-  "Book a table at Love Over Coffee, Vijay Nagar, Indore on District, order on Zomato or Swiggy, order online for pickup, or ask about birthdays on WhatsApp.",
+  // The public demo doesn't advertise partner platforms or WhatsApp, which are switched off there.
+  demoMode()
+    ? "Request a table at Love Over Coffee, Vijay Nagar, Indore, or order online for pickup."
+    : "Book a table at Love Over Coffee, Vijay Nagar, Indore on District, order on Zomato or Swiggy, order online for pickup, or ask about birthdays on WhatsApp.",
   "/book-order",
 );
 
@@ -33,6 +37,7 @@ export default async function BookOrderPage() {
   const waOrder = whatsappLink(b, "ordering");
   const waGroup = whatsappLink(b, "group");
   const direct = settings.commerce.ordering_enabled;
+  const demo = demoMode();
   const names = (list: typeof platforms) => list.map((p) => p.platform_name).join(" or ");
   const address = `${b.address_lines.join(", ")}, ${b.city} ${b.postal_code}`;
   const faqs = [
@@ -41,7 +46,7 @@ export default async function BookOrderPage() {
       a: `${reserve.length ? `Book on ${names(reserve)}, ` : ""}send a request through the Reserve a Table page on this website${waReserve ? ", or message the café on WhatsApp" : ""}. A request is confirmed once café staff confirm it.`,
     },
     ...(waReserve ? [{ q: "Is a WhatsApp message a confirmed booking?", a: "No. A WhatsApp message is an enquiry. Your table or order is confirmed only when café staff reply to confirm it." }] : []),
-    ...(direct ? [{ q: "Can I order online for pickup?", a: "Yes. Add items from the menu on this website, pay at checkout and collect your order from the café." }] : []),
+    ...(direct ? [{ q: "Can I order online for pickup?", a: demo ? "Yes. Add items from the menu on this website and go through checkout. In this demo the payment is simulated and no real charge is made." : "Yes. Add items from the menu on this website, pay at checkout and collect your order from the café." }] : []),
     ...(order.length ? [{ q: "Does Love Over Coffee deliver?", a: `Delivery is available through ${names(order)}. Orders placed there are handled by those platforms.` }] : []),
     { q: "Where is Love Over Coffee in Indore?", a: `At ${address}, in Vijay Nagar.${b.phone_display ? ` Call ${b.phone_display} for directions.` : ""}` },
   ];
@@ -54,7 +59,7 @@ export default async function BookOrderPage() {
         title={<>Your Coffee Experience, <em className="text-turquoise-deep">Your Way</em><span className="text-pink">.</span></>}
         media={MEDIA.storefront}
         accent={MEDIA.latteArt}
-        intro={<p>Reserve your table or order your favourites through your preferred platform.</p>}
+        intro={<p>{demo ? "Reserve your table or order your favourites on this website." : "Reserve your table or order your favourites through your preferred platform."}</p>}
       />
       <div className="container-site"><DemoContactNotice className="mb-8" /></div>
 
@@ -62,8 +67,10 @@ export default async function BookOrderPage() {
       <div className="container-site"><nav aria-label="Ways to visit" className="grid gap-px overflow-hidden rounded-[28px] bg-navy/60 sm:grid-cols-3">
         {[
           { n: "01", t: "Book a table", d: reserve.length ? "Instantly on a booking platform, or request one from us." : "Request one directly from the café.", href: "#reserve" },
-          { n: "02", t: "Order", d: direct ? "Pickup from our own website, or delivery via partners." : "Delivery and takeaway via our partners.", href: "#order" },
-          { n: "03", t: "Talk to us", d: "WhatsApp or call the café — staff reply and confirm.", href: "#visit" },
+          { n: "02", t: "Order", d: demo ? "Order on this website for pickup." : direct ? "Pickup from our own website, or delivery via partners." : "Delivery and takeaway via our partners.", href: "#order" },
+          demo
+            ? { n: "03", t: "Visit us", d: "Find the café on Scheme 113. Contact options are off in this demo.", href: "#visit" }
+            : { n: "03", t: "Talk to us", d: "WhatsApp or call the café — staff reply and confirm.", href: "#visit" },
         ].map((x) => (
           <a key={x.n} href={x.href} className="group bg-navy p-6 text-ivory transition-colors hover:bg-ink md:p-8">
             <span className="font-display text-sm italic text-turquoise">{x.n}</span>
@@ -125,7 +132,7 @@ export default async function BookOrderPage() {
         </div>
       </section>
 
-      <Ticker words={["Book a table", "Order online", "Zomato", "Swiggy", "District", "WhatsApp us"]} />
+      <Ticker words={demo ? ["Book a table", "Order online", "Pickup", "Vijay Nagar"] : ["Book a table", "Order online", "Zomato", "Swiggy", "District", "WhatsApp us"]} />
 
       {/* C. Location */}
       <section id="visit" className="scroll-mt-28 bg-cream py-section">

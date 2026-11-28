@@ -1,6 +1,7 @@
 import { fail, json, limit, parseBody } from "@/lib/http";
 import { getStore } from "@/lib/store";
 import { contactSchema } from "@/lib/validation";
+import { demoMode } from "@/lib/config";
 
 export async function POST(req: Request) {
   const limited = limit(req, "contact", 5, 10 * 60_000);
@@ -13,6 +14,6 @@ export async function POST(req: Request) {
     await getStore().createContactMessage(m);
     return json({ ok: true });
   } catch {
-    return fail(503, "unavailable", "We couldn't send your message. Please call or WhatsApp us instead.");
+    return fail(503, "unavailable", demoMode() ? "We couldn't send your message. Please try again in a moment." : "We couldn't send your message. Please call or WhatsApp us instead.");
   }
 }

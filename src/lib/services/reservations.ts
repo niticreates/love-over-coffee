@@ -3,9 +3,16 @@ import { shortRef, token } from "../ids";
 import { notifyReservation } from "../notify";
 import { checkBooking, generateSlots } from "../reservations";
 import { getStore } from "../store";
+import { demoMode } from "../config";
 import type { ReservationStatus } from "../types";
 import type { reservationSchema } from "../validation";
 import type { z } from "zod";
+
+// The public demo has no phone line, so booking errors there don't tell people to call.
+const DEMO_BOOKING_MESSAGES: Record<string, (s: { max_guests_per_booking: number }) => string> = {
+  disabled: () => "Online reservations are paused right now.",
+  bad_guests: (s) => `Online bookings are for 1–${s.max_guests_per_booking} guests.`,
+};
 
 export async function availability(date: string, guests: number) {
   const store = getStore();
@@ -31,7 +38,11 @@ export async function requestReservation(input: z.output<typeof reservationSchem
       occasion: input.occasion,
       requests: input.requests,
     },
-    (sameDay) => checkBooking(input, s.reservations, s.business.hours, sameDay),
+    (sameDay) => {
+      const check = checkBooking(input, s.reservations, s.business.hours, sameDay);
+      const demoMessage = !check.ok && demoMode() ? DEMO_BOOKING_MESSAGES[check.code] : undefined;
+      return demoMessage && !check.ok ? { ...check, message: demoMessage(s.reservations) } : check;
+    },
   );
 }
 
